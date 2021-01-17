@@ -19,7 +19,7 @@ contract("CrowdFundingCampaingCRUD Test", async accounts => {
         let instanceCRUD = await CrowdFundingCampaingCRUD.deployed();
         let listOfCFC = await instanceCRUD.getListOfCFC();
         expect(listOfCFC).to.be.instanceof(Array);
-        expect(listOfCFC.length).to.equal(0);;
+        expect(listOfCFC).to.have.property('length', 0);
         return true;
     });
 
@@ -29,6 +29,7 @@ contract("CrowdFundingCampaingCRUD Test", async accounts => {
 
         instanceCRUD.createCrowdFundingCampaing("Nombre campaña", 5, 500);
         expect(instanceCRUD.getListOfCFC()).not.to.eventually.be.empty;
+        expect(instanceCRUD.getListOfCFC()).to.eventually.have.property('length', 1);
 
         return true;
     });

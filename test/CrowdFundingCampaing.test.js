@@ -27,9 +27,23 @@ contract("CrowdFundingCampaingCRUD Test", async accounts => {
         let instanceCRUD = await CrowdFundingCampaingCRUD.deployed();
         expect(instanceCRUD.getListOfCFC()).to.eventually.be.empty;
 
-        instanceCRUD.createCrowdFundingCampaing("Nombre campaña", 5, 500);
+        await instanceCRUD.createCrowdFundingCampaing("Nombre campaña", 5, 500);
         expect(instanceCRUD.getListOfCFC()).not.to.eventually.be.empty;
         expect(instanceCRUD.getListOfCFC()).to.eventually.have.property('length', 1);
+
+        return true;
+    });
+
+    it("Should can't create two CrowdFundingCamaping with same name", async() => {
+        let instanceCRUD = await CrowdFundingCampaingCRUD.deployed();
+        expect(instanceCRUD.getListOfCFC()).to.eventually.have.property('length', 1);
+
+        await instanceCRUD.createCrowdFundingCampaing("Otro campaña", 5, 500);
+        expect(instanceCRUD.getListOfCFC()).not.to.eventually.be.empty;
+        expect(instanceCRUD.getListOfCFC()).to.eventually.have.property('length', 2);
+
+        expect(instanceCRUD.createCrowdFundingCampaing("Otro campaña", 10, 1000)).to.eventually.be.rejected;
+        expect(instanceCRUD.getListOfCFC()).to.eventually.have.property('length', 2);
 
         return true;
     });

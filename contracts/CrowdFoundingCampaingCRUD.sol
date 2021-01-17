@@ -2,7 +2,7 @@ pragma solidity ^0.6.0;
 
 import "./CrowdFundingCampaing.sol";
 
-contract CrowdFoundingCampaingCRUD {
+contract CrowdFundingCampaingCRUD {
 
 
     address[] public listOfCFC;
@@ -10,7 +10,7 @@ contract CrowdFoundingCampaingCRUD {
     mapping(string => address) campaingsByName;
 
 
-    function createCrowdFoundingCampaing(string calldata _name, uint _minimunContribution, uint _goal)
+    function createCrowdFundingCampaing(string calldata _name, uint _minimunContribution, uint _goal)
     external payable returns (address) {
 
         require(

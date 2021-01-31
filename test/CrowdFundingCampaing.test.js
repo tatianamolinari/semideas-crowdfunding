@@ -1,4 +1,5 @@
 var CrowdFundingCampaingCRUD = artifacts.require("CrowdFundingCampaingCRUD");
+var CrowdFundingCampaing = artifacts.require("CrowdFundingCampaing");
 
 var chai = require('chai');
 
@@ -19,14 +20,31 @@ contract("CrowdFundingCampaing Test", async accounts => {
         const { logs } = tx;
         const log = logs[0];
         let campaingAdress = log.args._campaingAddress;
+        console.log("Address campaing: " + campaingAdress);
+        this.campaing = await CrowdFundingCampaing.at(campaingAdress);
+
     })
 
     const [authorAddress, memberAccount, anotherAccount] = accounts;
 
-    it("Test campaing", async() => {
+    it("Checking CrowdFunding Campaing values from scratch", async() => {
+        let campaing = this.campaing
+
+        expect(campaing).to.be.instanceof(CrowdFundingCampaing);
+
+        expect(campaing.name()).to.eventually.be.equal("Nombre campaña");
+        expect(campaing.minimunContribution()).to.eventually.be.a.bignumber.equal(5);
+        expect(campaing.goal()).to.eventually.be.equal(500);
+        expect(campaing.active()).to.eventually.be.equal(true);
+
+        expect(campaing.proposals()).to.eventually.be.instanceof(Array);
+        expect(campaing.proposals()).to.eventually.have.property('length', 0);
+
+        expect(campaing.members()).to.eventually.be.instanceof(Array);
+        expect(campaing.members()).to.eventually.have.property('length', 1);
+        expect(campaing.membersCount()).to.eventually.be.equal(0);
 
 
-        return true;
     });
 
 });

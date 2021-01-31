@@ -1,4 +1,4 @@
-var CrowdFundingCampaing = artifacts.require("CrowdFundingCampaing");
+var CrowdFundingCampaingCRUD = artifacts.require("CrowdFundingCampaingCRUD");
 
 var chai = require('chai');
 
@@ -12,15 +12,20 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 contract("CrowdFundingCampaing Test", async accounts => {
+
+    beforeEach(async() => {
+        let instanceCRUD = await CrowdFundingCampaingCRUD.deployed();
+        const tx = await instanceCRUD.createCrowdFundingCampaing("Nombre campaña", 5, 500);
+        const { logs } = tx;
+        const log = logs[0];
+        let campaingAdress = log.args._campaingAddress;
+    })
+
     const [authorAddress, memberAccount, anotherAccount] = accounts;
 
     it("Test campaing", async() => {
-        let name = "Un nombre";
-        let minimunContribution = 20;
-        let goal = 200;
-        let manager = authorAddress;
-        await deployer.deploy(CrowdFundingCampaing, name, minimunContribution, goal, manager);
-        let instance = await CrowdFundingCampaing.deployed();
+
+
         return true;
     });
 

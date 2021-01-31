@@ -4,6 +4,15 @@ import "./CrowdFundingCampaing.sol";
 
 contract CrowdFundingCampaingCRUD {
 
+     /**
+     * Event for campaing creation
+     * @param _manager who paid for the tokens
+     * @param _campaingAddress address of new campaing
+     */
+    
+    event CampaingCreation(address indexed _manager, address indexed _campaingAddress);
+
+
 
     address[] public listOfCFC;
     mapping(string => bool) names;
@@ -24,7 +33,7 @@ contract CrowdFundingCampaingCRUD {
         names[_name] = true;
         campaingsByName[_name] = newCFC;
 
-        return newCFC;
+        emit CampaingCreation(msg.sender, newCFC);
     }
 
     function getListOfCFC() public view returns (address[] memory){

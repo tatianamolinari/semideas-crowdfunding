@@ -48,8 +48,16 @@ contract CrowdFundingCampaing {
         _;
     }
 
+    modifier notMembering() {
+        require(
+            !members[msg.sender],
+            "Sender is already a member authorized."
+        );
+        _;
+    }
+
     //functions
-    function contribute() public payable {
+    function contribute() public notMembering payable {
         require(
             msg.value >= minimunContribution,
             "The contribution is insuficient");

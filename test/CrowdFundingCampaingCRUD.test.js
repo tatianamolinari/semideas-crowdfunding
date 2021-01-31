@@ -27,7 +27,16 @@ contract("CrowdFundingCampaingCRUD Test", async accounts => {
         let instanceCRUD = await CrowdFundingCampaingCRUD.deployed();
         expect(instanceCRUD.getListOfCFC()).to.eventually.be.empty;
 
-        await instanceCRUD.createCrowdFundingCampaing("Nombre campaña", 5, 500);
+        const tx = await instanceCRUD.createCrowdFundingCampaing("Nombre campaña", 5, 500);
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+
+        const log = logs[0];
+        expect(log.event).to.equal('CampaingCreation');
+        expect(log.args._manager).to.equal(autorAddress);
+        //expect(log.args._campaingAddress).to.be.an.instanceOf(Address);
+
         expect(instanceCRUD.getListOfCFC()).not.to.eventually.be.empty;
         expect(instanceCRUD.getListOfCFC()).to.eventually.have.property('length', 1);
 

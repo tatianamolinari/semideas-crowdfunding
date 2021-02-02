@@ -37,8 +37,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -67,8 +66,7 @@
         }
       ],
       "stateMutability": "payable",
-      "type": "function",
-      "payable": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -81,8 +79,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_manager\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_campaingAddress\",\"type\":\"address\"}],\"name\":\"CampaingCreation\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_minimunContribution\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_goal\",\"type\":\"uint256\"}],\"name\":\"createCrowdFundingCampaing\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getListOfCFC\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"listOfCFC\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"events\":{\"CampaingCreation(address,address)\":{\"params\":{\"_campaingAddress\":\"address of new campaing\",\"_manager\":\"who paid for the tokens\"}}},\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"events\":{\"CampaingCreation(address,address)\":{\"notice\":\"Event for campaing creation\"}},\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/home/tati/Desktop/personal/Tesina/tesina-crowdfunding/contracts/CrowdFoundingCampaingCRUD.sol\":\"CrowdFundingCampaingCRUD\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/tati/Desktop/personal/Tesina/tesina-crowdfunding/contracts/CrowdFoundingCampaingCRUD.sol\":{\"keccak256\":\"0x9aeead048604b78445fda2a5f63a3f40214583ef61924af3b8029afea1fafd61\",\"urls\":[\"bzz-raw://3a628efeb9b5430b045b317e9699d7c433ebdff3afd3abbce50f78fcf6c968a4\",\"dweb:/ipfs/QmWwBE9NTn8L9RKt9P1A4RuGYCTyuCGk5zvrDXMmf6ao84\"]},\"/home/tati/Desktop/personal/Tesina/tesina-crowdfunding/contracts/CrowdFundingCampaing.sol\":{\"keccak256\":\"0xb4cd39362d5851552d9d5ccbaf713234d3f80310c9989d18e07b8a4864b4e6ee\",\"urls\":[\"bzz-raw://dbe5a8c9ac3873a5ee9ab6550ac1ab5c91ce1b66e92e63be72d46ff9d6c34d9f\",\"dweb:/ipfs/QmQ1txjMR48Jw36scXc1RjruGFrfUsFeisUuTZTKL2SHt6\"]}},\"version\":1}",
@@ -2455,8 +2452,7 @@
     }
   },
   "schemaVersion": "3.0.23",
-  "updatedAt": "2021-01-31T21:56:04.233Z",
-  "networkType": "ethereum",
+  "updatedAt": "2021-02-02T23:10:10.714Z",
   "devdoc": {
     "events": {
       "CampaingCreation(address,address)": {

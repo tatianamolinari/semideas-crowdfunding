@@ -1,19 +1,11 @@
 var CrowdFundingCampaingCRUD = artifacts.require("CrowdFundingCampaingCRUD");
-var CrowdFundingCampaing = artifacts.require("CrowdFundingCampaing");
 
-var chai = require('chai');
-
+const chai = require("./setupchai.js");
 const BN = web3.utils.BN;
-const chaiBN = require('chai-bn')(BN);
-chai.use(chaiBN);
-
-var chaiAsPromised = require("chai-as-promised");
-chai.use(chaiAsPromised);
-
 const expect = chai.expect;
 
 contract("CrowdFundingCampaingCRUD Test", async accounts => {
-    const [autorAddress, memberAccount, anotherAccount] = accounts;
+    const [authorAddress, memberAccount, anotherAccount] = accounts;
 
     it("List of Campaings should be empty", async() => {
         let instanceCRUD = await CrowdFundingCampaingCRUD.deployed();
@@ -34,7 +26,7 @@ contract("CrowdFundingCampaingCRUD Test", async accounts => {
 
         const log = logs[0];
         expect(log.event).to.equal('CampaingCreation');
-        expect(log.args._manager).to.equal(autorAddress);
+        expect(log.args._manager).to.equal(authorAddress);
         //expect(log.args._campaingAddress).to.be.an.instanceOf(Address);
 
         expect(instanceCRUD.getListOfCFC()).not.to.eventually.be.empty;
@@ -56,4 +48,5 @@ contract("CrowdFundingCampaingCRUD Test", async accounts => {
 
         return true;
     });
+
 });

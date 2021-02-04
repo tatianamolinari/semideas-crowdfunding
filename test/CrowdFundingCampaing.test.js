@@ -36,4 +36,47 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
     });
 
+    it("The manager should not be able to be an inversor", async() => {
+        let campaing = this.campaing;
+
+        expect(campaing.manager()).to.eventually.be.equal(authorAddress);
+        expect(campaing.contribute({ from: authorAddress, value: web3.utils.toWei("10", "wei") })).to.eventually.be.rejected;
+
+
+        return true;
+
+    });
+
+    it("The inversor should invest more than de minimun contribution", async() => {
+        let campaing = this.campaing;
+        expect(campaing.contribute({ from: memberAccount, value: web3.utils.toWei("2", "wei") })).to.eventually.be.rejected;
+        return true;
+
+    });
+
+    it("A not member should be able to contribute", async() => {
+        let campaing = this.campaing;
+
+        let campaingBalance = await web3.eth.getBalance(campaing.address);
+        let contributorBalance = await web3.eth.getBalance(memberAccount);
+
+        expect(campaing.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") })).to.eventually.be.fulfilled;
+
+        let afterCampaingBalance = await web3.eth.getBalance(campaing.address);
+        let afterContributorBalance = await web3.eth.getBalance(memberAccount);
+
+        console.log(campaingBalance);
+        console.log(contributorBalance);
+        console.log(afterCampaingBalance);
+        console.log(afterContributorBalance);
+
+        expect(afterContributorBalance.type).to.be.lessThan(contributorBalance - 5);
+
+
+
+        return true;
+
+    });
+
+
 });

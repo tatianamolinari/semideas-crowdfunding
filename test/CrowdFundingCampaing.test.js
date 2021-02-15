@@ -60,7 +60,7 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let campaingBalance = await web3.eth.getBalance(campaing.address);
         let contributorBalance = await web3.eth.getBalance(memberAccount);
 
-        expect(campaing.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") })).to.eventually.be.fulfilled;
+        await campaing.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") });
 
         let afterCampaingBalance = await web3.eth.getBalance(campaing.address);
         let afterContributorBalance = await web3.eth.getBalance(memberAccount);
@@ -70,7 +70,8 @@ contract("CrowdFundingCampaing Test", async accounts => {
         console.log(afterCampaingBalance);
         console.log(afterContributorBalance);
 
-        expect(afterContributorBalance.type).to.be.lessThan(contributorBalance - 5);
+        expect(parseInt(afterContributorBalance)).to.be.lessThan(parseInt(contributorBalance) - 5);
+        expect(parseInt(afterCampaingBalance)).to.be.equal(parseInt(campaingBalance) + 5);
 
 
 

@@ -16,6 +16,7 @@ contract CrowdFundingCampaing {
     uint public goal;
     uint public minimunContribution;
     bool active;
+    bool approved;
     mapping(address => bool) public members;
     uint public membersCount;
     Proposal[] public proposals;
@@ -28,6 +29,7 @@ contract CrowdFundingCampaing {
         minimunContribution = _minimunContribution;
         members[_manager] = true;
         active = true;
+        approved = false;
         membersCount = 0;
     }
 
@@ -43,7 +45,7 @@ contract CrowdFundingCampaing {
     modifier membering() {
         require(
             members[msg.sender],
-            "Sender is not a member authorized."
+            "Sender is not a member."
         );
         _;
     }
@@ -51,13 +53,29 @@ contract CrowdFundingCampaing {
     modifier notMembering() {
         require(
             !members[msg.sender],
-            "Sender is already a member authorized."
+            "Sender is already a member."
+        );
+        _;
+    }
+
+    modifier statusApproved() {
+        require(
+            approved,
+            "The campaing is not approved"
+        );
+        _;
+    }
+
+    modifier statusActive() {
+        require(
+            active,
+            "The campaing is not active"
         );
         _;
     }
 
     //functions
-    function contribute() public notMembering payable {
+    function contribute() public notMembering statusActive payable {
         require(
             msg.value >= minimunContribution,
             "The contribution is insuficient");
@@ -66,7 +84,16 @@ contract CrowdFundingCampaing {
 
     }
 
-    function createProposal(uint _value, address _recipient) public membering {
+    function setApproved() public restricted statusActive {
+        
+        require(
+            address(this).balance >= goal,
+            "The contributions are not more than the goal");
+        approved = true;
+         
+    }
+
+    function createProposal(uint _value, address _recipient) public restricted statusApproved statusActive {
         
         Proposal memory newProposal = Proposal({
             recipient : _recipient,
@@ -79,7 +106,7 @@ contract CrowdFundingCampaing {
          
     }
 
-    function aproveProposal(uint index) public membering {
+    function aproveProposal(uint index) public membering statusActive {
 
         Proposal storage proposal = proposals[index];
         require(
@@ -108,6 +135,10 @@ contract CrowdFundingCampaing {
         );
 
     }
+
+    function isMember(address _someone) public view returns (bool) {
+        return members[_someone];
+    } 
 
     function getProposalsCount() public view returns (uint) {
 

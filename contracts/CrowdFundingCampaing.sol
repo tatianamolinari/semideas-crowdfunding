@@ -125,9 +125,7 @@ contract CrowdFundingCampaing {
     /** @dev Allow not members to contribute with the campaing and be a member of it.
      */
     function contribute() public notMembering statusCreated payable {
-        require(
-            msg.value >= minimunContribution,
-            "The contribution is insuficient");
+        require(msg.value >= minimunContribution, "The contribution is insuficient");
         members[msg.sender] = true;
         contributions[msg.sender] = msg.value;
         membersCount++;
@@ -137,9 +135,7 @@ contract CrowdFundingCampaing {
      */
     function setActive() public restricted statusCreated {
         
-        require(
-            address(this).balance >= goal,
-            "The contributions are insufficient");
+        require(address(this).balance >= goal,"The contributions are insufficient");
         status = Status.ACTIVE;
          
     }
@@ -151,6 +147,8 @@ contract CrowdFundingCampaing {
      */
     function createProposal(uint _value, address _recipient, string memory _ipfshash) 
         public restricted statusActive {
+
+        require(address(this).balance >= _value, "The founds are insufficient");
         
         Proposal memory newProposal = Proposal({
             recipient : _recipient,
@@ -171,10 +169,7 @@ contract CrowdFundingCampaing {
     function aproveProposal(uint _index) public membering statusActive proposalActive(_index) {
 
         Proposal storage proposal = proposals[_index];
-        require(
-            !proposal.approvals[msg.sender],
-            "The proposal has been already approved by the sender"
-        );
+        require(!proposal.approvals[msg.sender], "The proposal has been already approved by the sender");
 
         proposal.approvals[msg.sender] = true;
         proposal.approvalsCount++;

@@ -35,7 +35,7 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let campaing = this.campaing;
 
         expect(campaing.owner()).to.eventually.be.equal(authorAddress);
-        expect(campaing.contribute({ from: authorAddress, value: web3.utils.toWei("10", "wei") })).to.eventually.be.rejected;
+        expect(campaing.contribute({ from: authorAddress, value: web3.utils.toWei("10", "wei") })).to.eventually.be.rejectedWith("Sender is already a member.");
 
 
         return true;
@@ -45,7 +45,7 @@ contract("CrowdFundingCampaing Test", async accounts => {
     it("The inversor should invest more than de minimun contribution", async() => {
 
         let campaing = this.campaing;
-        expect(campaing.contribute({ from: memberAccount, value: web3.utils.toWei("2", "wei") })).to.eventually.be.rejected;
+        expect(campaing.contribute({ from: memberAccount, value: web3.utils.toWei("2", "wei") })).to.eventually.be.rejectedWith("The contribution is insuficient");
 
         return true;
 
@@ -72,7 +72,7 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let notIsMember = await campaing.isMember(memberAccount);
         expect(notIsMember).to.be.equal(true);
 
-        expect(campaing.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") })).to.eventually.be.rejected;
+        expect(campaing.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") })).to.eventually.be.rejectedWith("Sender is already a member.");
 
 
         return true;
@@ -84,7 +84,7 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let campaing = this.campaing;
 
         expect(campaing.status()).to.eventually.be.a.bignumber.equal(new BN(0));
-        expect(campaing.setActive()).to.eventually.be.rejected;
+        expect(campaing.setActive()).to.eventually.be.rejectedWith("The contributions are insufficient");
 
 
         return true;
@@ -110,18 +110,59 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
     });
 
+    /*
+    it("Can't create a new proposal if the campaing is not ACTIVE", async() => {
+
+        let campaing = this.campaing;
+
+        expect(campaing.owner()).to.eventually.not.be.equal(authorAddress);
+        expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaing.status()).to.eventually.be.a.bignumber.equal(new BN(0));
+
+        //expect(campaing.createProposal(3, memberAccount, "FaAf25MoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz")).to.eventually.be.rejected;
+        expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+
+
+        return true;
+
+    });*/
+
+
     it("Only the owner should be able to create proposals", async() => {
 
         let campaing = this.campaing;
 
         expect(campaing.owner()).to.eventually.not.be.equal(memberAccount);
-        //expect(campaing.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") })).to.eventually.be.rejected;
-        //expect(campaing.createProposal(3, memberAccount, "FaAf25MoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz");
-
+        expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaing.createProposal(3, memberAccount, "FaAf25MoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz", { from: memberAccount })).to.eventually.be.rejectedWith("Sender is not the owner.");
+        expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
 
         return true;
 
     });
+
+    /*it("Owner create new proposal", async() => {
+
+        let campaing = this.campaing;
+
+        expect(campaing.owner()).to.eventually.not.be.equal(authorAddress);
+        expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+
+        let ipfshash = "FaAf25MoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz";
+        const tx = await campaing.createProposal(3, memberAccount, ipfshash);
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+
+        const log = logs[0];
+        expect(log.event).to.equal('proposalCreated');
+        expect(log.args._ipfshash).to.equal(ipfshash);
+
+        expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
+
+        return true;
+
+    });*/
 
 
 });

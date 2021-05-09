@@ -2,6 +2,16 @@ pragma solidity ^0.6.0;
 
 contract CrowdFundingCampaing {
 
+    /* Enums */
+
+    enum Status { CREATED, APPROVED, DISAPPROVED, ACTIVE, DESTROYED}
+
+    
+    /* Structs */
+
+    /** @dev Struct proposal
+        This struct represents the proposals that only owner can make to get more founds.
+    **/
     struct Proposal{
         uint value;
         address recipient;
@@ -10,90 +20,133 @@ contract CrowdFundingCampaing {
         mapping(address => bool) approvals;
     }
 
+    /** @dev Struct destruct proposal
+        This struct represents the proposals that members can make to get their founds back.
+    **/
+    struct DestructProposal{
+        bool complete;
+        uint approvalsCount;
+        mapping(address => bool) approvals;
+    }
 
-    string public name;
-    address public manager;
+
+    /* Storage */
+
+    StatusCampaing public status;
+    address public owner;
     uint public goal;
     uint public minimunContribution;
-    bool active;
-    bool approved;
     mapping(address => bool) public members;
+    mapping(address => uint) public contributions;
     uint public membersCount;
     Proposal[] public proposals;
+    DestructProposal[] public destructProposals;
     
 
-    constructor(string memory _name, uint _minimunContribution, uint _goal,  address _manager) public {
-        name = _name;
-        manager = _manager;
+    /** @dev Constructor.
+     *  @param _minimunContribution minimum contribution in wei that a person has to make to become a member.
+     *  @param _goal goal in wei that the proyect has to reach to be succesfull.
+     *  @param _ipfshash The url hash of the campaing data previusly stored in IPFS.
+    **/
+    constructor(uint _minimunContribution, uint _goal, bytes _ipfshash) public {
+        owner = msg.sender;
+        members[msg.sender] = true;
         goal = _goal;
         minimunContribution = _minimunContribution;
-        members[_manager] = true;
-        active = true;
-        approved = false;
+        status = Status.CREATED();
         membersCount = 0;
+
+        emit campaingCreated(_ipfshash);
     }
 
-    //modifiers
-    modifier restricted() {
+
+    /* Modifiers */
+
+    modifier restricted() { require(msg.sender==owner, "Sender is not the owner."); _; }
+
+    modifier membering() { require(members[msg.sender], "Sender is not a member."); _; }
+
+    modifier notMembering() { require(!members[msg.sender], "Sender is already a member."); _; }
+
+    modifier statusCreated() 
+        { require(status == Status.CREATED(), "The campaing status is not created."); _; }
+
+    modifier statusActive() 
+        { require(status == Status.ACTIVE(), "The campaing status is not active"); _; }
+
+    modifier proposalActive(uint _index) 
+        { require(proposals[index].status == Status.ACTIVE(), "The proposal is not longer active"); _; }
+
+    modifier proposalApproved(uint _index) 
+        { require(proposals[index].status == Status.APPROVED(), "The proposal is not approved" ); _; }
+
+    modifier destructProposalActive(uint _index) {
         require(
-            msg.sender==manager,
-            "Sender is not the manager authorized."
-        );
+            destructProposals[index].status == Status.ACTIVE(),
+            "The destruct proposal is not longer active");
         _;
     }
 
-    modifier membering() {
+    modifier destructProposalApproved(uint _index) {
         require(
-            members[msg.sender],
-            "Sender is not a member."
-        );
+            destructProposals[index].status == Status.APPROVED(),
+            "The destruct proposal is not approved");
         _;
     }
 
-    modifier notMembering() {
-        require(
-            !members[msg.sender],
-            "Sender is already a member."
-        );
-        _;
-    }
 
-    modifier statusApproved() {
-        require(
-            approved,
-            "The campaing is not approved"
-        );
-        _;
-    }
+    /* Events */
 
-    modifier statusActive() {
-        require(
-            active,
-            "The campaing is not active"
-        );
-        _;
-    }
+    /** @dev Emitted when the author creates the campaing.
+     *  @param _ipfshash The url hash of the campaing data stored in IPFS.
+     */
+    event campaingCreated(bytes indexed _ipfshash);
 
-    //functions
+    /** @dev Emitted when the author creates a proposal to free founds.
+     *  @param _ipfshash The url hash of the proposal data stored in IPFS.
+     */
+    event proposalCreated(bytes indexed _ipfshash);
+
+     /** @dev Emitted when a member creates a proposal to destruct the campaing and get the founds back.
+     *  @param _ipfshash The url hash of the destruct proposal data stored in IPFS.
+     */
+    event destructProposalCreated(bytes indexed _ipfshash);
+
+    /** @dev Emitted when the author creates a progress update to show how the proyect is going.
+     *  @param _ipfshash The url hash of the progress update data stored in IPFS.
+     */
+    event progressUpdate(bytes indexed _ipfshash);
+
+
+    /* Functions */
+
+    /** @dev Allow not members to contribute with the campaing and be a member of it.
+     */
     function contribute() public notMembering statusActive payable {
         require(
             msg.value >= minimunContribution,
             "The contribution is insuficient");
         members[msg.sender] = true;
+        contributions[msg.sender] = msg.value;
         membersCount++;
-
     }
 
     function setApproved() public restricted statusActive {
         
         require(
             address(this).balance >= goal,
-            "The contributions are not more than the goal");
-        approved = true;
+            "The contributions are insufficient");
+        status = StatusCampaing.APPROVED();
          
     }
 
-    function createProposal(uint _value, address _recipient) public restricted statusApproved statusActive {
+    /** @dev Allow only owner to create a new proposal to get more founds.
+     *  @param _value founds in wei that the owner want to withdraw.
+     *  @param _recipient address where the founds are going to be after withdraw them.
+     *  @param _ipfshash url hash of the proposal data (description and pictures) previusly stored in IPFS.
+     */
+    function createProposal(uint _value, address _recipient, bytes _ipfshash) 
+        public restricted statusApproved statusActive {
         
         Proposal memory newProposal = Proposal({
             recipient : _recipient,
@@ -103,15 +156,19 @@ contract CrowdFundingCampaing {
         });
 
         proposals.push(newProposal);
+        emit proposalCreated(_ipfshash);
          
     }
 
-    function aproveProposal(uint index) public membering statusActive {
+    /** @dev Allow only members to approve an active proposal that they haven't approved before.
+     *  @param _index index of the proposal the member wants to approve.
+     */
+    function aproveProposal(uint _index) public membering statusActive proposalActive(index) {
 
-        Proposal storage proposal = proposals[index];
+        Proposal storage proposal = proposals[_index];
         require(
             !proposal.approvals[msg.sender],
-            "The proposal is been already approved by the sender"
+            "The proposal has been already approved by the sender"
         );
 
         proposal.approvals[msg.sender] = true;
@@ -119,32 +176,25 @@ contract CrowdFundingCampaing {
         
     }
 
-    //** Funciones solo para la vista *//
+     /* Aux functions */
 
-    function getSummary() public view returns (
-        string memory, uint, uint, uint,  uint, address
-    ) {
-
-        return (
-            name,
-            goal,
-            minimunContribution,
-            address(this).balance,
-            proposals.length,
-            manager
-        );
-
-    }
-
-    function isMember(address _someone) public view returns (bool) {
-        return members[_someone];
+    /** @dev Function to return if someone is member.
+     *  @param _index index of the proposal the member wants to approve.
+     */
+    function isMember(address _address) public view returns (bool) {
+        return members[_address];
     } 
 
+    /** @dev Function to get the total number of proposals.
+     */
     function getProposalsCount() public view returns (uint) {
-
         return proposals.length;
-
     }
 
+    /** @dev Function to get the total number of destruct proposals.
+     */
+    function getDestructProposalsCount() public view returns (uint) {
+        return destructProposals.length;
+    }
    
 }

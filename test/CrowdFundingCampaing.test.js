@@ -20,7 +20,7 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
         expect(campaing.minimunContribution()).to.eventually.be.a.bignumber.equal(new BN(5));
         expect(campaing.goal()).to.eventually.be.a.bignumber.equal(new BN(300));
-        expect(campaing.status().toString()).to.eventually.be.equal(CrowdFundingCampaing.Status.CREATED().toString());
+        expect(campaing.status()).to.eventually.be.a.bignumber.equal(new BN(0));
 
         expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaing.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
@@ -30,11 +30,11 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
     });
 
-    it("The manager should not be able to be an inversor", async() => {
+    it("The owner should not be able to be an inversor", async() => {
 
         let campaing = this.campaing;
 
-        expect(campaing.manager()).to.eventually.be.equal(authorAddress);
+        expect(campaing.owner()).to.eventually.be.equal(authorAddress);
         expect(campaing.contribute({ from: authorAddress, value: web3.utils.toWei("10", "wei") })).to.eventually.be.rejected;
 
 
@@ -79,13 +79,12 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
     });
 
-    it("Can set campaing approved until reach the goal", async() => {
+    it("Can't set campaing active until reach the goal", async() => {
 
         let campaing = this.campaing;
 
-        let isApproved = await campaing.approved;
-        expect(isApproved).to.be.equal(false);
-        expect(campaing.setApproved()).to.eventually.be.rejected;
+        expect(campaing.status()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaing.setActive()).to.eventually.be.rejected;
 
 
         return true;
@@ -111,17 +110,18 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
     });
 
-    /*it("The manager should be able to create proposals", async() => {
+    it("Only the owner should be able to create proposals", async() => {
 
         let campaing = this.campaing;
 
-        expect(campaing.manager()).to.eventually.be.equal(authorAddress);
-        await campaing.createProposal(3, authorAddress);
+        expect(campaing.owner()).to.eventually.not.be.equal(memberAccount);
+        //expect(campaing.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") })).to.eventually.be.rejected;
+        //expect(campaing.createProposal(3, memberAccount, "FaAf25MoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz");
 
 
         return true;
 
-    });*/
+    });
 
 
 });

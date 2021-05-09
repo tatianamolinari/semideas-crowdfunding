@@ -18,6 +18,7 @@ contract CrowdFundingCampaing {
         bool complete;
         uint approvalsCount;
         mapping(address => bool) approvals;
+        Status status;
     }
 
     /** @dev Struct destruct proposal
@@ -27,12 +28,13 @@ contract CrowdFundingCampaing {
         bool complete;
         uint approvalsCount;
         mapping(address => bool) approvals;
+        Status status;
     }
 
 
     /* Storage */
 
-    StatusCampaing public status;
+    Status public status;
     address public owner;
     uint public goal;
     uint public minimunContribution;
@@ -48,12 +50,12 @@ contract CrowdFundingCampaing {
      *  @param _goal goal in wei that the proyect has to reach to be succesfull.
      *  @param _ipfshash The url hash of the campaing data previusly stored in IPFS.
     **/
-    constructor(uint _minimunContribution, uint _goal, bytes _ipfshash) public {
+    constructor(uint _minimunContribution, uint _goal, bytes memory _ipfshash) public {
         owner = msg.sender;
         members[msg.sender] = true;
         goal = _goal;
         minimunContribution = _minimunContribution;
-        status = Status.CREATED();
+        status = Status.CREATED;
         membersCount = 0;
 
         emit campaingCreated(_ipfshash);
@@ -69,27 +71,27 @@ contract CrowdFundingCampaing {
     modifier notMembering() { require(!members[msg.sender], "Sender is already a member."); _; }
 
     modifier statusCreated() 
-        { require(status == Status.CREATED(), "The campaing status is not created."); _; }
+        { require(status == Status.CREATED, "The campaing status is not created."); _; }
 
     modifier statusActive() 
-        { require(status == Status.ACTIVE(), "The campaing status is not active"); _; }
+        { require(status == Status.ACTIVE, "The campaing status is not active"); _; }
 
     modifier proposalActive(uint _index) 
-        { require(proposals[index].status == Status.ACTIVE(), "The proposal is not longer active"); _; }
+        { require(proposals[_index].status == Status.ACTIVE, "The proposal is not longer active"); _; }
 
     modifier proposalApproved(uint _index) 
-        { require(proposals[index].status == Status.APPROVED(), "The proposal is not approved" ); _; }
+        { require(proposals[_index].status == Status.APPROVED, "The proposal is not approved" ); _; }
 
     modifier destructProposalActive(uint _index) {
         require(
-            destructProposals[index].status == Status.ACTIVE(),
+            destructProposals[_index].status == Status.ACTIVE,
             "The destruct proposal is not longer active");
         _;
     }
 
     modifier destructProposalApproved(uint _index) {
         require(
-            destructProposals[index].status == Status.APPROVED(),
+            destructProposals[_index].status == Status.APPROVED,
             "The destruct proposal is not approved");
         _;
     }
@@ -131,12 +133,14 @@ contract CrowdFundingCampaing {
         membersCount++;
     }
 
+    /** @dev Allow only owner to change the status of the campaing from ACTIVE to APPROVED.
+     */
     function setApproved() public restricted statusActive {
         
         require(
             address(this).balance >= goal,
             "The contributions are insufficient");
-        status = StatusCampaing.APPROVED();
+        status = Status.APPROVED;
          
     }
 
@@ -145,14 +149,15 @@ contract CrowdFundingCampaing {
      *  @param _recipient address where the founds are going to be after withdraw them.
      *  @param _ipfshash url hash of the proposal data (description and pictures) previusly stored in IPFS.
      */
-    function createProposal(uint _value, address _recipient, bytes _ipfshash) 
-        public restricted statusApproved statusActive {
+    function createProposal(uint _value, address _recipient, bytes memory _ipfshash) 
+        public restricted statusActive {
         
         Proposal memory newProposal = Proposal({
             recipient : _recipient,
             value : _value,
             complete : false,
-            approvalsCount : 0
+            approvalsCount : 0,
+            status: Status.CREATED
         });
 
         proposals.push(newProposal);
@@ -163,7 +168,7 @@ contract CrowdFundingCampaing {
     /** @dev Allow only members to approve an active proposal that they haven't approved before.
      *  @param _index index of the proposal the member wants to approve.
      */
-    function aproveProposal(uint _index) public membering statusActive proposalActive(index) {
+    function aproveProposal(uint _index) public membering statusActive proposalActive(_index) {
 
         Proposal storage proposal = proposals[_index];
         require(
@@ -179,7 +184,6 @@ contract CrowdFundingCampaing {
      /* Aux functions */
 
     /** @dev Function to return if someone is member.
-     *  @param _index index of the proposal the member wants to approve.
      */
     function isMember(address _address) public view returns (bool) {
         return members[_address];

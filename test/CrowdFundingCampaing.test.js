@@ -9,13 +9,7 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
     const [authorAddress, memberAccount, anotherMemberAccount] = accounts;
     beforeEach(async() => {
-        //let instanceCRUD = await CrowdFundingCampaingCRUD.deployed();
-        //const tx = await instanceCRUD.createCrowdFundingCampaing("Test campaña", 5, 500);
-        //const { logs } = tx;
-        //const log = logs[0];
-        //let campaingAdress = log.args._campaingAddress;
-        //console.log("Address campaing: " + campaingAdress);
-        this.campaing = await CrowdFundingCampaing.deployed(); //new("Test campaña", 5, 500, authorAddress) //.at(campaingAdress);
+        this.campaing = await CrowdFundingCampaing.deployed();
 
     })
 
@@ -24,12 +18,12 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
         expect(campaing).to.be.instanceof(CrowdFundingCampaing);
 
-        expect(campaing.name()).to.eventually.be.equal("Test campaña");
         expect(campaing.minimunContribution()).to.eventually.be.a.bignumber.equal(new BN(5));
         expect(campaing.goal()).to.eventually.be.a.bignumber.equal(new BN(300));
-        //expect(campaing.active()).to.eventually.be.equal(true);
+        expect(campaing.status().toString()).to.eventually.be.equal(CrowdFundingCampaing.Status.CREATED().toString());
 
         expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaing.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaing.membersCount()).to.eventually.be.a.bignumber.equal(new BN(0));
 
         return true;

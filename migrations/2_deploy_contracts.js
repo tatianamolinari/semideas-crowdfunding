@@ -1,9 +1,7 @@
 var CrowdFundingCampaing = artifacts.require("CrowdFundingCampaing.sol");
-var CrowdFundingCampaingCRUD = artifacts.require("CrowdFundingCampaingCRUD.sol");
 //require("dotenv").config({ path: "../.env" });
 
 module.exports = async function(deployer) {
     let addr = await web3.eth.getAccounts();
-    await deployer.deploy(CrowdFundingCampaingCRUD);
-    await deployer.deploy(CrowdFundingCampaing, "Test campaña", 5, 300, addr[0])
+    await deployer.deploy(CrowdFundingCampaing, 5, 300, "0xQmWmyoMoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz")
 }

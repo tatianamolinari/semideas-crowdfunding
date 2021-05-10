@@ -4,7 +4,7 @@ contract CrowdFundingCampaing {
 
     /* Enums */
 
-    enum Status { CREATED, APPROVED, DISAPPROVED, ACTIVE, DESTROYED}
+    enum Status { CREATED, APPROVED, DISAPPROVED, ACTIVE, DESTROYED }
 
     
     /* Structs */
@@ -15,7 +15,6 @@ contract CrowdFundingCampaing {
     struct Proposal{
         uint value;
         address recipient;
-        bool complete;
         uint approvalsCount;
         mapping(address => bool) approvals;
         Status status;
@@ -25,7 +24,6 @@ contract CrowdFundingCampaing {
         This struct represents the proposals that members can make to get their founds back.
     **/
     struct DestructProposal{
-        bool complete;
         uint approvalsCount;
         mapping(address => bool) approvals;
         Status status;
@@ -153,7 +151,6 @@ contract CrowdFundingCampaing {
         Proposal memory newProposal = Proposal({
             recipient : _recipient,
             value : _value,
-            complete : false,
             approvalsCount : 0,
             status: Status.CREATED
         });
@@ -187,9 +184,9 @@ contract CrowdFundingCampaing {
     /** @dev Function to get the total number of proposals.
      *  @param _index index of the proposal to return
      */
-    function getProposal(uint _index) public view returns (address, uint, bool, uint, Status) {
+    function getProposal(uint _index) public view returns (address, uint, uint, Status) {
         Proposal storage proposal = proposals[_index];
-        return (proposal.recipient, proposal.value, proposal.complete, proposal.approvalsCount, proposal.status);
+        return (proposal.recipient, proposal.value, proposal.approvalsCount, proposal.status);
     } 
 
     /** @dev Function to get the total number of proposals.

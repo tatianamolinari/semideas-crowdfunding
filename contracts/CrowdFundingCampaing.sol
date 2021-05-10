@@ -50,7 +50,7 @@ contract CrowdFundingCampaing {
      *  @param _goal goal in wei that the proyect has to reach to be succesfull.
      *  @param _ipfshash The url hash of the campaing data previusly stored in IPFS.
     **/
-    constructor(uint _minimunContribution, uint _goal, string memory _ipfshash) public {
+    constructor(uint _minimunContribution, uint _goal, bytes32 _ipfshash) public {
         owner = msg.sender;
         members[msg.sender] = true;
         goal = _goal;
@@ -74,25 +74,25 @@ contract CrowdFundingCampaing {
         { require(status == Status.CREATED, "The campaing status is not created."); _; }
 
     modifier statusActive()
-        { require(status == Status.ACTIVE, "The campaing status is not active"); _; }
+        { require(status == Status.ACTIVE, "The campaing status is not active."); _; }
 
     modifier proposalActive(uint _index) 
-        { require(proposals[_index].status == Status.ACTIVE, "The proposal is not longer active"); _; }
+        { require(proposals[_index].status == Status.ACTIVE, "The proposal is not longer active."); _; }
 
     modifier proposalApproved(uint _index) 
-        { require(proposals[_index].status == Status.APPROVED, "The proposal is not approved" ); _; }
+        { require(proposals[_index].status == Status.APPROVED, "The proposal is not approved." ); _; }
 
     modifier destructProposalActive(uint _index) {
         require(
             destructProposals[_index].status == Status.ACTIVE,
-            "The destruct proposal is not longer active");
+            "The destruct proposal is not longer active.");
         _;
     }
 
     modifier destructProposalApproved(uint _index) {
         require(
             destructProposals[_index].status == Status.APPROVED,
-            "The destruct proposal is not approved");
+            "The destruct proposal is not approved.");
         _;
     }
 
@@ -102,22 +102,22 @@ contract CrowdFundingCampaing {
     /** @dev Emitted when the author creates the campaing.
      *  @param _ipfshash The url hash of the campaing data stored in IPFS.
      */
-    event campaingCreated(string indexed _ipfshash);
+    event campaingCreated(bytes32 indexed _ipfshash);
 
     /** @dev Emitted when the author creates a proposal to free founds.
      *  @param _ipfshash The url hash of the proposal data stored in IPFS.
      */
-    event proposalCreated(string indexed _ipfshash);
+    event proposalCreated(bytes32 indexed _ipfshash);
 
      /** @dev Emitted when a member creates a proposal to destruct the campaing and get the founds back.
      *  @param _ipfshash The url hash of the destruct proposal data stored in IPFS.
      */
-    event destructProposalCreated(string indexed _ipfshash);
+    event destructProposalCreated(bytes32 indexed _ipfshash);
 
     /** @dev Emitted when the author creates a progress update to show how the proyect is going.
      *  @param _ipfshash The url hash of the progress update data stored in IPFS.
      */
-    event progressUpdate(string indexed _ipfshash);
+    event progressUpdate(bytes32 indexed _ipfshash);
 
 
     /* Functions */
@@ -145,7 +145,7 @@ contract CrowdFundingCampaing {
      *  @param _recipient address where the founds are going to be after withdraw them.
      *  @param _ipfshash url hash of the proposal data (description and pictures) previusly stored in IPFS.
      */
-    function createProposal(uint _value, address _recipient, string memory _ipfshash) 
+    function createProposal(uint _value, address _recipient, bytes32 _ipfshash) 
         public restricted statusActive {
 
         require(address(this).balance >= _value, "The founds are insufficient");

@@ -7,7 +7,9 @@ const expect = chai.expect;
 
 contract("CrowdFundingCampaing Test", async accounts => {
 
-    const [authorAddress, memberAccount, anotherMemberAccount] = accounts;
+    const [authorAddress, memberAccount, anotherMemberAccount, recipientProposalAccount] = accounts;
+    const proposalCreatedHash = "0x7465737400000000000000000000000000000000000000000000000000000000";
+
     beforeEach(async() => {
         this.campaing = await CrowdFundingCampaing.deployed();
 
@@ -110,22 +112,47 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
     });
 
-    /*
+
     it("Can't create a new proposal if the campaing is not ACTIVE", async() => {
 
         let campaing = this.campaing;
 
-        expect(campaing.owner()).to.eventually.not.be.equal(authorAddress);
+        expect(campaing.owner()).to.eventually.be.equal(authorAddress);
         expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaing.status()).to.eventually.be.a.bignumber.equal(new BN(0));
 
-        //expect(campaing.createProposal(3, memberAccount, "FaAf25MoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz")).to.eventually.be.rejected;
+        expect(campaing.createProposal(3, memberAccount, proposalCreatedHash)).to.eventually.be.rejectedWith("The campaing status is not active.");;
         expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
 
 
         return true;
 
-    });*/
+    });
+
+    it("Only owner set campaing active", async() => {
+
+        let campaing = this.campaing;
+
+        expect(campaing.owner()).to.eventually.not.be.equal(memberAccount);
+        expect(campaing.setActive({ from: memberAccount })).to.eventually.be.rejectedWith("Sender is not the owner.");
+
+        return true;
+
+    });
+
+    it("Owner set campaing active", async() => {
+
+        let campaing = this.campaing;
+
+        expect(campaing.status()).to.eventually.be.a.bignumber.equal(new BN(0));
+
+        await campaing.setActive();
+
+        expect(campaing.status()).to.eventually.be.a.bignumber.equal(new BN(3));
+
+        return true;
+
+    });
 
 
     it("Only the owner should be able to create proposals", async() => {
@@ -134,8 +161,30 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
         expect(campaing.owner()).to.eventually.not.be.equal(memberAccount);
         expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
-        expect(campaing.createProposal(3, memberAccount, "FaAf25MoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz", { from: memberAccount })).to.eventually.be.rejectedWith("Sender is not the owner.");
+        expect(campaing.createProposal(3, memberAccount, proposalCreatedHash, { from: memberAccount })).to.eventually.be.rejectedWith("Sender is not the owner.");
         expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+
+        return true;
+
+    });
+
+    it("Owner creates a new proposal and a proposalCreated event is emited", async() => {
+
+        let campaing = this.campaing;
+
+        expect(campaing.owner()).to.eventually.be.equal(authorAddress);
+        expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+
+        const tx = await campaing.createProposal(3, recipientProposalAccount, proposalCreatedHash);
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+
+        const log = logs[0];
+        expect(log.event).to.equal('proposalCreated');
+        expect(log.args._ipfshash).to.equal(proposalCreatedHash);
+
+        expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
 
         return true;
 
@@ -149,7 +198,7 @@ contract("CrowdFundingCampaing Test", async accounts => {
         expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
 
         let ipfshash = "FaAf25MoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz";
-        const tx = await campaing.createProposal(3, memberAccount, ipfshash);
+        const tx = await campaing.createProposal(3, recipientProposalAccount, ipfshash);
         const { logs } = tx;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)

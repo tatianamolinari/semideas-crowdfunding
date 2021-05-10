@@ -182,6 +182,14 @@ contract CrowdFundingCampaing {
      */
     function isMember(address _address) public view returns (bool) {
         return members[_address];
+    }
+
+    /** @dev Function to get the total number of proposals.
+     *  @param _index index of the proposal to return
+     */
+    function getProposal(uint _index) public view returns (address, uint, bool, uint, Status) {
+        Proposal storage proposal = proposals[_index];
+        return (proposal.recipient, proposal.value, proposal.complete, proposal.approvalsCount, proposal.status);
     } 
 
     /** @dev Function to get the total number of proposals.

@@ -186,6 +186,20 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
         expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
 
+        let result = await campaing.getProposal(0);
+
+        let recipient = result['0'];
+        let value = result['1'];
+        let complete = result['2'];
+        let approvalsCount = result['3'];
+        let status = result['4'];
+
+        expect(recipient).to.be.equal(recipientProposalAccount);
+        expect(value).to.be.a.bignumber.equal(new BN(3));
+        expect(complete).to.be.false;
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(status).to.be.a.a.bignumber.equal(new BN(0));
+
         return true;
 
     });

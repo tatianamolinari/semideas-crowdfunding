@@ -7,7 +7,7 @@ const expect = chai.expect;
 
 contract("CrowdFundingCampaing Test", async accounts => {
 
-    const [authorAddress, memberAccount, anotherMemberAccount, recipientProposalAccount] = accounts;
+    const [authorAddress, memberAccount, anotherMemberAccount, recipientProposalAccount, noMemberAccount] = accounts;
     const proposalCreatedHash = "0x7465737400000000000000000000000000000000000000000000000000000000";
 
     beforeEach(async() => {
@@ -196,34 +196,172 @@ contract("CrowdFundingCampaing Test", async accounts => {
         expect(recipient).to.be.equal(recipientProposalAccount);
         expect(value).to.be.a.bignumber.equal(new BN(3));
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
-        expect(status).to.be.a.a.bignumber.equal(new BN(0));
+        expect(status).to.be.a.a.bignumber.equal(new BN(3));
 
         return true;
 
     });
 
-    /*it("Owner create new proposal", async() => {
+
+    it("Only members can vote a proposal", async() => {
+
+        let campaing = this.campaing;
+        let i_proposal = 0
+
+        var result = await campaing.getProposal(i_proposal);
+        var approvalsCount = result['2'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+
+        expect(campaing.isMember(noMemberAccount)).to.eventually.be.false;
+        expect(campaing.aproveProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
+
+        result = await campaing.getProposal(i_proposal);
+        approvalsCount = result['2'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+
+        return true;
+
+    });
+
+    it("Members vote a proposal", async() => {
+
+        let campaing = this.campaing;
+        let i_proposal = 0
+
+        var result = await campaing.getProposal(i_proposal);
+        var approvalsCount = result['2'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+
+        expect(campaing.isMember(memberAccount)).to.eventually.be.true;
+        await campaing.aproveProposal(i_proposal, { from: memberAccount });
+
+        result = await campaing.getProposal(i_proposal);
+        approvalsCount = result['2'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
+
+        return true;
+
+    });
+
+    it("Member can not vote a proposal twice", async() => {
+
+        let campaing = this.campaing;
+        let i_proposal = 0
+
+        var result = await campaing.getProposal(i_proposal);
+        var approvalsCount = result['2'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
+
+        expect(campaing.aproveProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The proposal has been already approved by the sender");;
+
+        result = await campaing.getProposal(i_proposal);
+        approvalsCount = result['2'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
+
+        return true;
+
+    });
+
+    it("Only members should be able to create destrcut proposals", async() => {
 
         let campaing = this.campaing;
 
-        expect(campaing.owner()).to.eventually.not.be.equal(authorAddress);
-        expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaing.isMember(noMemberAccount)).to.eventually.be.false;
+        expect(campaing.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaing.createDestructProposal(proposalCreatedHash, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
+        expect(campaing.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
 
-        let ipfshash = "FaAf25MoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz";
-        const tx = await campaing.createProposal(3, recipientProposalAccount, ipfshash);
+        return true;
+
+    });
+
+    it("Member creates a destrcut proposal", async() => {
+
+        let campaing = this.campaing;
+
+        expect(campaing.isMember(memberAccount)).to.eventually.be.true;
+        expect(campaing.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+
+        const tx = await campaing.createDestructProposal(proposalCreatedHash, { from: memberAccount });
         const { logs } = tx;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('proposalCreated');
-        expect(log.args._ipfshash).to.equal(ipfshash);
+        expect(log.event).to.equal('destructProposalCreated');
+        expect(log.args._ipfshash).to.equal(proposalCreatedHash);
 
-        expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
+        expect(campaing.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
+        let result = await campaing.getDestuctProposal(0);
+
+        let approvalsCount = result['0'];
+        let status = result['1'];
+
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(status).to.be.a.a.bignumber.equal(new BN(3));
 
         return true;
 
-    });*/
+    });
+
+    it("Only members can vote a destrcut proposal", async() => {
+
+        let campaing = this.campaing;
+        let i_proposal = 0
+
+        var result = await campaing.getDestuctProposal(i_proposal);
+        var approvalsCount = result['0'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+
+        expect(campaing.isMember(noMemberAccount)).to.eventually.be.false;
+        expect(campaing.aproveDestructProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
+
+        result = await campaing.getDestuctProposal(i_proposal);
+        approvalsCount = result['0'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+
+        return true;
+
+    });
+
+    it("Members vote a destrcut proposal", async() => {
+
+        let campaing = this.campaing;
+        let i_proposal = 0
+
+        var result = await campaing.getDestuctProposal(i_proposal);
+        var approvalsCount = result['0'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+
+        expect(campaing.isMember(anotherMemberAccount)).to.eventually.be.true;
+        await campaing.aproveDestructProposal(i_proposal, { from: anotherMemberAccount });
+
+        result = await campaing.getDestuctProposal(i_proposal);
+        approvalsCount = result['0'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
+
+        return true;
+
+    });
+
+    it("Member can not vote a proposal twice", async() => {
+
+        let campaing = this.campaing;
+        let i_proposal = 0
+
+        var result = await campaing.getDestuctProposal(i_proposal);
+        var approvalsCount = result['0'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
+
+        expect(campaing.aproveDestructProposal(i_proposal, { from: anotherMemberAccount })).to.eventually.be.rejectedWith("The proposal has been already approved by the sender");;
+
+        result = await campaing.getDestuctProposal(i_proposal);
+        approvalsCount = result['0'];
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
+
+        return true;
+
+    });
 
 
 });

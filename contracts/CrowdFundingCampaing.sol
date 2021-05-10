@@ -152,7 +152,7 @@ contract CrowdFundingCampaing {
             recipient : _recipient,
             value : _value,
             approvalsCount : 0,
-            status: Status.CREATED
+            status: Status.ACTIVE
         });
 
         proposals.push(newProposal);
@@ -173,6 +173,34 @@ contract CrowdFundingCampaing {
         
     }
 
+    /** @dev Allow only members to create a new proposal to finish de proyect and get the founds back.
+     *  @param _ipfshash url hash of the destruct proposal data (description) previusly stored in IPFS.
+     */
+    function createDestructProposal(bytes32 _ipfshash) public membering statusActive {
+        
+        DestructProposal memory newDProposal = DestructProposal({
+            approvalsCount : 0,
+            status: Status.ACTIVE
+        });
+
+        destructProposals.push(newDProposal);
+        emit destructProposalCreated(_ipfshash);
+         
+    }
+
+    /** @dev Allow only members to approve an active destrcut proposal that they haven't approved before.
+     *  @param _index index of the destrcut proposal the member wants to approve.
+     */
+    function aproveDestructProposal(uint _index) public membering statusActive proposalActive(_index) {
+
+        DestructProposal storage dProposal = destructProposals[_index];
+        require(!dProposal.approvals[msg.sender], "The proposal has been already approved by the sender");
+
+        dProposal.approvals[msg.sender] = true;
+        dProposal.approvalsCount++;
+        
+    }
+
      /* Aux functions */
 
     /** @dev Function to return if someone is member.
@@ -181,7 +209,7 @@ contract CrowdFundingCampaing {
         return members[_address];
     }
 
-    /** @dev Function to get the total number of proposals.
+    /** @dev Function to get the data of a proposal.
      *  @param _index index of the proposal to return
      */
     function getProposal(uint _index) public view returns (address, uint, uint, Status) {
@@ -194,6 +222,14 @@ contract CrowdFundingCampaing {
     function getProposalsCount() public view returns (uint) {
         return proposals.length;
     }
+
+     /** @dev Function to get the data of destruct proposal.
+     *  @param _index index of the destruct proposal to return
+     */
+    function getDestuctProposal(uint _index) public view returns (uint, Status) {
+        DestructProposal storage dProposal = destructProposals[_index];
+        return (dProposal.approvalsCount, dProposal.status);
+    } 
 
     /** @dev Function to get the total number of destruct proposals.
      */

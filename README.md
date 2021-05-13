@@ -1,4 +1,4 @@
-<div style="text-align:center" aling="center"><img src="client/public/logo.png" width="300" height="300" /></div>
+<p style="text-align:center" aling="center"><img src="client/public/logo.png" width="300" height="300" /></p>
 
 
 <h3> Contexto </h3>

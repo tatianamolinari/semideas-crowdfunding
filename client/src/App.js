@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import CrowdFundingCampaing from "./contracts/CrowdFundingCampaing.json";
 import getWeb3 from "./getWeb3";
+import { fromIntToStatus } from "./utils/utils.js"
 
 import "./App.css";
 
@@ -21,11 +22,22 @@ class App extends Component {
                 CrowdFundingCampaing.abi,
                 CrowdFundingCampaing.networks[this.networkId] && CrowdFundingCampaing.networks[this.networkId].address,
             );
-            console.log(CrowdFundingCampaing.networks[this.networkId].address);
             // Set web3, accounts, and contract to the state, and then proceed with an
             // example of interacting with the contract's methods.
+            const status = await this.instance.methods.getStatus().call();
             const minimunContribution = await this.instance.methods.minimunContribution().call();
-            this.setState({ loaded: true, minimunContribution: minimunContribution });
+            const owner = await this.instance.methods.owner().call();
+            const goal = await this.instance.methods.goal().call();
+            const membersCount = await this.instance.methods.membersCount().call();
+            //console.log(responsed);
+            this.setState({
+                loaded: true,
+                status: fromIntToStatus(status),
+                owner: owner,
+                goal: goal,
+                minimunContribution: minimunContribution,
+                membersCount: membersCount,
+            });
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
@@ -51,12 +63,16 @@ class App extends Component {
 
     render() {
         if (!this.state.loaded) {
-            return <div > Loading Web3, accounts, and contract... < /div>;
+            return <div > Loading Web3, accounts, and Crowdfounding contract... < /div>;
         }
         return ( < div className = "App" >
             <
-            h1 > Hi! < /h1> <
-            div > The minimunContribution value is: { this.state.minimunContribution } < /div>  < /
+            h1 > This is the campaing data stored in solidity: < /h1>  <
+            div > The owner address is: { this.state.owner } < /div> <
+            div > The status is: { this.state.status } < /div> <
+            div > The goal is: { this.state.goal } < /div> <
+            div > The minimunContribution value is: { this.state.minimunContribution } < /div> <
+            div > The membersCount is: { this.state.membersCount } < /div> < /
             div >
         );
     }

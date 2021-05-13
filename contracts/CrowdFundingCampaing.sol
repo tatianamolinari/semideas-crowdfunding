@@ -209,6 +209,18 @@ contract CrowdFundingCampaing {
         return members[_address];
     }
 
+    /** @dev Function to get the actual status of the campaing.
+     */
+    function getStatus() public view returns (Status) {
+        return status;
+    }
+
+    /** @dev Function to get the data of the campaing
+     */
+    function getCampaingInfo() public view returns (address, Status, uint, uint, uint) {
+        return (owner, status, goal, minimunContribution, membersCount);
+    } 
+
     /** @dev Function to get the data of a proposal.
      *  @param _index index of the proposal to return
      */
@@ -235,12 +247,6 @@ contract CrowdFundingCampaing {
      */
     function getDestructProposalsCount() public view returns (uint) {
         return destructProposals.length;
-    }
-
-    /** @dev Function to get the actual status of the campaing.
-     */
-    function getStatus() public view returns (Status) {
-        return status;
     }
    
 }

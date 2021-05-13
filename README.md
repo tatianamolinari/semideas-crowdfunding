@@ -1,2 +1,2 @@
 
-![Alt text](client/public/imagen.png?raw=true "Title")
+![Alt text](client/public/logo.png?raw=true "Title")

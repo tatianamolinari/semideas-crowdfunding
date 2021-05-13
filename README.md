@@ -1,2 +1,2 @@
-# tesina-crowdfunding
-Nuevo repositorio para refactoring de tesina
+
+![Alt text](client/public/logo.png?raw=true "Title")

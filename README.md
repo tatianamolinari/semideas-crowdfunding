@@ -1,2 +1,2 @@
 
-![Alt text](client/public/logo.png?raw=true "Title")
+![Alt text](client/public/logo.png?raw=true "Title") { width: 200px; }

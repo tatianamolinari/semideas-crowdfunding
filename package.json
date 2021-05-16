@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/tatianamolinari/tesina-crowdfunding#readme",
   "devDependencies": {
-    "hardhat": "^2.2.1"
+    "@openzeppelin/test-helpers": "^0.5.11",
+    "hardhat": "^2.2.1",
+    "openzeppelin-test-helpers": "^0.5.1"
   }
 }

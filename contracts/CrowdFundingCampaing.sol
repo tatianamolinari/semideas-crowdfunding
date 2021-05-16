@@ -36,7 +36,6 @@ contract CrowdFundingCampaing {
     address public owner;
     uint public goal;
     uint public minimunContribution;
-    mapping(address => bool) public members;
     mapping(address => uint) public contributions;
     uint public membersCount;
     Proposal[] public proposals;
@@ -50,7 +49,6 @@ contract CrowdFundingCampaing {
     **/
     constructor(uint _minimunContribution, uint _goal, bytes32 _ipfshash) public {
         owner = msg.sender;
-        members[msg.sender] = true;
         goal = _goal;
         minimunContribution = _minimunContribution;
         status = Status.CREATED;
@@ -64,9 +62,9 @@ contract CrowdFundingCampaing {
 
     modifier restricted() { require(msg.sender==owner, "Sender is not the owner."); _; }
 
-    modifier membering() { require(members[msg.sender], "Sender is not a member."); _; }
+    modifier membering() { require( (contributions[msg.sender]>0) || (msg.sender == owner), "Sender is not a member."); _; }
 
-    modifier notMembering() { require(!members[msg.sender], "Sender is already a member."); _; }
+    modifier notMembering() { require( (contributions[msg.sender]==0) && (msg.sender != owner) , "Sender is already a member."); _; }
 
     modifier statusCreated() 
         { require(status == Status.CREATED, "The campaing status is not created."); _; }
@@ -124,7 +122,6 @@ contract CrowdFundingCampaing {
      */
     function contribute() public notMembering statusCreated payable {
         require(msg.value >= minimunContribution, "The contribution is insuficient");
-        members[msg.sender] = true;
         contributions[msg.sender] = msg.value;
         membersCount++;
     }
@@ -206,7 +203,7 @@ contract CrowdFundingCampaing {
     /** @dev Function to return if someone is member.
      */
     function isMember(address _address) public view returns (bool) {
-        return members[_address];
+        return contributions[_address]>0;
     }
 
     /** @dev Function to get the actual status of the campaing.

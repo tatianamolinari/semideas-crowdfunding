@@ -1,6 +1,7 @@
 var CrowdFundingCampaing = artifacts.require("CrowdFundingCampaing");
 
 //var chai = require('chai');
+const { time } = require('openzeppelin-test-helpers');
 const chai = require("./setupchai.js");
 const BN = web3.utils.BN;
 const expect = chai.expect;
@@ -48,6 +49,7 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
         let campaing = this.campaing;
         expect(campaing.contribute({ from: memberAccount, value: web3.utils.toWei("2", "wei") })).to.eventually.be.rejectedWith("The contribution is insuficient");
+        await time.advanceBlock()
 
         return true;
 
@@ -208,8 +210,8 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let campaing = this.campaing;
         let i_proposal = 0
 
-        var result = await campaing.getProposal(i_proposal);
-        var approvalsCount = result['2'];
+        let result = await campaing.getProposal(i_proposal);
+        let approvalsCount = result['2'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaing.isMember(noMemberAccount)).to.eventually.be.false;
@@ -228,8 +230,8 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let campaing = this.campaing;
         let i_proposal = 0
 
-        var result = await campaing.getProposal(i_proposal);
-        var approvalsCount = result['2'];
+        let result = await campaing.getProposal(i_proposal);
+        let approvalsCount = result['2'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaing.isMember(memberAccount)).to.eventually.be.true;
@@ -248,8 +250,8 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let campaing = this.campaing;
         let i_proposal = 0
 
-        var result = await campaing.getProposal(i_proposal);
-        var approvalsCount = result['2'];
+        let result = await campaing.getProposal(i_proposal);
+        let approvalsCount = result['2'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaing.aproveProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The proposal has been already approved by the sender");;
@@ -309,8 +311,8 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let campaing = this.campaing;
         let i_proposal = 0
 
-        var result = await campaing.getDestuctProposal(i_proposal);
-        var approvalsCount = result['0'];
+        let result = await campaing.getDestuctProposal(i_proposal);
+        let approvalsCount = result['0'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaing.isMember(noMemberAccount)).to.eventually.be.false;
@@ -329,8 +331,8 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let campaing = this.campaing;
         let i_proposal = 0
 
-        var result = await campaing.getDestuctProposal(i_proposal);
-        var approvalsCount = result['0'];
+        let result = await campaing.getDestuctProposal(i_proposal);
+        let approvalsCount = result['0'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaing.isMember(anotherMemberAccount)).to.eventually.be.true;
@@ -349,8 +351,8 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let campaing = this.campaing;
         let i_proposal = 0
 
-        var result = await campaing.getDestuctProposal(i_proposal);
-        var approvalsCount = result['0'];
+        let result = await campaing.getDestuctProposal(i_proposal);
+        let approvalsCount = result['0'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaing.aproveDestructProposal(i_proposal, { from: anotherMemberAccount })).to.eventually.be.rejectedWith("The proposal has been already approved by the sender");;

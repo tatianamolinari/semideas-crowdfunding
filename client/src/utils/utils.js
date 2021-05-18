@@ -3,19 +3,19 @@ function fromIntToStatus(string_number) {
     var status = "";
     switch (string_number) {
         case '0':
-            status = "Created";
+            status = "Creada";
             break;
         case '1':
-            status = "Approved";
+            status = "Aprobada";
             break;
         case '2':
-            status = "Disapproved";
+            status = "Desaprobada";
             break;
         case '3':
-            status = "Active";
+            status = "Activa";
             break;
         case '4':
-            status = "Destroyed";
+            status = "Cerrada";
             break;
         default:
             console.log("Invalid Status");
@@ -30,19 +30,19 @@ function fromStatusToBadgeClass(status) {
     //enum Status { CREATED, APPROVED, DISAPPROVED, ACTIVE, DESTROYED }
     var badge_class = "";
     switch (status) {
-        case 'Created':
+        case 'Creada':
             badge_class = "primary";
             break;
-        case 'Approved':
+        case 'Aprobada':
             badge_class = "success";
             break;
-        case 'Disapproved':
+        case 'Desaprobada':
             badge_class = "secondary";
             break;
-        case 'Active':
+        case 'Activa':
             badge_class = "info";
             break;
-        case 'Destroyed':
+        case 'Cerrada':
             badge_class = "danger";
             break;
         default:

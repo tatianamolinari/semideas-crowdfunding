@@ -1,5 +1,6 @@
 body {
     overflow: hidden !important;
+    font-family: "DMSans-Regular" !important;
 }
 
 .container.root {
@@ -31,6 +32,7 @@ body {
   height:100%;
   margin:0;
   background-color: #eda73d;
+  font-family: "DMSans-Regular";
 
 }
 
@@ -103,8 +105,16 @@ ul {
 }
 
 .campaign-info .name {
+    font-family: "DMSans-Regular";
     padding-bottom: 2px;
     border-bottom: 2px solid #478e97;
+}
+
+.campaign-info .description {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    font-size: 1.25em;
+
 }
 
 .image-detail-container.row {
@@ -119,14 +129,28 @@ ul {
 
 .photos {
     transition: all 0.3s ease-out;
-    width: 70%;
+    width: 80%;
     height: auto;
     border-radius: 5px;
 }
 
-.photos {
+.photos:hover {
     cursor: pointer;
     position: relative;
     z-index: 999;
     transform: scale(1.2);
+}
+
+@font-face {
+    font-family: 'DMSans-Regular';
+    src: url('/fonts/DMSans-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('webfont.svg#svgFontName') format('svg');
+    /* Legacy iOS */
+}
+
+@font-face {
+    font-family: 'MoonTime-Regular';
+    src: url('/fonts/MoonTime-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('webfont.svg#svgFontName') format('svg');
+    /* Legacy iOS */
 }

@@ -5,7 +5,7 @@ class NavBar extends React.Component {
   render() {
     return (<Row className="nav-bar"> 
               <Col className="logo-row" lg={3}>
-              <img src="/logos/complete_row.png" class="container_img" />
+              <img src="/logos/complete_row.png" className="container_img" />
               </Col>
             </Row>);
   }

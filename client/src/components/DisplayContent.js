@@ -7,9 +7,9 @@ class DisplayContent extends React.Component {
               <div className="campaign-info">            
                 <h3 className="name"> Titulo de la campaña</h3>
                 <Row className="image-detail-container">
-                  <Col lg={4}> aa </Col>
-                  <Col lg={4}> aa </Col>
-                  <Col lg={4}> aa </Col>
+                  <Col lg={4}> <img src="/images/prueba/prueba1.jpg" class="photos" /> </Col>
+                  <Col lg={4}> <img src="/images/prueba/prueba2.jpg" class="photos" /> </Col>
+                  <Col lg={4}> <img src="/images/prueba/prueba3.jpg" class="photos" /> </Col>
                 </Row>
                 <div> La contribución mínima es de { this.props.data.minimunContribution } wei</div> 
                 <div> Autor: { this.props.data.owner } </div> 

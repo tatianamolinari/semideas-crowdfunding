@@ -19,6 +19,7 @@ function fromIntToStatus(string_number) {
             break;
         default:
             console.log("Invalid Status");
+            console.log(string_number);
             break;
     }
 

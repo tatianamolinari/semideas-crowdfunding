@@ -57,7 +57,7 @@ class NavBar extends React.Component {
                         <SideBarCampaignInfo/>
 
                         {this.state.loaded && <DisplayContent data={{
-                          status: fromIntToStatus(this.state.status),
+                          status: this.state.status,
                           owner: this.state.owner,
                           goal: this.state.goal,
                           minimunContribution: this.state.minimunContribution,

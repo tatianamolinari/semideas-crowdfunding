@@ -107,7 +107,26 @@ ul {
     border-bottom: 2px solid #478e97;
 }
 
+.image-detail-container.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .image-detail-container{
     margin-top: 3em;
     margin-bottom: 3em;
+}
+
+.photos {
+    transition: all 0.3s ease-out;
+    width: 70%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.photos {
+    cursor: pointer;
+    position: relative;
+    z-index: 999;
+    transform: scale(1.2);
 }

@@ -1,5 +1,42 @@
-.container-limit {
-    background-color: red;
+body {
+    overflow: hidden !important;
+}
+
+.container.root {
+    margin:0 ;
+    padding: 0;
+}
+
+.container-info {
+  height:85vh;
+}
+
+.nav-bar {
+  height:15vh; 
+  margin: 0;
+
+  background-color: rgb(248, 249, 250);
+  border-bottom-color: rgb(238, 238, 238);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+.nav-bar .logo-row {
+    background-color: white;
+    height:15vh; 
+    margin: 0;
+}
+
+.user_side_menu{
+  height:100%;
+  margin:0;
+  background-color: #eda73d;
+
+}
+
+.container_img {
+    height: 100%;
+    width: auto;
 }
 
 .invisible_button {
@@ -8,10 +45,9 @@
     width: 100%;
     text-align: inherit;
     text-align: center;
-  }
+}
 
-  .invisible_button a:hover {
-    background: #5564a0;
+.invisible_button a:hover {
     text-decoration: none;
     color: white;
 }
@@ -26,29 +62,52 @@
     color: white;
 }
 
+ul {
+    list-style-type: none;
+    padding: 0;
+}
 
-  .container.root {
-      margin:0 ;
-      padding: 0;
-  }
+.menu_user {
+    background-color: #f8f9fa;
+}
+  
+.menu_user_li {
+    padding: 3em;
+    border-bottom: 1px solid #ddd;
+}
+  
+.menu_user_li_active {
+    padding: 3em;
+    border-bottom: 1px solid #ddd;
+    background: #25b6b6;
+    color: white;
+}
+  
+.menu_user_li:hover {
+    background: #739ba0;
+}
+  
+.menu_user_li a {
+    color: #666;
+}
+  
+.menu_user_li_active a {
+    color: white;
+}
 
-  .container-info
-  {
-    height:90vh;
-  }
-  .nav-bar{
-    height:10vh; 
-    margin: 0;
+.campaign-info{
+    padding: 3em;
+    text-align: left;
+    height:85vh;
+    overflow-y:scroll;
+}
 
-    background-color: rgb(248, 249, 250);
-    border-bottom-color: rgb(238, 238, 238);
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-  }
+.campaign-info .name {
+    padding-bottom: 2px;
+    border-bottom: 2px solid #478e97;
+}
 
-  .user_side_menu{
-    height:100%;
-    margin:0;
-    background-color: orange;
-
-  }
+.image-detail-container{
+    margin-top: 3em;
+    margin-bottom: 3em;
+}

@@ -113,7 +113,7 @@ ul {
 .campaign-info .description {
     margin-top: 2em;
     margin-bottom: 2em;
-    font-size: 1.25em;
+    font-size: 1em;
 
 }
 
@@ -139,6 +139,44 @@ ul {
     position: relative;
     z-index: 999;
     transform: scale(1.2);
+}
+
+hr {
+    border-top: 3px solid #A9A9A9;
+}
+
+.contribute-row {
+    text-align: right;
+}
+
+.normal-button {
+    background-color: #0c6069;
+    color: #fff;
+    font-family: "DMSans-Regular";
+    padding: 1em;
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+    border-bottom-right-radius: 20px;
+    border-top-left-radius: 20px;
+    font-size: 1em;
+    margin: 1.5em;
+    border-width: 0;
+}
+
+.normal-button:hover {
+    background: #1a95ac;
+    text-decoration: none;
+    color: white;
+}
+
+.normal-button:visited {
+    text-decoration: none;
+    color: white;
+}
+
+.normal-button:focus {
+    text-decoration: none;
+    color: white;
 }
 
 @font-face {

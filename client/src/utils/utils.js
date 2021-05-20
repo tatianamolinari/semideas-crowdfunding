@@ -31,7 +31,7 @@ function fromStatusToBadgeClass(status) {
     var badge_class = "";
     switch (status) {
         case 'Creada':
-            badge_class = "primary";
+            badge_class = "created";
             break;
         case 'Aprobada':
             badge_class = "success";
@@ -54,6 +54,15 @@ function fromStatusToBadgeClass(status) {
     return badge_class;
 }
 
+function getValuesFromHash(hashmap) {
+    var array_values = [];
+
+    for (var key in hashmap) {
+        array_values.push(hashmap[key]);
+    }
+    return array_values;
+}
+
 /*function fromSolidity2String(bytes32) {
     return bytes32toString(web3.toAscii(bytes32));
 }
@@ -63,4 +72,4 @@ function bytes32toString(toParse) {
 }*/
 
 
-export { fromIntToStatus, fromStatusToBadgeClass };
+export { fromIntToStatus, fromStatusToBadgeClass, getValuesFromHash };

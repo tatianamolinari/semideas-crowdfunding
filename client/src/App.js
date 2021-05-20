@@ -12,7 +12,7 @@ class App extends Component {
         return ( 
             <div className = "App root" >
                 <NavBar name="Tatita" />
-                <ContainerInfo/>
+                <ContainerInfo active="general_data"/>
             </div>
         );
     }

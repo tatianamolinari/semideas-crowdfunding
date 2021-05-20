@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
+import { Col } from "react-bootstrap";
 import { Button } from "semantic-ui-react";
 
 
@@ -13,10 +13,10 @@ class SideBarCampaignInfo extends Component {
   }
 
   change_active(new_active) {
-    this.state.active = new_active;
+    this.setState({ active: new_active});
   }
 
-  change_active(new_active) {
+  /*change_active(new_active) {
     var old_active = this.state.active;
 
     const active_element = document.getElementById(old_active); //this.refs[old_active]
@@ -33,32 +33,31 @@ class SideBarCampaignInfo extends Component {
 
     new_active_element.className = "menu_user_li_active";
     new_active_container.style = "";
-  }
+  }*/
 
   render() {
-    const isLoggedIn = false;
     return (
       <Col lg={3} className="user_side_menu">
          
         <ul>
           <Button className="invisible_button">
             <li id="general_data" className="menu_user_li">
-              <a href="#"> Datos Generales </a>
+              Datos Generales
             </li>
           </Button>
           <Button className="invisible_button">
             <li id="progress" className="menu_user_li">
-              <a href="#"> Avances </a>
+              Avances
             </li>
           </Button>
           <Button className="invisible_button">
             <li id="proposal" className="menu_user_li">
-              <a href="#"> Pedidos de presupuesto </a>
+              Pedidos de presupuesto
             </li>
           </Button>
           <Button className="invisible_button">
             <li id="destrcut" className="menu_user_li">
-              <a href="#"> Pedidos de baja </a>
+              Pedidos de baja
             </li>
           </Button>
         </ul>

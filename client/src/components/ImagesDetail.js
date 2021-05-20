@@ -4,9 +4,11 @@ import { Row, Col } from "react-bootstrap";
 class ImagesDetail extends React.Component {
 
   renderImages() {
+    var i = 0;
     const images =  this.props.images.slice(0, 3).map(src_image => {
+      i++;
       return (
-        <Col lg={4}> <img src={src_image} className="photos" /> </Col>
+        <Col key={i} lg={4}> <img src={src_image} alt="" className="photos" /> </Col>
       );
     });
 

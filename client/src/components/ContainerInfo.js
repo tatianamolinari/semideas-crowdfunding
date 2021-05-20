@@ -1,48 +1,76 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
+import { Col, Row, Container } from "react-bootstrap";
+import { Button } from "semantic-ui-react";
 
 import CrowdFundingCampaing from "../contracts/CrowdFundingCampaing.json";
 import getWeb3 from "../getWeb3";
-import { fromIntToStatus } from "../utils/utils.js"
+import { fromIntToStatus, getValuesFromHash } from "../utils/utils.js"
 
-
-import SideBarCampaignInfo from "./SideBarCampaignInfo.js";
 import DisplayContent from "./DisplayContent.js"
 
 class NavBar extends React.Component {
 
-  state = { loaded: false };
+  state = {
+    active: this.props.active,
+    loaded: false
+  };
+
+  change_active(new_active) {
+ 
+    var old_active = this.state.active;
+
+    const active_element = document.getElementById(old_active);
+    const active_container = document.getElementById(
+      old_active.concat("_container")
+    );
+    active_element.className = "menu_user_li";
+    active_container.style = "display: none;";
+    
+    const new_active_element = document.getElementById(new_active);
+    const new_active_container = document.getElementById(
+      new_active.concat("_container")
+    );
+
+    new_active_element.className = "menu_user_li_active";
+    new_active_container.style = "";
+    this.setState({ active: new_active});
+  }
 
     componentDidMount = async() => {
         try {
-            // Get network provider and web3 instance.
             this.web3 = await getWeb3();
-
-            // Use web3 to get the user's accounts.
             this.accounts = await this.web3.eth.getAccounts();
-
-            // Get the contract instance in the actual network (the same as metamask).
             this.networkId = await this.web3.eth.net.getId();
+            
             this.instance = await new this.web3.eth.Contract(
                 CrowdFundingCampaing.abi,
                 CrowdFundingCampaing.networks[this.networkId] && CrowdFundingCampaing.networks[this.networkId].address,
             );
 
-            // Set web3, accounts, and contract to the state, and then proceed with an
-            // example of interacting with the contract's methods.
-            const status = await this.instance.methods.getStatus().call();
-            const minimunContribution = await this.instance.methods.minimunContribution().call();
-            const owner = await this.instance.methods.owner().call();
-            const goal = await this.instance.methods.goal().call();
-            const membersCount = await this.instance.methods.membersCount().call();
-            //console.log(responsed);
+            //(owner, status, goal, minimunContribution, membersCount)
+            let campaingValues = await this.instance.methods.getCampaingInfo().call();
+            let campaingInfo = getValuesFromHash(campaingValues);
+            
+            const owner = campaingInfo[0];
+            const status = await campaingInfo[1];
+            const goal = campaingInfo[2]
+            const minimunContribution = campaingInfo[3];
+            const membersCount = campaingInfo[4];
+            
+            const isMember = await this.instance.methods.isMember(this.accounts[0]).call();
+            const balance = await this.web3.eth.getBalance(this.instance.options.address);
+            const isOwner = this.accounts[0]===owner;
+
             this.setState({
                 loaded: true,
+                balance: balance,
+                isMember: isMember,
                 status: fromIntToStatus(status),
                 owner: owner,
                 goal: goal,
                 minimunContribution: minimunContribution,
-                membersCount: membersCount
+                membersCount: membersCount,
+                isOwner: isOwner
             });
         } catch (error) {
             alert(
@@ -50,19 +78,78 @@ class NavBar extends React.Component {
             );
             console.error(error);
         }
-    };
+  };
+
+
 
   render() {
               return (<Row className="container-info"> 
-                        <SideBarCampaignInfo/>
+                         <Col lg={3} className="user_side_menu">
+                          <ul>
+                            <Button className="invisible_button" 
+                            onClick={() => {
+                              this.change_active("general_data");
+                            }}>
+                              <li id="general_data" className="menu_user_li">
+                                Datos Generales
+                              </li>
+                            </Button>
+                            <Button className="invisible_button"
+                            onClick={() => {
+                              this.change_active("progress");
+                            }}>
+                              <li id="progress" className="menu_user_li">
+                                Avances
+                              </li>
+                            </Button>
+                            <Button className="invisible_button"
+                            onClick={() => {
+                              this.change_active("proposals");
+                            }}>
+                              <li id="proposals" className="menu_user_li">
+                                Pedidos de presupuesto
+                              </li>
+                            </Button>
+                            <Button className="invisible_button"
+                             onClick={() => {
+                              this.change_active("destruct_proposals");
+                            }}>
+                              <li id="destruct_proposals" className="menu_user_li">
+                                Pedidos de baja
+                              </li>
+                            </Button>
+                          </ul>
+                        </Col>
 
-                        {this.state.loaded && <DisplayContent data={{
-                          status: this.state.status,
-                          owner: this.state.owner,
-                          goal: this.state.goal,
-                          minimunContribution: this.state.minimunContribution,
-                          membersCount: this.state.membersCount,
-                        }}/>}
+                        {                        
+                        this.state.loaded  &&
+                        <Col className="display-content" lg={9}>
+                          <DisplayContent
+                          data={{ 
+                            status: this.state.status,
+                            owner: this.state.owner,
+                            goal: this.state.goal,
+                            minimunContribution: this.state.minimunContribution,
+                            membersCount: this.state.membersCount,
+                            isMember: this.state.isMember,
+                            balance: this.state.balance,
+                            isOwner: this.state.isOwner
+                          }}/>
+
+                          <div id="progress_container" style={{display: "none"}}>
+                            PROGRESS
+                          </div>
+
+                          <div id="proposals_container" style={{display: "none"}}>
+                            PROPOSALS
+                          </div>
+
+                          <div id="destruct_proposals_container" style={{display: "none"}}>
+                            DESTRUCT PROPOSALS
+                          </div>
+                        </Col>
+                                           
+                        }
 
                         {!this.state.loaded && <div> Loading Web3, accounts, and Crowdfounding contract... </div>}
     

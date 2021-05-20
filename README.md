@@ -12,7 +12,7 @@ El problema que surge en la comunidad del crowdfunding es el uso de las platafor
 </p>
 
 <h3> Objetivo </h3>
-<p> Desarrollar una prueba de concepto de una plataforma de crowdfunding sobre la blockchain de Ethereum aprovechando la ventajas que posee esta tecnología para no transferir los fondos de una sola vez al autor del proyecto y permitir que los colaboradores participen activamente del desarrollo de la campaña y puedan recuperar lo que quede de fondos en caso de considerarlo necesario. Basandose en las siguientes premisas: <br>
+<p> Desarrollar una versión inicial de una plataforma de crowdfunding sobre la blockchain de Ethereum aprovechando la ventajas que posee esta tecnología para no transferir los fondos de una sola vez al autor del proyecto y permitir que los colaboradores participen activamente del desarrollo de la campaña y puedan recuperar lo que quede de fondos en caso de considerarlo necesario. Basandose en las siguientes premisas: <br>
 
 <ul>
   <li> Una vez terminada la etapa de colaboración, los fondos recaudados se quedan en el contrato inteligente que representa a la campaña de crowdfunding.</li>

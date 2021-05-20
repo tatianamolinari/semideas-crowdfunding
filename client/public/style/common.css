@@ -88,11 +88,31 @@ ul {
     color: white;
 }
 
-.campaign-info{
+.campaign-info {
     padding: 3em;
     text-align: left;
     height:85vh;
     overflow-y:scroll;
+}
+
+.proposal-info {
+    padding: 3em;
+    text-align: left;
+    height:85vh;
+    overflow-y:scroll;
+}
+
+.proposal-info .title {
+    font-family: "DMSans-Regular";
+    padding-bottom: 2px;
+    border-bottom: 2px solid #478e97;
+}
+
+.proposal-info .description {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    font-size: 1em;
+
 }
 
 .campaign-info .name {

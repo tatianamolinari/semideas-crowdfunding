@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Badge } from "react-bootstrap";
+import { Badge } from "react-bootstrap";
 import { fromStatusToBadgeClass } from "../utils/utils.js"
 
 import ImagesDetail from "./ImagesDetail.js";
@@ -10,8 +10,7 @@ class DisplayContent extends React.Component {
     const badge_status = fromStatusToBadgeClass(this.props.data.status);
     //const a = false;
     const images = ["/images/prueba/prueba1.jpg","/images/prueba/prueba2.jpg","/images/prueba/prueba3.jpg","/images/prueba/prueba4.jpg"]
-    const descripcion = "Esta descripcion es mockeada porque todavía no agregamos el resto de los datos a IPFS. \n La idea es que se vea de una manera linda, ordenada, y que si es largo se pueda hacer scroll. Por ahora esta esto para mostrar y pongo fotos de gatitos porque me encantan."
-
+    const descripcion = "Lorem ipsum dolor sit amet consectetur adipiscing elit quis, condimentum odio class etiam justo euismod orci, lobortis cras aptent mauris nullam semper senectus. Etiam ligula malesuada sapien magna tincidunt scelerisque ridiculus vel, aenean aliquam arcu eget facilisis placerat cubilia nibh purus, eleifend mi sociis ad vitae nam tempor. Imperdiet arcu parturient libero suscipit accumsan erat convallis velit metus bibendum taciti, auctor neque felis per augue in maecenas vulputate enim. Montes senectus urna eros accumsan lobortis cras ante convallis lacus, volutpat ullamcorper platea fermentum morbi class hac laoreet pretium sagittis, luctus cursus pellentesque interdum sed nullam porta est. Morbi mattis tincidunt ligula ad blandit per varius vulputate lobortis, nam curae urna netus bibendum a non aenean, consequat ut nascetur mi viverra lectus ultrices dis. A magnis molestie ultrices suscipit euismod litora fames volutpat erat vehicula venenatis mattis neque nam interdum, tincidunt orci condimentum augue natoque magna libero arcu dui taciti mus sed hendrerit class."
     return (  <div className="campaign-info" id="general_data_container">            
                 <h3 className="name"> Este titulo está mockeado </h3>
                 <ImagesDetail images={images}/>

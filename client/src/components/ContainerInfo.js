@@ -7,8 +7,9 @@ import getWeb3 from "../getWeb3";
 import { fromIntToStatus, getValuesFromHash } from "../utils/utils.js"
 
 import DisplayContent from "./DisplayContent.js"
+import DisplayProposals from "./proposals/DisplayProposals.js"
 
-class NavBar extends React.Component {
+class ContainerInfo extends React.Component {
 
   state = {
     active: this.props.active,
@@ -140,9 +141,8 @@ class NavBar extends React.Component {
                             PROGRESS
                           </div>
 
-                          <div id="proposals_container" style={{display: "none"}}>
-                            PROPOSALS
-                          </div>
+                          <DisplayProposals/>
+
 
                           <div id="destruct_proposals_container" style={{display: "none"}}>
                             DESTRUCT PROPOSALS
@@ -157,4 +157,4 @@ class NavBar extends React.Component {
   }
 }
 
-export default NavBar;
+export default ContainerInfo;

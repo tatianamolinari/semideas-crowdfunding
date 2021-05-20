@@ -29,7 +29,6 @@ contract CrowdFundingCampaing {
         Status status;
     }
 
-
     /* Storage */
 
     Status public status;
@@ -214,7 +213,7 @@ contract CrowdFundingCampaing {
 
     /** @dev Function to get the data of the campaing
      */
-    function getCampaingInfo() public view returns (address, Status, uint, uint, uint) {
+    function getCampaingInfo() public view returns (address, Status, uint, uint, uint ) {
         return (owner, status, goal, minimunContribution, membersCount);
     } 
 

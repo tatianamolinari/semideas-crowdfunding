@@ -36,6 +36,18 @@ body {
 
 }
 
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+ul.vertical-center {
+    height: 100%;
+}
+
 .container_img {
     height: 100%;
     width: auto;
@@ -48,6 +60,12 @@ body {
     width: 100%;
     text-align: inherit;
     text-align: center;
+    font-size: 1.2em;
+}
+
+.user_side_menu .invisible_button {
+    height: 25%;
+
 }
 
 .invisible_button:focus {
@@ -65,8 +83,13 @@ ul {
 }
   
 .menu_user_li {
-    padding: 3em;
+    padding-top: 3.5em;
+    height: 100%;
     border-bottom: 1px solid #ddd;
+}
+
+.menu_user_li.last{
+    border-bottom: 0;
 }
   
 .menu_user_li_active {
@@ -102,29 +125,48 @@ ul {
     overflow-y:scroll;
 }
 
+.proposal-item-list {
+    transition: all 0.3s ease-out;
+    margin-bottom: 2em;
+}
+
+.proposal-item-list:hover {
+    cursor: pointer;
+    position: relative;
+    z-index: 999;
+    transform: scale(1.1);
+}
+
+
 .proposal-info .title {
     font-family: "DMSans-Regular";
     padding-bottom: 2px;
     border-bottom: 2px solid #478e97;
+    font-size: 2em !important;
+}
+
+h5 {
+
+    font-size: 1.25em !important;
 }
 
 .proposal-info .description {
     margin-top: 2em;
     margin-bottom: 2em;
-    font-size: 1em;
-
+    font-size: 1em !important
 }
 
 .campaign-info .name {
     font-family: "DMSans-Regular";
     padding-bottom: 2px;
     border-bottom: 2px solid #478e97;
+    font-size: 2em !important
 }
 
 .campaign-info .description {
     margin-top: 2em;
     margin-bottom: 2em;
-    font-size: 1em;
+    font-size: 1em !important;
 
 }
 
@@ -160,16 +202,28 @@ hr {
     text-align: right;
 }
 
+.aling-right {
+    text-align: right;
+}
+
+.aling-left {
+    text-align: left;
+}
+
+.proposal-footer {
+    margin :2em !important;
+}
+
 .normal-button {
     background-color: #0c6069;
     color: #fff;
     font-family: "DMSans-Regular";
     padding: 1em;
-    padding-bottom: 0.5em;
-    padding-top: 0.5em;
+    padding-bottom: 0.6em;
+    padding-top: 0.6em;
     border-bottom-right-radius: 20px;
     border-top-left-radius: 20px;
-    font-size: 1em;
+    font-size: 1.10em;
     margin: 1.5em;
     border-width: 0;
 }
@@ -197,6 +251,11 @@ hr {
     color: white;
 }
 
+.badge-active {
+    background-color: #65bd9f;
+    color: white;
+}
+
 @font-face {
     font-family: 'DMSans-Regular';
     src: url('/fonts/DMSans-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
@@ -209,4 +268,7 @@ hr {
     src: url('/fonts/MoonTime-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
     url('webfont.svg#svgFontName') format('svg');
     /* Legacy iOS */
+}
+.ui.dimmer {
+    background-color: rgb(0 0 0 / 80%) !important ; 
 }

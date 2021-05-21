@@ -1,9 +1,10 @@
 import React from "react";
-import { Col, Row, Container } from "react-bootstrap";
-import { Button } from "semantic-ui-react";
+import { Col, Row } from "react-bootstrap";
+import {Dimmer, Loader }  from 'semantic-ui-react';
 
-import CrowdFundingCampaing from "../contracts/CrowdFundingCampaing.json";
 import getWeb3 from "../getWeb3";
+import CrowdFundingCampaing from "../contracts/CrowdFundingCampaing.json";
+
 import { fromIntToStatus, getValuesFromHash } from "../utils/utils.js"
 
 import DisplayContent from "./DisplayContent.js"
@@ -64,6 +65,7 @@ class ContainerInfo extends React.Component {
 
             this.setState({
                 loaded: true,
+                instance: this.instance,
                 balance: balance,
                 isMember: isMember,
                 status: fromIntToStatus(status),
@@ -86,39 +88,39 @@ class ContainerInfo extends React.Component {
   render() {
               return (<Row className="container-info"> 
                          <Col lg={3} className="user_side_menu">
-                          <ul>
-                            <Button className="invisible_button" 
+                          <ul className="vertical-center">
+                            <button className="invisible_button" 
                             onClick={() => {
                               this.change_active("general_data");
                             }}>
                               <li id="general_data" className="menu_user_li">
                                 Datos Generales
                               </li>
-                            </Button>
-                            <Button className="invisible_button"
+                            </button>
+                            <button className="invisible_button"
                             onClick={() => {
                               this.change_active("progress");
                             }}>
                               <li id="progress" className="menu_user_li">
                                 Avances
                               </li>
-                            </Button>
-                            <Button className="invisible_button"
+                            </button>
+                            <button className="invisible_button"
                             onClick={() => {
                               this.change_active("proposals");
                             }}>
                               <li id="proposals" className="menu_user_li">
                                 Pedidos de presupuesto
                               </li>
-                            </Button>
-                            <Button className="invisible_button"
+                            </button>
+                            <button className="invisible_button"
                              onClick={() => {
                               this.change_active("destruct_proposals");
                             }}>
-                              <li id="destruct_proposals" className="menu_user_li">
+                              <li id="destruct_proposals" className="menu_user_li last">
                                 Pedidos de baja
                               </li>
-                            </Button>
+                            </button>
                           </ul>
                         </Col>
 
@@ -141,7 +143,11 @@ class ContainerInfo extends React.Component {
                             PROGRESS
                           </div>
 
-                          <DisplayProposals/>
+                          <DisplayProposals
+                          instance={this.instance}
+                          isMember={this.state.isMember}
+                          isOwner={this.state.isOwner}
+                          active="proposals_list"/>
 
 
                           <div id="destruct_proposals_container" style={{display: "none"}}>
@@ -151,7 +157,13 @@ class ContainerInfo extends React.Component {
                                            
                         }
 
-                        {!this.state.loaded && <div> Loading Web3, accounts, and Crowdfounding contract... </div>}
+                        {!this.state.loaded && 
+                        <Dimmer active>
+                        <h1> Aún no hay pedidos de presupuesto para mostrar. </h1>
+  
+                          <Loader size='large' inline>Cargando...</Loader>
+                        </Dimmer>
+                        }
     
                       </Row>);
   }

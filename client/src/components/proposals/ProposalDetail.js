@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge } from "react-bootstrap";
-import { fromStatusToBadgeClass, fromIntToStatus } from "../../utils/utils.js"
+import { fromStatusToBadgeClass, fromIntToStatus } from "../../helpers/utils.js"
 
 class ProposalDetail extends React.Component {
 

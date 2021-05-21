@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import NavBar from "./components/NavBar.js";
-import ContainerInfo from "./components/ContainerInfo.js"
+import ContainerInfo from "./components/campaign/ContainerInfo.js"
 
 import "./App.css";
 

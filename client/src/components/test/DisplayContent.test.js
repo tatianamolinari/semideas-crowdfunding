@@ -3,7 +3,7 @@ import {render, within} from "@testing-library/react";
 import '@testing-library/jest-dom/extend-expect';
 
 
-import DisplayContent from "./DisplayContent";
+import DisplayContent from "../campaign/DisplayContent";
 
 let getByTestId, queryByTestId;
 

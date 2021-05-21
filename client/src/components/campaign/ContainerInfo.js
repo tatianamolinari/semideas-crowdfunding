@@ -2,13 +2,13 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import {Dimmer, Loader }  from 'semantic-ui-react';
 
-import getWeb3 from "../getWeb3";
-import CrowdFundingCampaing from "../contracts/CrowdFundingCampaing.json";
+import getWeb3 from "../../getWeb3";
+import CrowdFundingCampaing from "../../contracts/CrowdFundingCampaing.json";
 
-import { fromIntToStatus, getValuesFromHash } from "../utils/utils.js"
+import { fromIntToStatus, getValuesFromHash } from "../../helpers/utils.js"
 
 import DisplayContent from "./DisplayContent.js"
-import DisplayProposals from "./proposals/DisplayProposals.js"
+import DisplayProposals from "../proposals/DisplayProposals.js"
 
 class ContainerInfo extends React.Component {
 

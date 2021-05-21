@@ -8,7 +8,7 @@ class ImagesDetail extends React.Component {
     const images =  this.props.images.slice(0, 3).map(src_image => {
       i++;
       return (
-        <Col key={i} lg={4}> <img src={src_image} alt="" className="photos" /> </Col>
+        <Col key={i} lg={4}> <img data-testid="campaign-photo" src={src_image} alt="" className="photos" /> </Col>
       );
     });
 

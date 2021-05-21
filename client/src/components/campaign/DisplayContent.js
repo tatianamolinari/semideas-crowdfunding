@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "react-bootstrap";
 
-import { fromStatusToBadgeClass } from "../utils/utils.js";
+import { fromStatusToBadgeClass } from "../../helpers/utils.js";
 
 import ImagesDetail from "./ImagesDetail.js";
 
@@ -29,7 +29,7 @@ class DisplayContent extends React.Component {
                
                 { (!this.props.data.isMember) && (!this.props.data.isOwner)
                   &&  
-                  <div className="contribute-row" data-testid="contrbution-row">
+                  <div className="contribute-row" data-testid="contribution-row">
                      <button className="normal-button">Quiero contribuir</button>
                   </div> }
 

@@ -1,45 +1,65 @@
-import React from "react";
-import { Row, Col, Modal, Container, Button } from "react-bootstrap";
+import React, {useState} from "react";
+import { Modal, Col, Form } from "react-bootstrap";
 
-class ContributeModal extends React.Component {
+function ContributeModal(params) {
+  const [show, setShow] = useState(false);
 
-  render() {
-    
-    return (   <Modal aria-labelledby="contained-modal-title-vcenter">
-                    <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Using Grid in Modal
-                    </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className="show-grid">
-                    <Container>
-                        <Row>
-                        <Col xs={12} md={8}>
-                            .col-xs-12 .col-md-8
-                        </Col>
-                        <Col xs={6} md={4}>
-                            .col-xs-6 .col-md-4
-                        </Col>
-                        </Row>
+  const contract = params.instance;
+  const minimunContribution = params.minimunContribution;
 
-                        <Row>
-                        <Col xs={6} md={4}>
-                            .col-xs-6 .col-md-4
-                        </Col>
-                        <Col xs={6} md={4}>
-                            .col-xs-6 .col-md-4
-                        </Col>
-                        <Col xs={6} md={4}>
-                            .col-xs-6 .col-md-4
-                        </Col>
-                        </Row>
-                    </Container>
-                    </Modal.Body>
-                    <Modal.Footer>
-                    <Button >Close</Button>
-                    </Modal.Footer>
-                </Modal>);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const contribuir = () =>  {
+      console.log("contribuir");
+      console.log(contract);
+      console.log(minimunContribution);
   }
+
+  return (
+    <div>
+      <button 
+      className="normal-button"
+      onClick={handleShow}>
+            Quiero contribuir
+        </button>
+
+      <Modal show={show} onHide={handleClose}
+      aria-labelledby="contained-modal-title-vcenter"
+      centered>
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">Contribuir con la campaña</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <Form>
+                <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Contribuir con:</Form.Label>
+                    <Form.Control type="email" placeholder="Valor" />
+                    <Form.Text className="text-muted">
+                    *la cantidad debe estar en wei.
+                    </Form.Text>
+                </Form.Group>
+            </Form>
+        </Modal.Body>
+        <Modal.Footer className="footer-buttons">
+            <Col lg={6} className="aling-left">
+                <button 
+                    className="normal-button" 
+                    onClick={handleClose}>
+                    Cerrar
+                </button>
+            </Col>
+            <Col lg={6} className="aling-right">
+                <button 
+                    className="normal-button" 
+                    onClick={contribuir}>
+                    Contribuir
+                </button>
+            </Col>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
 }
 
 export default ContributeModal;

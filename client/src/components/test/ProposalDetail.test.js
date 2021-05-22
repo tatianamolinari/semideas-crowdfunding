@@ -35,6 +35,6 @@ it("Check ProposalDetail description render", () => {
 it("Check ProposalDetail valor render", () => {
 
     const { getByText } = within(getByTestId('fecha_creacion'));
-    expect(getByText('Fecha de creación 11/02/2019')).toBeInTheDocument();
+    expect(getByText('11/02/2019')).toBeInTheDocument();
 
 });

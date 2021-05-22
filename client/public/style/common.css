@@ -246,6 +246,11 @@ hr {
     outline-offset: none !important;
 }
 
+.footer-buttons {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
 .badge-created {
     background-color: #0c6069;
     color: white;

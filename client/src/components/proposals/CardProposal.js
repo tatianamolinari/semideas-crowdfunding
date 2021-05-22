@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Card, Icon } from 'semantic-ui-react'
-import { Col } from "react-bootstrap";
 //import { fromStatusToBadgeClass } from "../utils/utils.js"
 
 

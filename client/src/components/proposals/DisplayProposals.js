@@ -81,12 +81,12 @@ class DisplayProposals extends React.Component {
 
     return (  <div className="proposal-info" id="proposals_container" style={{display: "none"}}>            
                 
-                { this.state.active=="proposals_list" && proposal_nodes.length>0 &&
+                { this.state.active==="proposals_list" && proposal_nodes.length>0 &&
                 <Row  id="proposals_list">
                 {proposal_nodes}                
                 </Row> }
 
-                { this.state.active=="proposals_list" && proposal_nodes.length==0 &&
+                { this.state.active==="proposals_list" && proposal_nodes.length===0 &&
                 <div>  
                     <h1> Aún no hay pedidos de presupuesto para mostrar. </h1>
                     <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
@@ -95,7 +95,7 @@ class DisplayProposals extends React.Component {
                 }
                 
                 
-                { this.state.active=="proposals_detail" &&
+                { this.state.active==="proposals_detail" &&
                 <div  id="proposals_detail">
                   <ProposalDetail
                   index_proposal={this.state.proposal_data.index_proposal}

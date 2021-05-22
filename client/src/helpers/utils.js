@@ -1,3 +1,8 @@
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function fromIntToStatus(string_number) {
     //enum Status { CREATED, APPROVED, DISAPPROVED, ACTIVE, DESTROYED }
     var status = "";
@@ -71,4 +76,4 @@ function bytes32toString(toParse) {
 }*/
 
 
-export { fromIntToStatus, fromStatusToBadgeClass, getValuesFromHash };
+export { fromIntToStatus, fromStatusToBadgeClass, getValuesFromHash, sleep };

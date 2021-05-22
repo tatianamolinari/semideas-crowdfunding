@@ -51,12 +51,12 @@ class ProposalDetail extends React.Component {
 
     return (  <div className="proposal-detail">            
                 <h3 className="title" data-testid="titulo"> {this.props.title} </h3>
-                <p className="aling-right" data-testid="fecha_creacion"> Fecha de creación {this.props.proposal_date}</p>
+                <p className="aling-right"> Fecha de creación <span data-testid="fecha_creacion">{this.props.proposal_date}</span></p>
                 <h5 data-testid="estado"> Estado: <Badge variant={badge_status}> { this.state.proposal_data.status } </Badge> </h5>
                 <p className="description" data-testid="descripcion"> {this.props.description} </p>
                 <hr/>
-                <div data-testid="valor"> Fondos a retirar: { this.state.proposal_data.value } wei. </div>
-                <div data-testid="destinatario"> Destinatario: { this.state.proposal_data.recipient }. </div> 
+                <div> Fondos a retirar: <span data-testid="valor">{ this.state.proposal_data.value }</span> wei. </div>
+                <div> Destinatario: <span data-testid="destinatario">{ this.state.proposal_data.recipient }</span>. </div> 
               </div>);
   }
 }

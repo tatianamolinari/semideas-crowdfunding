@@ -25,7 +25,7 @@ beforeEach(() => {
 it("Check DisplayContent goal render", () => {
 
     const { getByText } = within(getByTestId('goal'));
-    expect(getByText('Para que esta campaña comience se deben recaudar 50 wei o más.')).toBeInTheDocument();
+    expect(getByText('50')).toBeInTheDocument();
 
 
 });
@@ -33,21 +33,21 @@ it("Check DisplayContent goal render", () => {
 it("Check DisplayContent balance render", () => {
 
     const { getByText } = within(getByTestId('balance'));
-    expect(getByText('Contriobuciones totales: 25 wei.')).toBeInTheDocument();
+    expect(getByText('25')).toBeInTheDocument();
 
 });
 
 it("Check DisplayContent minimunContribution render", () => {
 
     const { getByText } = within(getByTestId('minimunContribution'));
-    expect(getByText('La contribución mínima es de 5 wei.')).toBeInTheDocument();
+    expect(getByText('5')).toBeInTheDocument();
 
 });
 
 it("Check DisplayContent owner render", () => {
 
     const { getByText } = within(getByTestId('owner'));
-    expect(getByText('Autor: 0xDF0fd73D8e1539290a73073d466c3a933Ca895D5.')).toBeInTheDocument();
+    expect(getByText('0xDF0fd73D8e1539290a73073d466c3a933Ca895D5')).toBeInTheDocument();
 
 });
 

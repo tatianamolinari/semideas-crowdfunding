@@ -115,18 +115,18 @@ class ContainerInfo extends React.Component {
                             </button>
                             <button className="invisible_button"
                             onClick={() => {
-                              this.change_active("progress");
-                            }}>
-                              <li id="progress" className="menu_user_li">
-                                Avances
-                              </li>
-                            </button>
-                            <button className="invisible_button"
-                            onClick={() => {
                               this.change_active("proposals");
                             }}>
                               <li id="proposals" className="menu_user_li">
                                 Pedidos de presupuesto
+                              </li>
+                            </button>
+                            <button className="invisible_button"
+                            onClick={() => {
+                              this.change_active("progress");
+                            }}>
+                              <li id="progress" className="menu_user_li">
+                                Avances
                               </li>
                             </button>
                             <button className="invisible_button"

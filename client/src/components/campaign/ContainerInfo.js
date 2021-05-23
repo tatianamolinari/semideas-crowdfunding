@@ -9,6 +9,7 @@ import { fromIntToStatus, getValuesFromHash, sleep } from "../../helpers/utils.j
 
 import DisplayContent from "./DisplayContent.js"
 import DisplayProposals from "../proposals/DisplayProposals.js"
+import DisplayProgressUpdates from "../progressUpdates/DisplayProgressUpdates"
 
 class ContainerInfo extends React.Component {
 
@@ -155,9 +156,9 @@ class ContainerInfo extends React.Component {
                             isOwner: this.state.isOwner
                           }}/>
 
-                          <div id="progress_container" style={{display: "none"}}>
-                            PROGRESS
-                          </div>
+                          <DisplayProgressUpdates
+                          instance={this.instance}
+                          active="progress_updates_list"/> 
 
                           <DisplayProposals
                           instance={this.instance}

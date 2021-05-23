@@ -63,6 +63,10 @@ ul.vertical-center {
     font-size: 1.2em;
 }
 
+.see-more-button .header {
+    font-size: 1.28em !important;
+}
+
 .user_side_menu .invisible_button {
     height: 25%;
 
@@ -259,6 +263,10 @@ hr {
 .badge-active {
     background-color: #65bd9f;
     color: white;
+}
+
+.div-clickleable {
+    cursor: pointer;
 }
 
 @font-face {

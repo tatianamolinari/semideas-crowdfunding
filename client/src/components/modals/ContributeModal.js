@@ -20,11 +20,13 @@ function ContributeModal(params) {
     <div>
       <button 
       className="normal-button"
-      onClick={handleShow}>
+      onClick={handleShow}
+      data-testid="cuntributionButton">
             Quiero contribuir
-        </button>
+      </button>
 
       <Modal show={show} onHide={handleClose}
+      data-testid="contributionModal"
       aria-labelledby="contained-modal-title-vcenter"
       centered>
         <Modal.Header closeButton>
@@ -34,9 +36,9 @@ function ContributeModal(params) {
             <Form>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Contribuir con:</Form.Label>
-                    <Form.Control type="email" placeholder="Valor" />
+                    <Form.Control type="email" placeholder="Valor en wei" />
                     <Form.Text className="text-muted">
-                    *la cantidad debe estar en wei.
+                    *el valor debe ser mayor al mínimo que es <span data-testid="minimunContribution">{minimunContribution}</span>.
                     </Form.Text>
                 </Form.Group>
             </Form>

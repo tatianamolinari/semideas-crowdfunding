@@ -16,7 +16,7 @@ class ProgressUpdateDetail extends React.Component {
                 <Row>
                 <div>
                 { images.length > 0 &&
-                  <Col lg={5} className="image-container-left">
+                  <Col lg={5} className="image-container-left" data-testid="images">
                     <CarrouselImages images={images}/>
                   </Col>
                 }

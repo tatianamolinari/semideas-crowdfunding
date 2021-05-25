@@ -12,6 +12,7 @@ class CarrouselImages extends React.Component {
         itemsCarrousel.push(
             <Carousel.Item key={index}>
                 <img
+                data-testid="carousel-image"
                 className="d-block w-100"
                 src={image}
                 alt="progressImage"

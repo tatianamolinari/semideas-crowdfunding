@@ -98,7 +98,8 @@ ul {
 }
   
 .menu_user_li_active {
-    padding: 3em;
+    padding-top: 3.5em;
+    height: 100%;
     border-bottom: 1px solid #ddd;
     background: #0c6069;
     color: white;

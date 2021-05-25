@@ -99,6 +99,10 @@ contract CrowdFundingCampaing {
      */
     event campaingCreated(bytes32 indexed _ipfshash);
 
+    /** @dev Emitted when a new person contributes with the campaign.
+     */
+    event newContribution();
+
     /** @dev Emitted when the author creates a proposal to free founds.
      *  @param _ipfshash The url hash of the proposal data stored in IPFS.
      */
@@ -123,6 +127,7 @@ contract CrowdFundingCampaing {
         require(msg.value >= minimunContribution, "The contribution is insuficient");
         contributions[msg.sender] = msg.value;
         membersCount++;
+        emit newContribution();
     }
 
     /** @dev Allow only owner to change the status of the campaing from CREATED to ACTIVE.

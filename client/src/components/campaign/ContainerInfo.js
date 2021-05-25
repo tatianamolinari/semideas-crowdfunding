@@ -47,7 +47,6 @@ class ContainerInfo extends React.Component {
             this.accounts = await this.web3.eth.getAccounts();
             this.networkId = await this.web3.eth.net.getId();
 
-            console.log(!CrowdFundingCampaing.networks[this.networkId]);
             if (!CrowdFundingCampaing.networks[this.networkId]){
               this.setState({
                 loaded: true,
@@ -109,7 +108,7 @@ class ContainerInfo extends React.Component {
                             onClick={() => {
                               this.change_active("general_data");
                             }}>
-                              <li id="general_data" className="menu_user_li">
+                              <li id="general_data" className="menu_user_li_active">
                                 Datos Generales
                               </li>
                             </button>
@@ -145,6 +144,7 @@ class ContainerInfo extends React.Component {
                         <Col className="display-content" lg={9}>
                           <DisplayContent
                           instance={this.instance}
+                          web3={this.web3}
                           data={{ 
                             status: this.state.status,
                             owner: this.state.owner,

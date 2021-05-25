@@ -40,7 +40,8 @@ class DisplayContent extends React.Component {
                   <div className="contribute-row" data-testid="contribution-row">
                      <ContributeModal 
                       instance={this.props.instance}
-                      minimunContribution={this.props.data.minimunContribution}/>
+                      minimunContribution={this.props.data.minimunContribution}
+                      web3={this.props.web3}/>
                   </div> }
 
               </div>);

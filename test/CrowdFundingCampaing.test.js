@@ -61,7 +61,13 @@ contract("CrowdFundingCampaing Test", async accounts => {
         let notIsMember = await campaing.isMember(memberAccount);
         expect(notIsMember).to.be.equal(false);
 
-        await campaing.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") });
+        const tx = await campaing.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") });
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+
+        const log = logs[0];
+        expect(log.event).to.equal('newContribution'); 
 
         let nowIsMember = await campaing.isMember(memberAccount);
         expect(nowIsMember).to.be.equal(true);

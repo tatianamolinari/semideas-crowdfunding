@@ -18,36 +18,42 @@ function ContributeModal(params) {
   const contribuir = async () =>  {
 
     if (value >= minimunContribution){
- 
+      console.log("1");
       try {
+        console.log("2");
         let accounts = await web3.eth.getAccounts();
+        console.log("2b");
         if(accounts.length===0)
         {
           console.log("Para contribuir debes haber iniciado sesión en la wallet de metamask.");
         }
         else {
+          console.log("3");
           let gasprice = await web3.eth.getGasPrice();
           await instance.methods.contribute().send({ from: accounts[0], gas: gasprice, value: value })     
           .on('error', function(error){ 
-          
+            console.log("error 1");
             if (error["code"] === 4001)
             {
+              console.log("error b1");
               console.log("Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.");
             }
           });
-          console.log("aaaaaaaaaaa");
+
+          console.log("sin error");
         }
       }
       catch(error)  {
-        console.log("errorrrrr");
-        console.log(error);
+        console.log("error catch 1");
       }
+      console.log("sin ningun error");
     }
     else {
 
       console.log("no se puede")
 
     }
+    console.log("fuera de if")
   }
 
   return (

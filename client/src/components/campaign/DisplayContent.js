@@ -10,9 +10,7 @@ class DisplayContent extends React.Component {
 
   state = {
     active: this.props.active,
-    loaded: false,
-    error: false,
-    error_msj: "",
+    loaded: false
   };
 
   render() {
@@ -30,7 +28,7 @@ class DisplayContent extends React.Component {
                 <p className="description"> {descripcion} </p>
                 <hr/>
                 <div> Para que esta campaña comience se deben recaudar <span data-testid="goal">{ this.props.data.goal }</span> wei o más. </div>
-                <div> Contriobuciones totales: <span data-testid="balance">{ this.props.data.balance }</span> wei. </div>
+                <div> Contribuciones totales: <span data-testid="balance">{ this.props.data.balance }</span> wei. </div>
                 <div> La contribución mínima es de <span data-testid="minimunContribution">{ this.props.data.minimunContribution }</span> wei.</div> 
                 <div> Autor: <span data-testid="owner">{ this.props.data.owner }</span>. </div>   
                 <div> Cantidad de miembros contribuyentes: <span data-testid="membersCount">{ this.props.data.membersCount }</span>. </div>

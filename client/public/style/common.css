@@ -278,6 +278,16 @@ hr {
     padding-bottom: 1em !important;
 }
 
+.message-modal-error .modal-content {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+}
+
+.message-modal-error .modal-content .normal-button {
+    margin: 1em;
+    font-size: 1em;
+}
+
 @font-face {
     font-family: 'DMSans-Regular';
     src: url('/fonts/DMSans-Regular.ttf') format('truetype'), /* Safari, Android, iOS */

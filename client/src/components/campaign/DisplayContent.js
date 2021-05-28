@@ -39,7 +39,8 @@ class DisplayContent extends React.Component {
                      <ContributeModal 
                       instance={this.props.instance}
                       minimunContribution={this.props.data.minimunContribution}
-                      web3={this.props.web3}/>
+                      web3={this.props.web3}
+                      contributeLoading={false}/>
                   </div> }
 
               </div>);

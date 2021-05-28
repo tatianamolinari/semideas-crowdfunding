@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import { Modal, Col, Form } from "react-bootstrap";
+import { Message, Button } from "semantic-ui-react";
 import MessageModal from "../modals/MessageModal"
 import CrowdFundingCampaing from "../../contracts/CrowdFundingCampaing.json";
 
@@ -13,7 +14,8 @@ class ContributeModal extends React.Component {
     web3: this.props.web3,
     minimunContribution: this.props.minimunContribution,
     showMessage: false,
-    message: ""
+    message: "",
+    contributeLoading: this.props.contributeLoading
   };
 
   contribuir = async() =>  {
@@ -42,13 +44,13 @@ class ContributeModal extends React.Component {
             if (error["code"] === 4001)
             {
               const msg = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
-              component.setState({ message: msg, showMessage:true});
+              component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
               console.log(msg);
             }
             else if (receipt.cumulativeGasUsed === receipt.gasUsed) {
               
               const msg = "Te quedaste sin gas"
-              component.setState({ message: msg, showMessage:true});
+              //component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
               console.log(msg);
 
               console.log(receipt.cumulativeGasUsed);
@@ -57,7 +59,7 @@ class ContributeModal extends React.Component {
             }
             else {
               const msg = "error desconocido"
-              component.setState({ message: msg, showMessage:true});
+              //component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
               console.log(msg);
               console.log(error);
 
@@ -105,15 +107,15 @@ class ContributeModal extends React.Component {
         showMessage={this.state.showMessage}
         handleMessageClose={this.handleMessageClose}
         message={this.state.message}
-        title="Hubo un error al contribuir" />
+        title={this.state.title} />
       
-
-        <button 
+        <Button
+        loading={this.state.contributeLoading}
         className="normal-button"
         onClick={this.handleShow}
         data-testid="cuntributionButton">
               Quiero contribuir
-        </button>
+        </Button>
         <Modal show={this.state.show} onHide={this.handleClose}
         data-testid="contributionModal"
         aria-labelledby="contained-modal-title-vcenter"
@@ -141,7 +143,7 @@ class ContributeModal extends React.Component {
                   </button>
               </Col>
               <Col lg={6} className="aling-right">
-                  <button 
+                  <button
                       className="normal-button" 
                       onClick={this.contribuir}>
                       Contribuir

@@ -221,33 +221,34 @@ hr {
 }
 
 .normal-button {
-    background-color: #0c6069;
-    color: #fff;
-    font-family: "DMSans-Regular";
-    padding: 1em;
-    padding-bottom: 0.6em;
-    padding-top: 0.6em;
-    border-bottom-right-radius: 20px;
-    border-top-left-radius: 20px;
-    font-size: 1.10em;
-    margin: 1.5em;
-    border-width: 0;
+    background-color: #0c6069 !important;
+    color: #fff !important;
+    font-family: "DMSans-Regular" !important;
+    padding: 1em !important;
+    padding-bottom: 0.6em !important;
+    padding-top: 0.6em !important;
+    border-bottom-right-radius: 20px !important;
+    border-top-left-radius: 20px !important;
+    font-size: 1.10em !important;
+    margin: 1.5em !important;
+    border-width: 0 !important;
+    font-weight: 400 !important;
 }
 
 .normal-button:hover {
-    background: #1a95ac;
-    text-decoration: none;
-    color: white;
+    background: #1a95ac !important;
+    text-decoration: none !important;
+    color: white !important;
 }
 
 .normal-button:visited {
-    text-decoration: none;
-    color: white;
+    text-decoration: none !important;
+    color: white !important;
 }
 
 .normal-button:focus {
-    text-decoration: none;
-    color: white;
+    text-decoration: none !important;
+    color: white !important;
     outline: none !important;
     outline-offset: none !important;
 }

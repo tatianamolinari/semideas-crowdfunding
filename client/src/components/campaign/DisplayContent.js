@@ -20,17 +20,25 @@ class DisplayContent extends React.Component {
 
   actualizeContributionInfo = async() =>  {
 
-    let accounts = await this.state.web3.eth.getAccounts();
-    const isMember = await this.state.instance.methods.isMember(accounts[0]).call();
-    const balance = await this.state.web3.eth.getBalance(this.state.instance.options.address);
-    const membersCount = await this.state.instance.methods.membersCount().call();
+    try {
+      let accounts = await this.state.web3.eth.getAccounts();
+      const isMember = await this.state.instance.methods.isMember(accounts[0]).call();
+      const balance = await this.state.web3.eth.getBalance(this.state.instance.options.address);
+      const membersCount = await this.state.instance.methods.membersCount().call();
 
-    console.log(isMember);
-    console.log(balance);
-    console.log(membersCount);
-    
-    this.setState({ isMember: isMember, balance: balance, membersCount: membersCount});
-  }
+      console.log(isMember);
+      console.log(balance);
+      console.log(membersCount);
+      
+      this.setState({ isMember: isMember, balance: balance, membersCount: membersCount});
+    }
+    catch (error) {
+      alert(
+          `Failed to load web3, accounts, or contract. Check console for details.`,
+      );
+      console.error(error);
+    }
+}
 
   componentDidMount = async() => {
 

@@ -289,6 +289,12 @@ hr {
     font-size: 1em;
 }
 
+.title-error-msj {
+    margin-top: 1em !important;
+    margin: auto;
+    width: 60%;
+}
+
 @font-face {
     font-family: 'DMSans-Regular';
     src: url('/fonts/DMSans-Regular.ttf') format('truetype'), /* Safari, Android, iOS */

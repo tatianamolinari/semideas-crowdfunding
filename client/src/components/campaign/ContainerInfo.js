@@ -5,11 +5,13 @@ import {Dimmer, Loader }  from 'semantic-ui-react';
 import getWeb3 from "../../getWeb3";
 import CrowdFundingCampaing from "../../contracts/CrowdFundingCampaing.json";
 
-import { fromIntToStatus, getValuesFromHash, sleep } from "../../helpers/utils.js"
+import { fromIntToStatus, getValuesFromHash } from "../../helpers/utils.js"
 
-import DisplayContent from "./DisplayContent.js"
-import DisplayProposals from "../proposals/DisplayProposals.js"
+import DisplayContent from "./DisplayContent"
+import DisplayProposals from "../proposals/DisplayProposals"
 import DisplayProgressUpdates from "../progressUpdates/DisplayProgressUpdates"
+import ErrorMessage from "../errors/ErrorMessage"
+import MenuButton from "../buttons/MenuButton"
 
 class ContainerInfo extends React.Component {
 
@@ -51,7 +53,7 @@ class ContainerInfo extends React.Component {
               this.setState({
                 loaded: true,
                 error: true,
-                error_msj: "Por favor, verifica en Metamask haber seleccionado la red correcta"
+                error_msj: "Por favor, verifica en Metamask haber seleccionado la red correcta."
               });
             }
             else {
@@ -104,38 +106,47 @@ class ContainerInfo extends React.Component {
               return (<Row className="container-info"> 
                          <Col lg={3} className="user_side_menu">
                           <ul className="vertical-center">
-                            <button className="invisible_button" 
-                            onClick={() => {
-                              this.change_active("general_data");
-                            }}>
-                              <li id="general_data" className="menu_user_li_active">
-                                Datos Generales
-                              </li>
-                            </button>
-                            <button className="invisible_button"
-                            onClick={() => {
-                              this.change_active("proposals");
-                            }}>
-                              <li id="proposals" className="menu_user_li">
-                                Pedidos de presupuesto
-                              </li>
-                            </button>
-                            <button className="invisible_button"
-                            onClick={() => {
-                              this.change_active("progress");
-                            }}>
-                              <li id="progress" className="menu_user_li">
-                                Avances
-                              </li>
-                            </button>
-                            <button className="invisible_button"
-                             onClick={() => {
-                              this.change_active("destruct_proposals");
-                            }}>
-                              <li id="destruct_proposals" className="menu_user_li last">
-                                Pedidos de baja
-                              </li>
-                            </button>
+
+                            <MenuButton 
+                              disabledValue={this.state.error}
+                              changeActive={() => {
+                                this.change_active("general_data");
+                              }}
+                              idName="general_data"
+                              classLi="menu_user_li_active"
+                              textButton="Datos Generales"
+                            />
+
+                            <MenuButton 
+                              disabledValue={this.state.error}
+                              changeActive={() => {
+                                this.change_active("proposals");
+                              }}
+                              idName="proposals"
+                              classLi="menu_user_li"
+                              textButton="Pedidos de presupuesto"
+                            />
+
+                            <MenuButton 
+                              disabledValue={this.state.error}
+                              changeActive={() => {
+                                this.change_active("progress");
+                              }}
+                              idName="progress"
+                              classLi="menu_user_li"
+                              textButton="Avances"
+                            />
+
+                            <MenuButton 
+                              disabledValue={this.state.error}
+                              changeActive={() => {
+                                this.change_active("destruct_proposals");
+                              }}
+                              idName="destruct_proposals"
+                              classLi="menu_user_li"
+                              textButton="Pedidos de baja"
+                            />
+
                           </ul>
                         </Col>
 
@@ -182,11 +193,12 @@ class ContainerInfo extends React.Component {
                         </Dimmer>
                         }
 
-                      {this.state.error && 
-                       <Col className="display-content" lg={9}>
-                        <h1> {this.state.error_msj} </h1>
-                        </Col>
-                        }
+                      { this.state.error && 
+                       
+                          <Col className="display-content" lg={9}>
+                            <ErrorMessage error_msj={this.state.error_msj}/>
+                          </Col>
+                      }
     
                       </Row>);
   }

@@ -1,8 +1,7 @@
-import React, {useState} from "react";
+import React from "react";
 import { Modal, Col, Form } from "react-bootstrap";
-import { Message, Button } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 import MessageModal from "../modals/MessageModal"
-import CrowdFundingCampaing from "../../contracts/CrowdFundingCampaing.json";
 
 
 class ContributeModal extends React.Component {

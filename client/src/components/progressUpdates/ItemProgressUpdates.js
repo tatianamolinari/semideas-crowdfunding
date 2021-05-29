@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Item, Icon, Image } from 'semantic-ui-react'
+import { Item, Icon } from 'semantic-ui-react'
 
 
 class ItemProgressUpdates extends React.Component {

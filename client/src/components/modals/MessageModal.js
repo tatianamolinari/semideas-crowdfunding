@@ -1,6 +1,5 @@
-import React, {useState} from "react";
-import { Modal, Col, Form } from "react-bootstrap";
-import CrowdFundingCampaing from "../../contracts/CrowdFundingCampaing.json";
+import React from "react";
+import { Modal, Col } from "react-bootstrap";
 
 
 class MessageModal extends React.Component {

@@ -34,10 +34,11 @@ class ContributeModal extends React.Component {
 
           let gasprice = await this.state.web3.eth.getGasPrice();
           let gas = await this.state.instance.methods.contribute().estimateGas({ from: accounts[0], value: this.state.value });
-
-          let transaction = this.state.instance.methods.contribute().send({ from: accounts[0], gasPrice: gasprice, gas: gas, value: this.state.value }) ;    
-          
+          this.setState({ contributeLoading: true});
           var component = this;
+          
+          let transaction = this.state.instance.methods.contribute().send({ from: accounts[0], gasPrice: gasprice, gas: gas, value: this.state.value }) ;
+          this.handleClose();
 
           transaction.on('error', function(error, receipt){ 
             
@@ -45,12 +46,14 @@ class ContributeModal extends React.Component {
             {
               const msg = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
               component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
+              component.setState({ contributeLoading: false});
               console.log(msg);
             }
             else if (receipt.cumulativeGasUsed === receipt.gasUsed) {
               
-              const msg = "Te quedaste sin gas"
-              //component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
+              const msg = "La operación llevó más gas que el que pusiste como límite."
+              component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
+              component.setState({ contributeLoading: false});
               console.log(msg);
 
               console.log(receipt.cumulativeGasUsed);
@@ -71,9 +74,11 @@ class ContributeModal extends React.Component {
 
             if(receipt.status === '0x1' || receipt.status === 1){
               console.log('Transaction Success')
+              component.setState({ contributeLoading: false});
           }
           else {
               console.log('Transaction Failed')
+              component.setState({ contributeLoading: false});
               }
           });
 

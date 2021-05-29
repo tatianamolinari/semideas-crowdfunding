@@ -49,7 +49,15 @@ class ContributeModal extends React.Component {
               component.setState({ contributeLoading: false});
               console.log(msg);
             }
-            else if (receipt.cumulativeGasUsed === receipt.gasUsed) {
+            else if(error["code"] === -32603) {
+              const msg = "Error de nonce: El nonce de la cuenta elegida y de la transacción son diferentes.";
+              component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
+              component.setState({ contributeLoading: false});
+              console.log(msg);
+              console.log(error);
+            }
+
+            else if (receipt && (receipt.cumulativeGasUsed === receipt.gasUsed)) {
               
               const msg = "La operación llevó más gas que el que pusiste como límite."
               component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
@@ -72,7 +80,7 @@ class ContributeModal extends React.Component {
           transaction.on('receipt', receipt => {
             console.log('reciept', receipt);
 
-            if(receipt.status === '0x1' || receipt.status === 1){
+            if(receipt.status === '0x1' || receipt.status === 1  || receipt.status===true ){
               console.log('Transaction Success');
               component.setState({ contributeLoading: false});
               component.setState({ message: "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!", showMessage: true, title: "Bienvenido al proyecto"});
@@ -91,6 +99,8 @@ class ContributeModal extends React.Component {
       }
     }
     else {
+      console.log(this.state.value);
+      console.log(this.state.minimunContribution);
       const msg = "La contribución debe ser mayor a la mínima";
       this.setState({ message: msg, showMessage:true});
     }

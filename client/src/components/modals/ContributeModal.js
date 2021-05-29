@@ -75,6 +75,7 @@ class ContributeModal extends React.Component {
             if(receipt.status === '0x1' || receipt.status === 1){
               console.log('Transaction Success')
               component.setState({ contributeLoading: false});
+              component.setState({ message: "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!", showMessage: true, title: "Bienvenido al proyecto"});
           }
           else {
               console.log('Transaction Failed')

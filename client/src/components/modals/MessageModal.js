@@ -16,9 +16,9 @@ class MessageModal extends React.Component {
         aria-labelledby="contained-modal-title-vcenter"
         centered>
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">{this.props.title}</Modal.Title>
+            <Modal.Title id="contained-modal-title-vcenter" data-testid="title">{this.props.title}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body data-testid="message">
               {this.props.message}
           </Modal.Body>
           <Modal.Footer className="footer-buttons">

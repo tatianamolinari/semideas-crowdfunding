@@ -150,11 +150,17 @@ contract("CrowdFundingCampaing Test", async accounts => {
 
     it("Owner set campaing active", async() => {
 
-        let campaing = this.campaing;
+        let campaing = this.campaing; 
 
         expect(campaing.status()).to.eventually.be.a.bignumber.equal(new BN(0));
 
-        await campaing.setActive();
+        const tx = await campaing.setActive();
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+
+        const log = logs[0];
+        expect(log.event).to.equal('changeStatusCampaign');
 
         expect(campaing.status()).to.eventually.be.a.bignumber.equal(new BN(3));
 

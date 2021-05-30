@@ -118,11 +118,13 @@ class ContributeModal extends React.Component {
 
       <div>
 
+        { this.state.showMessage &&
         <MessageModal
         showMessage={this.state.showMessage}
         handleMessageClose={this.handleMessageClose}
         message={this.state.message}
         title={this.state.title} />
+        }
       
         <Button
         loading={this.state.contributeLoading}
@@ -152,15 +154,18 @@ class ContributeModal extends React.Component {
           <Modal.Footer className="footer-buttons">
               <Col lg={6} className="aling-left">
                   <button 
+                      id="cerrar"
                       className="normal-button" 
-                      onClick={this.handleClose}>
+                      onClick={this.handleClose}
+                      data-testid="cancelButton">
                       Cerrar
                   </button>
               </Col>
               <Col lg={6} className="aling-right">
                   <button
                       className="normal-button" 
-                      onClick={this.contribuir}>
+                      onClick={this.contribuir}
+                      data-testid="aceptContributionButton">
                       Contribuir
                   </button>
               </Col>

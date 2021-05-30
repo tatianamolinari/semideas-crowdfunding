@@ -118,6 +118,10 @@ contract CrowdFundingCampaing {
      */
     event progressUpdate(bytes32 indexed _ipfshash);
 
+    /** @dev Emitted when the status of the campaign change.
+     */
+    event changeStatusCampaign();
+
 
     /* Functions */
 
@@ -136,6 +140,8 @@ contract CrowdFundingCampaing {
         
         require(address(this).balance >= goal,"The contributions are insufficient");
         status = Status.ACTIVE;
+
+        emit changeStatusCampaign();
          
     }
 

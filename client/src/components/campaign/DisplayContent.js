@@ -64,6 +64,7 @@ class DisplayContent extends React.Component {
 
   }
 
+
   render() {
     const badge_status = fromStatusToBadgeClass(this.props.data.status);
 

@@ -77,8 +77,6 @@ class ContainerInfo extends React.Component {
               const balance = await this.web3.eth.getBalance(this.instance.options.address);
               const isOwner = this.accounts[0]===owner;
 
-              //await sleep(2500);
-
               this.setState({
                   loaded: true,
                   instance: this.instance,

@@ -185,7 +185,7 @@ class ContainerInfo extends React.Component {
 
                         {!this.state.loaded && 
                         <Dimmer active>
-                        <h1> Obteniendo la información de la campaña... </h1>
+                        <h1 data-testid="info-loading"> Obteniendo la información de la campaña... </h1>
   
                           <Loader size='large' inline>Cargando...</Loader>
                         </Dimmer>
@@ -193,7 +193,7 @@ class ContainerInfo extends React.Component {
 
                       { this.state.error && 
                        
-                          <Col className="display-content" lg={9}>
+                          <Col data-testid="info-error" className="display-content" lg={9}>
                             <ErrorMessage error_msj={this.state.error_msj}/>
                           </Col>
                       }

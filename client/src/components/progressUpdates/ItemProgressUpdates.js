@@ -12,14 +12,15 @@ class ItemProgressUpdates extends React.Component {
                 <Item>
                   <Item.Image size='small' src='/images/prueba/prueba1.jpg' />
                   <Item.Content onClick={this.props.onClick} className="div-clickleable">
-                    <Item.Header>{this.props.title}</Item.Header>
+                    <Item.Header data-testid="title">{this.props.title}</Item.Header>
                     <Item.Meta>Description</Item.Meta>
-                    <Item.Description>
+                    <Item.Description data-testid="description">
                       {this.props.description.substring(0,200)+"..."}
                     </Item.Description>
                     <Item.Extra>
                       <div className="aling-right">
-                        <Icon name='calendar alternate outline' />{this.props.progress_update_date}
+                        <Icon name='calendar alternate outline' />
+                          <span data-testid="progress_date">{this.props.progress_update_date}</span>
                       </div>
                     </Item.Extra>
                     <hr/>

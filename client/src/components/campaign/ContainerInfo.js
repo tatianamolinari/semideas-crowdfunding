@@ -13,6 +13,11 @@ import DisplayProgressUpdates from "../progressUpdates/DisplayProgressUpdates"
 import ErrorMessage from "../errors/ErrorMessage"
 import MenuButton from "../buttons/MenuButton"
 
+const { create } = require('ipfs-http-client')
+
+// connect to a different API
+const ipfs = create('https://ipfs.infura.io/ipfs/')
+
 class ContainerInfo extends React.Component {
 
   state = {
@@ -45,6 +50,38 @@ class ContainerInfo extends React.Component {
 
     componentDidMount = async() => {
         try {
+
+          const input = [
+            {
+              'id': '0x10',
+              'date': '14.07.2018'
+            },
+            {
+              'id': '0x20',
+              'date': '14.07.2018'
+            },
+            {
+              'id': '0x30',
+              'date': '14.17.2019'
+            }
+          ]
+          
+          const result = await ipfs.add(Buffer.from(JSON.stringify(input)));
+          console.log(result);
+
+         const validCID = "QmZwXEkC6Xg1RMSPNFch3J3NTBYPkb2UksoSjBDQBavJos";
+          
+         ipfs.get(validCID, function (err, files) {
+          if (err) {
+            console.log(err);
+          }
+          files.forEach((file) => {
+            console.log(file.path);
+            console.log(file.content.toString('utf8'));
+          });
+        });
+          
+
             this.web3 = await getWeb3();
             this.accounts = await this.web3.eth.getAccounts();
             this.networkId = await this.web3.eth.net.getId();

@@ -13,8 +13,10 @@ import DisplayProgressUpdates from "../progressUpdates/DisplayProgressUpdates"
 import ErrorMessage from "../errors/ErrorMessage"
 import MenuButton from "../buttons/MenuButton"
 
+const uint8ArrayToString = require('uint8arrays/to-string')
+
 const { create } = require('ipfs-http-client')
-const ipfs = create('https://ipfs.infura.io:5001')
+const ipfs_client = create('https://ipfs.infura.io:5001')
 
 class ContainerInfo extends React.Component {
 
@@ -64,7 +66,7 @@ class ContainerInfo extends React.Component {
             }
           ]
           
-          const  hash  =  await ipfs.add(JSON.stringify(input));
+          const  hash  =  await ipfs_client.add(JSON.stringify(input));
           console.log(hash);
           console.log(`https://ipfs.infura.io/ipfs/${hash}`);
           const cidv1 = hash.cid.toV1().toBaseEncodedString('base32');
@@ -73,23 +75,21 @@ class ContainerInfo extends React.Component {
           const url_cid = `https://${cidv1}.ipfs.dweb.link`;
           console.log(url_cid);
 
-          //const result = await ipfs.get(cidv1);
-          //console.log(result);
-          console.log("Antes del 1er get");
+          for await (const file of ipfs_client.get(`/ipfs/${hash.path}`)) {
+            console.log(file.type, file.path)
           
-          ipfs.get(hash.path, function (err, files) {
-            if (err) {
-              console.log(err);
+            if (!file.content) continue;
+          
+            const content = []
+          
+            for await (const chunk of file.content) {
+              content.push(chunk)
             }
-            files.forEach((file) => {
-              console.log(file.path);
-              console.log(file.content.toString('utf8'));
-            });
-          });
-
-          console.log("Después del 1er get");
-          const data = ipfs.cat(`/ipfs/${hash.path}`);
-          console.log(data);
+          
+            console.log(uint8ArrayToString(content[0]));
+          }
+          
+    
 
 
           //const url = `https://ipfs.infura.io/ipfs/${hash.path}`

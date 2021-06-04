@@ -75,7 +75,7 @@ class ContainerInfo extends React.Component {
 
           //const result = await ipfs.get(cidv1);
           //console.log(result);
-          console.log("Llegamos");
+          console.log("Antes del 1er get");
           
           ipfs.get(hash.path, function (err, files) {
             if (err) {
@@ -87,7 +87,7 @@ class ContainerInfo extends React.Component {
             });
           });
 
-          console.log("hola");
+          console.log("Después del 1er get");
           const data = ipfs.cat(`/ipfs/${hash.path}`);
           console.log(data);
 

@@ -14,8 +14,6 @@ import ErrorMessage from "../errors/ErrorMessage"
 import MenuButton from "../buttons/MenuButton"
 
 const { create } = require('ipfs-http-client')
-
-// connect to a different API
 const ipfs = create('https://ipfs.infura.io:5001')
 
 class ContainerInfo extends React.Component {
@@ -66,18 +64,46 @@ class ContainerInfo extends React.Component {
             }
           ]
           
-          const  hash  =  await ipfs.add(Buffer.from(JSON.stringify(input)));
-          console.log(hash.path);
+          const  hash  =  await ipfs.add(JSON.stringify(input));
+          console.log(hash);
+          console.log(`https://ipfs.infura.io/ipfs/${hash}`);
+          const cidv1 = hash.cid.toV1().toBaseEncodedString('base32');
+          console.log(cidv1);
 
-          const url = `https://ipfs.infura.io/ipfs/${hash.path}`
-          console.log(url);
+          const url_cid = `https://${cidv1}.ipfs.dweb.link`;
+          console.log(url_cid);
+
+          //const result = await ipfs.get(cidv1);
+          //console.log(result);
+          console.log("Llegamos");
+          
+          ipfs.get(hash.path, function (err, files) {
+            if (err) {
+              console.log(err);
+            }
+            files.forEach((file) => {
+              console.log(file.path);
+              console.log(file.content.toString('utf8'));
+            });
+          });
+
+          console.log("hola");
+          const data = ipfs.cat(`/ipfs/${hash.path}`);
+          console.log(data);
+
+
+          //const url = `https://ipfs.infura.io/ipfs/${hash.path}`
+          //console.log(url);
+
+          //const result = await ipfs.cat(url);
+          //console.log(result);
 
           
-
+            console.log("Antes de web3");
             this.web3 = await getWeb3();
+            console.log("Después de web3");
             this.accounts = await this.web3.eth.getAccounts();
             this.networkId = await this.web3.eth.net.getId();
-            console.log("aaaaaaaa");
 
             if (!CrowdFundingCampaing.networks[this.networkId]){
               this.setState({

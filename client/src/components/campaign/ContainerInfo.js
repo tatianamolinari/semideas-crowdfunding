@@ -16,7 +16,7 @@ import MenuButton from "../buttons/MenuButton"
 const { create } = require('ipfs-http-client')
 
 // connect to a different API
-const ipfs = create('https://ipfs.infura.io/ipfs/')
+const ipfs = create('https://ipfs.infura.io:5001')
 
 class ContainerInfo extends React.Component {
 
@@ -66,25 +66,18 @@ class ContainerInfo extends React.Component {
             }
           ]
           
-          const result = await ipfs.add(Buffer.from(JSON.stringify(input)));
-          console.log(result);
+          const  hash  =  await ipfs.add(Buffer.from(JSON.stringify(input)));
+          console.log(hash.path);
 
-         const validCID = "QmZwXEkC6Xg1RMSPNFch3J3NTBYPkb2UksoSjBDQBavJos";
-          
-         ipfs.get(validCID, function (err, files) {
-          if (err) {
-            console.log(err);
-          }
-          files.forEach((file) => {
-            console.log(file.path);
-            console.log(file.content.toString('utf8'));
-          });
-        });
+          const url = `https://ipfs.infura.io/ipfs/${hash.path}`
+          console.log(url);
+
           
 
             this.web3 = await getWeb3();
             this.accounts = await this.web3.eth.getAccounts();
             this.networkId = await this.web3.eth.net.getId();
+            console.log("aaaaaaaa");
 
             if (!CrowdFundingCampaing.networks[this.networkId]){
               this.setState({

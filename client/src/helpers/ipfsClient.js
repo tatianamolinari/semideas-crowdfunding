@@ -1,0 +1,46 @@
+
+const uint8ArrayToString = require('uint8arrays/to-string')
+
+const { create } = require('ipfs-http-client')
+const ipfs_client = create('https://ipfs.infura.io:5001')
+
+
+
+async function addJson(json_value)
+{
+    const res = await ipfs_client.add(JSON.stringify(json_value));
+    return res;
+}
+
+function getIPFSUrlFromPath(path)
+{
+    return `https://ipfs.infura.io/ipfs/${path}`;
+}
+
+function getCIDv1FromCID(cid)
+{
+    const cidv1 = cid.toV1().toBaseEncodedString('base32');
+    return cidv1;
+}
+
+function getIPFSUrlFromCID(cidv1)
+{
+   return `https://${cidv1}.ipfs.dweb.link`;
+}
+
+
+async function getJsonFromIPFSHash(hash)
+{
+    const content = [];
+    for await (const file of ipfs_client.get(`/ipfs/${hash}`)) {
+        console.log(file.type, file.path)
+        if (!file.content) continue;
+        for await (const chunk of file.content) {
+            content.push(chunk)
+        }
+    }
+    return uint8ArrayToString(content[0]);
+}
+
+
+export { addJson, getIPFSUrlFromPath, getCIDv1FromCID, getIPFSUrlFromCID, getJsonFromIPFSHash };

@@ -6,6 +6,7 @@ import getWeb3 from "../../getWeb3";
 import CrowdFundingCampaing from "../../contracts/CrowdFundingCampaing.json";
 
 import { fromIntToStatus, getValuesFromHash } from "../../helpers/utils.js"
+import { addJson, getIPFSUrlFromPath, getCIDv1FromCID, getIPFSUrlFromCID, getJsonFromIPFSHash } from "../../helpers/ipfsClient.js"
 
 import DisplayContent from "./DisplayContent"
 import DisplayProposals from "../proposals/DisplayProposals"
@@ -13,10 +14,6 @@ import DisplayProgressUpdates from "../progressUpdates/DisplayProgressUpdates"
 import ErrorMessage from "../errors/ErrorMessage"
 import MenuButton from "../buttons/MenuButton"
 
-const uint8ArrayToString = require('uint8arrays/to-string')
-
-const { create } = require('ipfs-http-client')
-const ipfs_client = create('https://ipfs.infura.io:5001')
 
 class ContainerInfo extends React.Component {
 
@@ -51,57 +48,33 @@ class ContainerInfo extends React.Component {
     componentDidMount = async() => {
         try {
 
-          const input = [
-            {
-              'id': '0x10',
-              'date': '14.07.2018'
-            },
-            {
-              'id': '0x20',
-              'date': '14.07.2018'
-            },
-            {
-              'id': '0x30',
-              'date': '14.17.2019'
-            }
-          ]
-          
-          const  hash  =  await ipfs_client.add(JSON.stringify(input));
-          console.log(hash);
-          console.log(`https://ipfs.infura.io/ipfs/${hash}`);
-          const cidv1 = hash.cid.toV1().toBaseEncodedString('base32');
-          console.log(cidv1);
-
-          const url_cid = `https://${cidv1}.ipfs.dweb.link`;
-          console.log(url_cid);
-
-          for await (const file of ipfs_client.get(`/ipfs/${hash.path}`)) {
-            console.log(file.type, file.path)
-          
-            if (!file.content) continue;
-          
-            const content = []
-          
-            for await (const chunk of file.content) {
-              content.push(chunk)
-            }
-          
-            console.log(uint8ArrayToString(content[0]));
-          }
-          
-    
+            const input = [
+              {
+                'id': '0x10',
+                'date': '14.07.2018'
+              },
+              {
+                'id': '0x20',
+                'date': '14.07.2018'
+              },
+              {
+                'id': '0x30',
+                'date': '14.17.2019'
+              }
+            ]
 
 
-          //const url = `https://ipfs.infura.io/ipfs/${hash.path}`
-          //console.log(url);
+            const result = await addJson(input);
+            console.log(result);
 
-          //const result = await ipfs.cat(url);
-          //console.log(result);
+            console.log(getIPFSUrlFromPath(result.path));
+            console.log(getCIDv1FromCID(result.cid));
+            console.log(getIPFSUrlFromCID(getCIDv1FromCID(result.cid)));
 
-          
-            console.log("Antes de web3");
+            const original = await getJsonFromIPFSHash(result.path);
+            console.log(original);
+
             this.web3 = await getWeb3();
-            console.log("Después de web3");
             this.accounts = await this.web3.eth.getAccounts();
             this.networkId = await this.web3.eth.net.getId();
 

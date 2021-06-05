@@ -6,7 +6,7 @@ import getWeb3 from "../../getWeb3";
 import CrowdFundingCampaing from "../../contracts/CrowdFundingCampaing.json";
 
 import { fromIntToStatus, getValuesFromHash } from "../../helpers/utils.js"
-import { addJson, getIPFSUrlFromPath, getCIDv1FromCID, getIPFSUrlFromCID, getJsonFromIPFSHash } from "../../helpers/ipfsClient.js"
+//import { addJson, getIPFSUrlFromPath, getCIDv1FromCID, getIPFSUrlFromCID, getJsonFromIPFSHash } from "../../helpers/ipfsClient.js"
 
 import DisplayContent from "./DisplayContent"
 import DisplayProposals from "../proposals/DisplayProposals"
@@ -63,7 +63,7 @@ class ContainerInfo extends React.Component {
               }
             ]
 
-
+            /*
             const result = await addJson(input);
             console.log(result);
 
@@ -72,7 +72,7 @@ class ContainerInfo extends React.Component {
             console.log(getIPFSUrlFromCID(getCIDv1FromCID(result.cid)));
 
             const original = await getJsonFromIPFSHash(result.path);
-            console.log(original);
+            console.log(original);*/
 
             this.web3 = await getWeb3();
             this.accounts = await this.web3.eth.getAccounts();

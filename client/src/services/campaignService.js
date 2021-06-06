@@ -2,6 +2,7 @@ import getWeb3 from "../getWeb3";
 import CrowdFundingCampaing from "../contracts/CrowdFundingCampaing.json";
 
 import { getValuesFromHash } from "../helpers/utils.js"
+import { stat } from "fs";
 
 
 class CampaignService {
@@ -15,6 +16,10 @@ class CampaignService {
     this.accounts = await this.web3.eth.getAccounts();
     this.networkId = await this.web3.eth.net.getId();
     this.instance = null;
+  }
+
+  async getAccounts(){
+    return (await this.web3.eth.getAccounts());
   }
 
   getFirstAccount(){
@@ -45,7 +50,7 @@ class CampaignService {
     let campaingValues = await this.instance.methods.getCampaingInfo().call();
     let campaingInfo = getValuesFromHash(campaingValues);
              
-    var campaingData = new Object();
+    let campaingData = new Object();
     campaingData.owner = campaingInfo[0];
     campaingData.status = await campaingInfo[1];
     campaingData.goal = campaingInfo[2]
@@ -79,14 +84,11 @@ class CampaignService {
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
-          console.log("conectado");
           console.log(subscriptionId);
       })
       .on('data', function(event){
-          console.log("data");
           actualizeFunction();
-          //component.actualizeContributionInfo();
-          console.log(event); // same results as the optional callback above
+          console.log(event); 
       })
       .on('error', function(error, receipt) {
         console.log("hubo un error");
@@ -96,6 +98,63 @@ class CampaignService {
 
   }
 
+  transactionOnError(error, receipt, statusResponse, resolve)  { 
+    statusResponse.error = true;
+      
+    if (error["code"] === 4001) {
+      statusResponse.errorMsg = "Acción denegada";
+      console.log(statusResponse.errorMsg);
+    }
+    else if(error["code"] === -32603) {
+      statusResponse.errorMsg = "Nonce error";
+    }
+    else if (receipt && (receipt.cumulativeGasUsed === receipt.gasUsed)) {
+      statusResponse.errorMsg = "Gas insuficiente";
+      console.log(receipt.cumulativeGasUsed);
+      console.log(receipt.gasUsed);
+    }
+    else {
+      statusResponse.errorMsg = "Error desconocido"
+      console.log(statusResponse.errorMsg);
+      console.log(error);
+    }
+
+    resolve(statusResponse);
+  }
+
+  transactionOnReipt(receipt, statusResponse, resolve){
+    {
+      console.log('reciept', receipt);
+      if(receipt.status === '0x1' || receipt.status === 1  || receipt.status===true ){
+        console.log('Transaction Success');
+      }
+      else {
+        console.log('Transaction receipt but failed')
+      }
+    }
+    resolve(statusResponse);
+  }
+
+
+  async contribute(value) {
+    let gasprice = await this.web3.eth.getGasPrice();
+    let gas = await this.instance.methods.contribute().estimateGas({ from: this.accounts[0], value: value });      
+    let transaction = this.instance.methods.contribute().send({ from: this.accounts[0], gasPrice: gasprice, gas: gas, value: value }) ;    
+    var service = this;
+
+    var promise = new Promise(function(resolve, reject) {
+
+    let statusResponse = new Object();
+    statusResponse.error = false;
+    statusResponse.errorMsg = "";
+
+    transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+    transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+
+    });
+
+    return promise;
+  }
 }
 
 export const campaignService = new CampaignService()

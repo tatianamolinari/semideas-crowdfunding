@@ -19,10 +19,10 @@ class ContributeModal extends React.Component {
 
   contribuir = async() =>  {
 
-    console.log(this.state)
     if (this.state.value >= this.state.minimunContribution){
       try {
-        let accounts = await this.state.web3.eth.getAccounts();
+        let accounts = await campaignService.getAccounts();
+
         if(accounts.length===0)
         {
           const mssj = "Para contribuir debes haber iniciado sesión en la wallet de metamask.";
@@ -31,65 +31,39 @@ class ContributeModal extends React.Component {
         }
         else {
 
-          let gasprice = await this.state.web3.eth.getGasPrice();
-          let gas = await this.state.instance.methods.contribute().estimateGas({ from: accounts[0], value: this.state.value });
           this.setState({ contributeLoading: true});
-          var component = this;
-          
-          let transaction = this.state.instance.methods.contribute().send({ from: accounts[0], gasPrice: gasprice, gas: gas, value: this.state.value }) ;
           this.handleClose();
 
-          transaction.on('error', function(error, receipt){ 
-            
-            if (error["code"] === 4001)
-            {
-              const msg = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
-              component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
-              component.setState({ contributeLoading: false});
-              console.log(msg);
-            }
-            else if(error["code"] === -32603) {
-              const msg = "Error de nonce: El nonce de la cuenta elegida y de la transacción son diferentes.";
-              component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
-              component.setState({ contributeLoading: false});
-              console.log(msg);
-              console.log(error);
-            }
+          campaignService.contribute(this.state.value).then((statusResponse) => {
+            let title, message = "";
 
-            else if (receipt && (receipt.cumulativeGasUsed === receipt.gasUsed)) {
-              
-              const msg = "La operación llevó más gas que el que pusiste como límite."
-              component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
-              component.setState({ contributeLoading: false});
-              console.log(msg);
-
-              console.log(receipt.cumulativeGasUsed);
-              console.log(receipt.gasUsed);
-              
+            if (statusResponse.error) {
+              title = "Hubo un error al contribuir";
+              switch (statusResponse.errorMsg) {
+                case "Acción denegada":
+                  message = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
+                  break;
+                case "Nonce error":
+                  message = "Error de nonce: El nonce de la cuenta elegida y de la transacción son diferentes.";
+                  break;
+                case "Gas insuficiente":
+                  message = "La operación llevó más gas que el que pusiste como límite.";
+                  break;
+                default: 
+                  message = "Error desconocido";
+                  break;
+              }
             }
             else {
-              const msg = "error desconocido"
-              //component.setState({ message: msg, showMessage: true, title: "Hubo un error al contribuir"});
-              console.log(msg);
-              console.log(error);
-
+              title = "Bienvenido al proyecto";
+              message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
             }
+
+            this.setState({ contributeLoading: false, 
+                            message: message, 
+                            showMessage: true, 
+                            title: title});
           });
-
-          transaction.on('receipt', receipt => {
-            console.log('reciept', receipt);
-
-            if(receipt.status === '0x1' || receipt.status === 1  || receipt.status===true ){
-              console.log('Transaction Success');
-              component.setState({ contributeLoading: false});
-              component.setState({ message: "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!", showMessage: true, title: "Bienvenido al proyecto"});
-          }
-          else {
-              console.log('Transaction Failed')
-              component.setState({ contributeLoading: false});
-              }
-          });
-
         }
       }
       catch(error)  {

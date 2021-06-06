@@ -2,8 +2,6 @@ import getWeb3 from "../getWeb3";
 import CrowdFundingCampaing from "../contracts/CrowdFundingCampaing.json";
 
 import { getValuesFromHash } from "../helpers/utils.js"
-import { stat } from "fs";
-
 
 class CampaignService {
     

@@ -2,8 +2,6 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import {Dimmer, Loader }  from 'semantic-ui-react';
 
-import getWeb3 from "../../getWeb3";
-
 import { fromIntToStatus } from "../../helpers/utils.js"
 import { ipfsService } from "../../services/ipfsService.js"
 import { campaignService } from "../../services/campaignService.js"
@@ -73,10 +71,6 @@ class ContainerInfo extends React.Component {
 
             const original = await ipfsService.getJsonFromIPFSHash(result.path);
             console.log(original);
-
-            this.web3 = await getWeb3();
-            this.accounts = await this.web3.eth.getAccounts();
-            this.networkId = await this.web3.eth.net.getId();
 
             if (!campaignService.isCorrectNetwork()){
               this.setState({

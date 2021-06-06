@@ -3,9 +3,8 @@ import { Col, Row } from "react-bootstrap";
 import {Dimmer, Loader }  from 'semantic-ui-react';
 
 import getWeb3 from "../../getWeb3";
-import CrowdFundingCampaing from "../../contracts/CrowdFundingCampaing.json";
 
-import { fromIntToStatus, getValuesFromHash } from "../../helpers/utils.js"
+import { fromIntToStatus } from "../../helpers/utils.js"
 import { ipfsService } from "../../services/ipfsService.js"
 import { campaignService } from "../../services/campaignService.js"
 
@@ -87,36 +86,23 @@ class ContainerInfo extends React.Component {
               });
             }
             else {
-            
-              this.instance = await new this.web3.eth.Contract(
-                  CrowdFundingCampaing.abi,
-                  CrowdFundingCampaing.networks[this.networkId] && CrowdFundingCampaing.networks[this.networkId].address,
-              );
-
-              //(owner, status, goal, minimunContribution, membersCount)
-              let campaingValues = await this.instance.methods.getCampaingInfo().call();
-              let campaingInfo = getValuesFromHash(campaingValues);
-              
-              const owner = campaingInfo[0];
-              const status = await campaingInfo[1];
-              const goal = campaingInfo[2]
-              const minimunContribution = campaingInfo[3];
-              const membersCount = campaingInfo[4];
-              
-              const isMember = await this.instance.methods.isMember(this.accounts[0]).call();
-              const balance = await this.web3.eth.getBalance(this.instance.options.address);
-              const isOwner = this.accounts[0]===owner;
+              const instance = await campaignService.setInstance();
+              const campaingInfo = await campaignService.getCampaingInfo();
+              const isMember = await campaignService.getMembership();
+              const balance = await campaignService.getBalance();
+              const actualAccount = await campaignService.getFirstAccount();
+              const isOwner = actualAccount===campaingInfo.owner;
 
               this.setState({
                   loaded: true,
-                  instance: this.instance,
+                  instance: instance,
                   balance: balance,
                   isMember: isMember,
-                  status: fromIntToStatus(status),
-                  owner: owner,
-                  goal: goal,
-                  minimunContribution: minimunContribution,
-                  membersCount: membersCount,
+                  status: fromIntToStatus(campaingInfo.status),
+                  owner: campaingInfo.owner,
+                  goal: campaingInfo.goal,
+                  minimunContribution: campaingInfo.minimunContribution,
+                  membersCount: campaingInfo.membersCount,
                   isOwner: isOwner
               });
             }
@@ -179,11 +165,9 @@ class ContainerInfo extends React.Component {
                         </Col>
 
                         {                        
-                        this.state.loaded  && !this.state.error &&
-                        <Col className="display-content" lg={9}>
+                        this.state.loaded  && !this.state.error && 
+                         <Col className="display-content" lg={9}>
                           <DisplayContent
-                          instance={this.instance}
-                          web3={this.web3}
                           data={{ 
                             status: this.state.status,
                             owner: this.state.owner,
@@ -196,11 +180,11 @@ class ContainerInfo extends React.Component {
                           }}/>
 
                           <DisplayProgressUpdates
-                          instance={this.instance}
+                          instance={this.state.instance}
                           active="progress_updates_list"/> 
 
                           <DisplayProposals
-                          instance={this.instance}
+                          instance={this.state.instance}
                           isMember={this.state.isMember}
                           isOwner={this.state.isOwner}
                           active="proposals_list"/>

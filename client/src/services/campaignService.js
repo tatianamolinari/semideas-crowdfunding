@@ -25,11 +25,20 @@ class CampaignService {
     return CrowdFundingCampaing.networks[this.networkId];
   }
 
+  async getCurrentBlock(){
+    return (await this.web3.eth.getBlockNumber())
+  }
+
   async setInstance() {
     this.instance = await new this.web3.eth.Contract(
       CrowdFundingCampaing.abi,
       CrowdFundingCampaing.networks[this.networkId] && CrowdFundingCampaing.networks[this.networkId].address,
     );
+    return this.instance;
+  }
+
+  getInstance(){
+    return this.instance;
   }
 
   async getCampaingInfo() {
@@ -56,6 +65,35 @@ class CampaignService {
 
   async getBalance(){
     return (await this.web3.eth.getBalance(this.instance.options.address));
+  }
+
+  async getMembersCount(){
+    return (await this.instance.methods.membersCount().call());
+  }
+
+  async suscribeToNewContribution(actualizeFunction){
+
+    const currentBlock = await this.getCurrentBlock();
+
+    this.instance.events.newContribution({
+      fromBlock: currentBlock
+      }, function(error, event){ console.log(event); })
+      .on("connected", function(subscriptionId){
+          console.log("conectado");
+          console.log(subscriptionId);
+      })
+      .on('data', function(event){
+          console.log("data");
+          actualizeFunction();
+          //component.actualizeContributionInfo();
+          console.log(event); // same results as the optional callback above
+      })
+      .on('error', function(error, receipt) {
+        console.log("hubo un error");
+        console.log(error);
+      });
+
+
   }
 
 }

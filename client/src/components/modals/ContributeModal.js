@@ -3,14 +3,14 @@ import { Modal, Col, Form } from "react-bootstrap";
 import { Button } from "semantic-ui-react";
 import MessageModal from "../modals/MessageModal"
 
+import { campaignService } from "../../services/campaignService.js"
+
 
 class ContributeModal extends React.Component {
 
   state = {
     show: false,
     value: '',
-    instance: this.props.instance,
-    web3: this.props.web3,
     minimunContribution: this.props.minimunContribution,
     showMessage: false,
     message: "",

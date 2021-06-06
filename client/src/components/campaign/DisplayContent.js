@@ -2,9 +2,11 @@ import React from "react";
 import { Badge } from "react-bootstrap";
 
 import { fromStatusToBadgeClass } from "../../helpers/utils.js";
+import { campaignService } from "../../services/campaignService.js"
 
 import ImagesDetail from "./ImagesDetail.js";
 import ContributeModal from "../modals/ContributeModal"
+
 
 class DisplayContent extends React.Component {
 
@@ -14,21 +16,14 @@ class DisplayContent extends React.Component {
     isMember: this.props.data.isMember,
     balance: this.props.data.balance,
     membersCount: this.props.data.membersCount,
-    instance: this.props.instance,
-    web3: this.props.web3
   };
 
   actualizeContributionInfo = async() =>  {
 
     try {
-      let accounts = await this.state.web3.eth.getAccounts();
-      const isMember = await this.state.instance.methods.isMember(accounts[0]).call();
-      const balance = await this.state.web3.eth.getBalance(this.state.instance.options.address);
-      const membersCount = await this.state.instance.methods.membersCount().call();
-
-      console.log(isMember);
-      console.log(balance);
-      console.log(membersCount);
+      const isMember = await campaignService.getMembership();
+      const balance = await campaignService.getBalance();
+      const membersCount = await campaignService.getMembersCount();
       
       this.setState({ isMember: isMember, balance: balance, membersCount: membersCount});
     }
@@ -42,26 +37,8 @@ class DisplayContent extends React.Component {
 
   componentDidMount = async() => {
 
-    const component = this;
-    const currentBlock = await this.state.web3.eth.getBlockNumber();
-
-    this.state.instance.events.newContribution({
-      fromBlock: currentBlock
-      }, function(error, event){ console.log(event); })
-      .on("connected", function(subscriptionId){
-          console.log("conectado");
-          console.log(subscriptionId);
-      })
-      .on('data', function(event){
-          console.log("data");
-          component.actualizeContributionInfo();
-          console.log(event); // same results as the optional callback above
-      })
-      .on('error', function(error, receipt) {
-        console.log("hubo un error");
-        console.log(error);
-      });
-
+    const actualizeInfo = async() => {this.actualizeContributionInfo()};
+    await campaignService.suscribeToNewContribution(actualizeInfo);
   }
 
 
@@ -89,9 +66,7 @@ class DisplayContent extends React.Component {
                   &&  
                   <div className="contribute-row" data-testid="contribution-row">
                      <ContributeModal 
-                      instance={this.props.instance}
                       minimunContribution={this.props.data.minimunContribution}
-                      web3={this.state.web3}
                       contributeLoading={false}/>
                   </div> }
 

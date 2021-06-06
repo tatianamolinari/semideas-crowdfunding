@@ -6,7 +6,8 @@ import getWeb3 from "../../getWeb3";
 import CrowdFundingCampaing from "../../contracts/CrowdFundingCampaing.json";
 
 import { fromIntToStatus, getValuesFromHash } from "../../helpers/utils.js"
-//import { addJson, getIPFSUrlFromPath, getCIDv1FromCID, getIPFSUrlFromCID, getJsonFromIPFSHash } from "../../helpers/ipfsClient.js"
+import { ipfsService } from "../../services/ipfsService.js"
+import { campaignService } from "../../services/campaignService.js"
 
 import DisplayContent from "./DisplayContent"
 import DisplayProposals from "../proposals/DisplayProposals"
@@ -63,22 +64,22 @@ class ContainerInfo extends React.Component {
               }
             ]
 
-            /*
-            const result = await addJson(input);
+            
+            const result = await ipfsService.addJson(input);
             console.log(result);
 
-            console.log(getIPFSUrlFromPath(result.path));
-            console.log(getCIDv1FromCID(result.cid));
-            console.log(getIPFSUrlFromCID(getCIDv1FromCID(result.cid)));
+            console.log(ipfsService.getIPFSUrlFromPath(result.path));
+            console.log(ipfsService.getCIDv1FromCID(result.cid));
+            console.log(ipfsService.getIPFSUrlFromCID(ipfsService.getCIDv1FromCID(result.cid)));
 
-            const original = await getJsonFromIPFSHash(result.path);
-            console.log(original);*/
+            const original = await ipfsService.getJsonFromIPFSHash(result.path);
+            console.log(original);
 
             this.web3 = await getWeb3();
             this.accounts = await this.web3.eth.getAccounts();
             this.networkId = await this.web3.eth.net.getId();
 
-            if (!CrowdFundingCampaing.networks[this.networkId]){
+            if (!campaignService.isCorrectNetwork()){
               this.setState({
                 loaded: true,
                 error: true,

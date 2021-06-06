@@ -12,8 +12,7 @@ contract("CrowdFundingCampaing Test", async accounts => {
     const proposalCreatedHash = "0x7465737400000000000000000000000000000000000000000000000000000000";
 
     beforeEach(async() => {
-        this.campaing = await CrowdFundingCampaing.deployed();
-
+        this.campaing = await CrowdFundingCampaing.deployed()
     })
 
     it("Checking CrowdFunding Campaing values from scratch", async() => {
@@ -197,6 +196,9 @@ contract("CrowdFundingCampaing Test", async accounts => {
         const log = logs[0];
         expect(log.event).to.equal('proposalCreated');
         expect(log.args._ipfshash).to.equal(proposalCreatedHash);
+
+        console.log(log.args._ipfshash);
+        console.log(proposalCreatedHash);
 
         expect(campaing.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
 

@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import {Dimmer, Loader }  from 'semantic-ui-react';
 
 import { fromIntToStatus } from "../../helpers/utils.js"
-import { ipfsService } from "../../services/ipfsService.js"
+//import { ipfsService } from "../../services/ipfsService.js"
 import { campaignService } from "../../services/campaignService.js"
 
 import DisplayContent from "./DisplayContent"
@@ -46,6 +46,7 @@ class ContainerInfo extends React.Component {
     componentDidMount = async() => {
         try {
 
+          /*
             const input = [
               {
                 'id': '0x10',
@@ -70,7 +71,7 @@ class ContainerInfo extends React.Component {
             console.log(ipfsService.getIPFSUrlFromCID(ipfsService.getCIDv1FromCID(result.cid)));
 
             const original = await ipfsService.getJsonFromIPFSHash(result.path);
-            console.log(original);
+            console.log(original);*/
 
             if (!campaignService.isCorrectNetwork()){
               this.setState({

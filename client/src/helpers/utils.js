@@ -1,4 +1,6 @@
 
+const bs58 = require('bs58')
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -75,5 +77,15 @@ function bytes32toString(toParse) {
     return toParse.slice(0, toParse.indexOf("\u0000"));
 }*/
 
+function addressToHexBytes(address){
+    var out = bs58.decode(address);
+    var hexBytes = new Buffer(out).toString('hex');
+    return hexBytes;
+}
 
-export { fromIntToStatus, fromStatusToBadgeClass, getValuesFromHash, sleep };
+function hexBytesToAddress(bytes){
+    var out = bs58.encode(new Buffer(bytes, 'hex'));
+    return out;
+}
+
+export { fromIntToStatus, fromStatusToBadgeClass, getValuesFromHash, sleep, addressToHexBytes, hexBytesToAddress };

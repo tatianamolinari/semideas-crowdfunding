@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bs58": "^4.0.1",
     "eth-revert-reason": "^1.0.3",
     "ipfs-http-client": "^50.1.0",
     "react": "16.11.0",

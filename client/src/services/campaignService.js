@@ -14,6 +14,7 @@ class CampaignService {
     this.accounts = await this.web3.eth.getAccounts();
     this.networkId = await this.web3.eth.net.getId();
     this.instance = null;
+    return true;
   }
 
   async getAccounts(){
@@ -24,7 +25,8 @@ class CampaignService {
     return this.accounts[0];
   }
 
-  isCorrectNetwork() {
+  async isCorrectNetwork() {
+    let initialized = await this.init();
     return CrowdFundingCampaing.networks[this.networkId];
   }
 

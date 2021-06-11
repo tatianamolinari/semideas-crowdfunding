@@ -1,4 +1,6 @@
 const path = require("path");
+//const {create} = require('ipfs-http-client');
+
 
 module.exports = {
     // See <http://truffleframework.com/docs/advanced/configuration>

@@ -23,5 +23,10 @@
         "@openzeppelin/test-helpers": "^0.5.11",
         "hardhat": "^2.2.1",
         "openzeppelin-test-helpers": "^0.5.1"
+    },
+    "dependencies": {
+        "esm": "^3.2.25",
+        "ipfs-http-client": "^50.1.1",
+        "web-encoding": "1.1.3"
     }
 }

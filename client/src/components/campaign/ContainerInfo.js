@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import {Dimmer, Loader }  from 'semantic-ui-react';
 
 import { fromIntToStatus, hexBytesToAddress, addressToHexBytes } from "../../helpers/utils.js"
-//import { ipfsService } from "../../services/ipfsService.js"
+import { ipfsService } from "../../services/ipfsService.js"
 import { campaignService } from "../../services/campaignService.js"
 
 import DisplayContent from "./DisplayContent"
@@ -46,7 +46,7 @@ class ContainerInfo extends React.Component {
     componentDidMount = async() => {
         try {
 
-          /*
+          
             const input = [
               {
                 'id': '0x10',
@@ -71,12 +71,13 @@ class ContainerInfo extends React.Component {
             console.log(ipfsService.getIPFSUrlFromCID(ipfsService.getCIDv1FromCID(result.cid)));
 
             const original = await ipfsService.getJsonFromIPFSHash(result.path);
-            console.log(original);*/
+            console.log(original);
 
             console.log(addressToHexBytes("QmWmyoMoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz"));
             console.log(hexBytesToAddress("12207D5A99F603F231D53A4F39D1521F98D2E8BB279CF29BEBFD0687DC98458E7F89"));
 
-            if (!campaignService.isCorrectNetwork()){
+            let correctNetwork = await campaignService.isCorrectNetwork();
+            if (!correctNetwork){
               this.setState({
                 loaded: true,
                 error: true,

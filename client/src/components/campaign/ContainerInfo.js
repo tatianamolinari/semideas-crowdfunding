@@ -78,6 +78,8 @@ class ContainerInfo extends React.Component {
             console.log(hexBytesToAddress("12207D5A99F603F231D53A4F39D1521F98D2E8BB279CF29BEBFD0687DC98458E7F89"));
 
             const correctNetwork = await campaignService.isCorrectNetwork();
+            console.log("-----------------------");
+            console.log(correctNetwork);
             if (!correctNetwork){
               this.setState({
                 loaded: true,

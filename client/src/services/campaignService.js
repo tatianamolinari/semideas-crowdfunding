@@ -57,7 +57,7 @@ class CampaignService {
     campaignData.minimunContribution = campaignInfo[3];
     campaignData.membersCount = campaignInfo[4];
 
-    return ampaignData;
+    return campaignData;
   }
 
   async getMembershipFromAddress(address) {

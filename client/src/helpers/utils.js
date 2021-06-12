@@ -80,13 +80,11 @@ function bytes32toString(toParse) {
 function addressToHexBytes(address){
     const out = bs58.decode(address);
     const hexBytes = new Buffer(out).toString('hex');
-    //console.log(hexBytes);
-    return hexBytes;//.substring(4);
+    return hexBytes.substring(4);
 }
 
 function hexBytesToAddress(bytes){
-    //console.log("1220" + bytes);
-    const out = bs58.encode(new Buffer(bytes, 'hex'));
+    const out = bs58.encode(new Buffer("1220" + bytes, 'hex'));
     return out;
 }
 

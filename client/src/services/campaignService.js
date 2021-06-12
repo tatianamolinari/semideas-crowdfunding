@@ -42,6 +42,14 @@ class CampaignService {
     return this.instance;
   }
 
+  async setInstanceFromAddress(address) {
+    this.instance = await new this.web3.eth.Contract(
+      CrowdFundingCampaign.abi,
+      CrowdFundingCampaign.networks[this.networkId] && address,
+    );
+    return this.instance;
+  }
+
   getInstance(){
     return this.instance;
   }

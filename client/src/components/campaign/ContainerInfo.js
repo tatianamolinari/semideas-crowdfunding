@@ -84,7 +84,7 @@ class ContainerInfo extends React.Component {
               });
             }
             else {
-              const instance = await campaignService.setInstance();
+              const instance = await campaignService.setInstance(); //setInstanceFromAddress("0x1E43Ef8Fe9e98DB1bE1CBf9DDe81EcfC6Ad1B302");
               const campaignInfo = await campaignService.getCampaignInfo();
               const isMember = await campaignService.getMembership();
               const balance = await campaignService.getBalance();

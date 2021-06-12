@@ -1,10 +1,7 @@
 const path = require("path");
-//const {create} = require('ipfs-http-client');
-
 
 module.exports = {
     // See <http://truffleframework.com/docs/advanced/configuration>
-    // to customize your Truffle configuration!
     contracts_build_directory: path.join(__dirname, "client/src/contracts"),
     networks: {
         development: {

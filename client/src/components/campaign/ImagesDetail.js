@@ -4,7 +4,7 @@ import { Row, Col } from "react-bootstrap";
 class ImagesDetail extends React.Component {
 
   renderImages() {
-    var i = 0;
+    let i = 0;
     const images =  this.props.images.slice(0, 3).map(src_image => {
       i++;
       return (

@@ -53,7 +53,7 @@ it("Check item progress update date render", () => {
 
 test('props.onClick is called when div is clicked', () =>{
     const fn = jest.fn();
-    let item = shallow(<ItemProgressUpdates
+    const item = shallow(<ItemProgressUpdates
                         key={1}
                         title={title}
                         description={desc}

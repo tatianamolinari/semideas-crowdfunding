@@ -73,6 +73,7 @@ class ContainerInfo extends React.Component {
             const original = await ipfsService.getJsonFromIPFSHash(result.path);
             console.log(original);
 
+            console.log(addressToHexBytes(result.path));
             console.log(addressToHexBytes("QmWmyoMoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz"));
             console.log(hexBytesToAddress("12207D5A99F603F231D53A4F39D1521F98D2E8BB279CF29BEBFD0687DC98458E7F89"));
 

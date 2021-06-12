@@ -26,7 +26,7 @@ class CampaignService {
   }
 
   async isCorrectNetwork() {
-    let initialized = await this.init();
+    const initialized = await this.init();
     return CrowdFundingCampaing.networks[this.networkId];
   }
 
@@ -47,10 +47,10 @@ class CampaignService {
   }
 
   async getCampaingInfo() {
-    let campaingValues = await this.instance.methods.getCampaingInfo().call();
-    let campaingInfo = getValuesFromHash(campaingValues);
+    const campaingValues = await this.instance.methods.getCampaingInfo().call();
+    const campaingInfo = getValuesFromHash(campaingValues);
              
-    let campaingData = new Object();
+    const campaingData = new Object();
     campaingData.owner = campaingInfo[0];
     campaingData.status = await campaingInfo[1];
     campaingData.goal = campaingInfo[2]
@@ -137,19 +137,19 @@ class CampaignService {
 
 
   async contribute(value) {
-    let gasprice = await this.web3.eth.getGasPrice();
-    let gas = await this.instance.methods.contribute().estimateGas({ from: this.accounts[0], value: value });      
-    let transaction = this.instance.methods.contribute().send({ from: this.accounts[0], gasPrice: gasprice, gas: gas, value: value }) ;    
+    const gasprice = await this.web3.eth.getGasPrice();
+    const gas = await this.instance.methods.contribute().estimateGas({ from: this.accounts[0], value: value });      
+    const transaction = this.instance.methods.contribute().send({ from: this.accounts[0], gasPrice: gasprice, gas: gas, value: value }) ;    
     var service = this;
 
-    var promise = new Promise(function(resolve, reject) {
+    const promise = new Promise(function(resolve, reject) {
 
-    let statusResponse = new Object();
-    statusResponse.error = false;
-    statusResponse.errorMsg = "";
+      const statusResponse = new Object();
+      statusResponse.error = false;
+      statusResponse.errorMsg = "";
 
-    transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-    transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
 
     });
 

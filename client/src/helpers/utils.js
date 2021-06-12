@@ -7,7 +7,7 @@ function sleep(ms) {
 
 function fromIntToStatus(string_number) {
     //enum Status { CREATED, APPROVED, DISAPPROVED, ACTIVE, DESTROYED }
-    var status = "";
+    let status = "";
     switch (string_number) {
         case '0':
             status = "Creada";
@@ -34,7 +34,7 @@ function fromIntToStatus(string_number) {
 }
 
 function fromStatusToBadgeClass(status) {
-    var badge_class = "";
+    let badge_class = "";
     switch (status) {
         case 'Creada':
             badge_class = "created";
@@ -61,9 +61,9 @@ function fromStatusToBadgeClass(status) {
 }
 
 function getValuesFromHash(hashmap) {
-    var array_values = [];
+    const array_values = [];
 
-    for (var key in hashmap) {
+    for (const key in hashmap) {
         array_values.push(hashmap[key]);
     }
     return array_values;
@@ -78,13 +78,15 @@ function bytes32toString(toParse) {
 }*/
 
 function addressToHexBytes(address){
-    var out = bs58.decode(address);
-    var hexBytes = new Buffer(out).toString('hex');
-    return hexBytes;
+    const out = bs58.decode(address);
+    const hexBytes = new Buffer(out).toString('hex');
+    //console.log(hexBytes);
+    return hexBytes;//.substring(4);
 }
 
 function hexBytesToAddress(bytes){
-    var out = bs58.encode(new Buffer(bytes, 'hex'));
+    //console.log("1220" + bytes);
+    const out = bs58.encode(new Buffer(bytes, 'hex'));
     return out;
 }
 

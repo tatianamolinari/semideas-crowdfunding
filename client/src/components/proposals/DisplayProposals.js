@@ -21,9 +21,9 @@ class DisplayProposals extends React.Component {
     const i_proposal = totalProposals - 1 - ((this.state.page-1)*6);
     const last_i = i_proposal - 6;
     console.log(`First i proposal ${i_proposal} & Last i proposal ${last_i} with totalProposals ${totalProposals} - page ${this.state.page} `) 
-    var proposals = []
+    const proposals = []
     
-    for(var i=i_proposal; (i >= 0 && i >= last_i) ; i--){
+    for(let i=i_proposal; (i >= 0 && i >= last_i) ; i--){
       proposals.push(
         {"index_proposal": i,
          "title":`Titulo proposal ${i}`, 
@@ -63,7 +63,7 @@ class DisplayProposals extends React.Component {
 
   render() {
 
-    var proposal_nodes = []
+    let proposal_nodes = []
       for (const [index, proposal] of this.state.proposals.entries()) {
         proposal_nodes.push(
           <Col lg={4} className="invisible_button"

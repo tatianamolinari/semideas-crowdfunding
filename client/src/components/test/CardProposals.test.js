@@ -25,7 +25,7 @@ it("Check CardProposal title render", () => {
 it("Check CardProposal description render", () => {
 
     const { getByText } = within(getByTestId('description'));
-    let desc = "Una descripcion de la proposal que tenga mas que 250 caracteres para poder verificar que lo corte en esa canitdad solo para mostrar. No puede estar todo este texto como descripción si no solamente los primeros 250 caracteres por eso la estoy haciendo larga. Al finnnnnnnn.".substring(0,250)+"..."
+    const desc = "Una descripcion de la proposal que tenga mas que 250 caracteres para poder verificar que lo corte en esa canitdad solo para mostrar. No puede estar todo este texto como descripción si no solamente los primeros 250 caracteres por eso la estoy haciendo larga. Al finnnnnnnn.".substring(0,250)+"..."
     expect(getByText(desc)).toBeInTheDocument();
 
 });

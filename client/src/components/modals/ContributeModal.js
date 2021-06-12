@@ -20,7 +20,7 @@ class ContributeModal extends React.Component {
   contribuir = async() =>  {
     if (parseInt(this.state.value) >= parseInt(this.state.minimunContribution)){
       try {
-        let accounts = await campaignService.getAccounts();
+        const accounts = await campaignService.getAccounts();
 
         if(accounts.length===0)
         {

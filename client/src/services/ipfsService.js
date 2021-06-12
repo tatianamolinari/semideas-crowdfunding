@@ -15,31 +15,26 @@ class IPFSService {
     }
 
 
-    async addJson(json_value)
-    {
+    async addJson(json_value){
         const res = await this.ipfs_client.add(JSON.stringify(json_value));
         return res;
     }
 
-    getIPFSUrlFromPath(path)
-    {
+    getIPFSUrlFromPath(path){
         return `https://ipfs.infura.io/ipfs/${path}`;
     }
 
-    getCIDv1FromCID(cid)
-    {
+    getCIDv1FromCID(cid){
         const cidv1 = cid.toV1().toBaseEncodedString('base32');
         return cidv1;
     }
 
-    getIPFSUrlFromCID(cidv1)
-    {
-    return `https://${cidv1}.ipfs.dweb.link`;
+    getIPFSUrlFromCID(cidv1){
+        return `https://${cidv1}.ipfs.dweb.link`;
     }
 
 
-    async getFileFromIPFSHash(hash)
-    {
+    async getFileFromIPFSHash(hash){
         const content = [];
         for await (const file of this.ipfs_client.get(`/ipfs/${hash}`)) {
             console.log(file.type, file.path)
@@ -51,9 +46,7 @@ class IPFSService {
         return uint8ArrayToString(content[0]);
     }
 
-    async getJsonFromIPFSHash(hash)
-    {
-        
+    async getJsonFromIPFSHash(hash){
         return JSON.parse(await this.getFileFromIPFSHash(hash));
     }
 

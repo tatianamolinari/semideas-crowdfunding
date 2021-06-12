@@ -21,9 +21,9 @@ class DisplayProgressUpdates extends React.Component {
     const i_progress_update = totalProgressUpdates - 1 - ((this.state.page-1)*4);
     const last_i = i_progress_update - 4;
     console.log(`First i progress update ${i_progress_update} & Last i progress update ${last_i} with totalProgressUpdates ${totalProgressUpdates} - page ${this.state.page} `) 
-    var progress_updates = []
+    const progress_updates = []
     
-    for(var i=i_progress_update; (i >= 0 && i >= last_i) ; i--){
+    for(let i=i_progress_update; (i >= 0 && i >= last_i) ; i--){
       progress_updates.push(
         {"index_progress_update": i,
          "title":`Titulo progress update ${i}`, 

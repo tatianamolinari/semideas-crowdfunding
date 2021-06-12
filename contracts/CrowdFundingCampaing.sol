@@ -1,6 +1,6 @@
 pragma solidity ^0.6.0;
 
-contract CrowdFundingCampaing {
+contract CrowdFundingCampaign {
 
     /* Enums */
 
@@ -44,7 +44,7 @@ contract CrowdFundingCampaing {
     /** @dev Constructor.
      *  @param _minimunContribution minimum contribution in wei that a person has to make to become a member.
      *  @param _goal goal in wei that the proyect has to reach to be succesfull.
-     *  @param _ipfshash The url hash of the campaing data previusly stored in IPFS.
+     *  @param _ipfshash The url hash of the campaign data previusly stored in IPFS.
     **/
     constructor(uint _minimunContribution, uint _goal, bytes32 _ipfshash) public {
         owner = msg.sender;
@@ -53,7 +53,7 @@ contract CrowdFundingCampaing {
         status = Status.CREATED;
         membersCount = 0;
 
-        emit campaingCreated(_ipfshash);
+        emit campaignCreated(_ipfshash);
     }
 
 
@@ -66,10 +66,10 @@ contract CrowdFundingCampaing {
     modifier notMembering() { require( (contributions[msg.sender]==0) && (msg.sender != owner) , "Sender is already a member."); _; }
 
     modifier statusCreated() 
-        { require(status == Status.CREATED, "The campaing status is not created."); _; }
+        { require(status == Status.CREATED, "The campaign status is not created."); _; }
 
     modifier statusActive()
-        { require(status == Status.ACTIVE, "The campaing status is not active."); _; }
+        { require(status == Status.ACTIVE, "The campaign status is not active."); _; }
 
     modifier proposalActive(uint _index) 
         { require(proposals[_index].status == Status.ACTIVE, "The proposal is not longer active."); _; }
@@ -94,10 +94,10 @@ contract CrowdFundingCampaing {
 
     /* Events */
 
-    /** @dev Emitted when the author creates the campaing.
-     *  @param _ipfshash The url hash of the campaing data stored in IPFS.
+    /** @dev Emitted when the author creates the campaign.
+     *  @param _ipfshash The url hash of the campaign data stored in IPFS.
      */
-    event campaingCreated(bytes32 indexed _ipfshash);
+    event campaignCreated(bytes32 indexed _ipfshash);
 
     /** @dev Emitted when a new person contributes with the campaign.
      */
@@ -108,7 +108,7 @@ contract CrowdFundingCampaing {
      */
     event proposalCreated(bytes32 indexed _ipfshash);
 
-     /** @dev Emitted when a member creates a proposal to destruct the campaing and get the founds back.
+     /** @dev Emitted when a member creates a proposal to destruct the campaign and get the founds back.
      *  @param _ipfshash The url hash of the destruct proposal data stored in IPFS.
      */
     event destructProposalCreated(bytes32 indexed _ipfshash);
@@ -125,7 +125,7 @@ contract CrowdFundingCampaing {
 
     /* Functions */
 
-    /** @dev Allow not members to contribute with the campaing and be a member of it.
+    /** @dev Allow not members to contribute with the campaign and be a member of it.
      */
     function contribute() public notMembering statusCreated payable {
         require(msg.value >= minimunContribution, "The contribution is insuficient");
@@ -134,7 +134,7 @@ contract CrowdFundingCampaing {
         emit newContribution();
     }
 
-    /** @dev Allow only owner to change the status of the campaing from CREATED to ACTIVE.
+    /** @dev Allow only owner to change the status of the cCampaign from CREATED to ACTIVE.
      */
     function setActive() public restricted statusCreated {
         
@@ -216,15 +216,15 @@ contract CrowdFundingCampaing {
         return contributions[_address]>0;
     }
 
-    /** @dev Function to get the actual status of the campaing.
+    /** @dev Function to get the actual status of the campaign.
      */
     function getStatus() public view returns (Status) {
         return status;
     }
 
-    /** @dev Function to get the data of the campaing
+    /** @dev Function to get the data of the campaign
      */
-    function getCampaingInfo() public view returns (address, Status, uint, uint, uint ) {
+    function getCampaignInfo() public view returns (address, Status, uint, uint, uint ) {
         return (owner, status, goal, minimunContribution, membersCount);
     } 
 

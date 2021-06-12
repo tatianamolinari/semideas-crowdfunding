@@ -24,7 +24,7 @@ class ContainerInfo extends React.Component {
 
   change_active(new_active) {
  
-    var old_active = this.state.active;
+    const old_active = this.state.active;
 
     const active_element = document.getElementById(old_active);
     const active_container = document.getElementById(
@@ -77,7 +77,7 @@ class ContainerInfo extends React.Component {
             console.log(addressToHexBytes("QmWmyoMoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz"));
             console.log(hexBytesToAddress("12207D5A99F603F231D53A4F39D1521F98D2E8BB279CF29BEBFD0687DC98458E7F89"));
 
-            let correctNetwork = await campaignService.isCorrectNetwork();
+            const correctNetwork = await campaignService.isCorrectNetwork();
             if (!correctNetwork){
               this.setState({
                 loaded: true,
@@ -87,22 +87,22 @@ class ContainerInfo extends React.Component {
             }
             else {
               const instance = await campaignService.setInstance();
-              const campaingInfo = await campaignService.getCampaingInfo();
+              const campaignInfo = await campaignService.getCampaignInfo();
               const isMember = await campaignService.getMembership();
               const balance = await campaignService.getBalance();
               const actualAccount = await campaignService.getFirstAccount();
-              const isOwner = actualAccount===campaingInfo.owner;
+              const isOwner = actualAccount===campaignInfo.owner;
 
               this.setState({
                   loaded: true,
                   instance: instance,
                   balance: balance,
                   isMember: isMember,
-                  status: fromIntToStatus(campaingInfo.status),
-                  owner: campaingInfo.owner,
-                  goal: campaingInfo.goal,
-                  minimunContribution: campaingInfo.minimunContribution,
-                  membersCount: campaingInfo.membersCount,
+                  status: fromIntToStatus(campaignInfo.status),
+                  owner: campaignInfo.owner,
+                  goal: campaignInfo.goal,
+                  minimunContribution: campaignInfo.minimunContribution,
+                  membersCount: campaignInfo.membersCount,
                   isOwner: isOwner
               });
             }

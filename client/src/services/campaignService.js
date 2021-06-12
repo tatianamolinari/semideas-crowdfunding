@@ -1,5 +1,5 @@
 import getWeb3 from "../getWeb3";
-import CrowdFundingCampaing from "../contracts/CrowdFundingCampaing.json";
+import CrowdFundingCampaign from "../contracts/CrowdFundingCampaign.json";
 
 import { getValuesFromHash } from "../helpers/utils.js"
 
@@ -27,7 +27,7 @@ class CampaignService {
 
   async isCorrectNetwork() {
     const initialized = await this.init();
-    return CrowdFundingCampaing.networks[this.networkId];
+    return CrowdFundingCampaign.networks[this.networkId];
   }
 
   async getCurrentBlock(){
@@ -36,8 +36,8 @@ class CampaignService {
 
   async setInstance() {
     this.instance = await new this.web3.eth.Contract(
-      CrowdFundingCampaing.abi,
-      CrowdFundingCampaing.networks[this.networkId] && CrowdFundingCampaing.networks[this.networkId].address,
+      CrowdFundingCampaign.abi,
+      CrowdFundingCampaign.networks[this.networkId] && CrowdFundingCampaign.networks[this.networkId].address,
     );
     return this.instance;
   }
@@ -46,18 +46,18 @@ class CampaignService {
     return this.instance;
   }
 
-  async getCampaingInfo() {
-    const campaingValues = await this.instance.methods.getCampaingInfo().call();
-    const campaingInfo = getValuesFromHash(campaingValues);
+  async getCampaignInfo() {
+    const campaignValues = await this.instance.methods.getCampaignInfo().call();
+    const campaignInfo = getValuesFromHash(campaignValues);
              
-    const campaingData = new Object();
-    campaingData.owner = campaingInfo[0];
-    campaingData.status = await campaingInfo[1];
-    campaingData.goal = campaingInfo[2]
-    campaingData.minimunContribution = campaingInfo[3];
-    campaingData.membersCount = campaingInfo[4];
+    const campaignData = new Object();
+    campaignData.owner = campaignInfo[0];
+    campaignData.status = await campaignInfo[1];
+    campaignData.goal = campaignInfo[2]
+    campaignData.minimunContribution = campaignInfo[3];
+    campaignData.membersCount = campaignInfo[4];
 
-    return campaingData;
+    return ampaignData;
   }
 
   async getMembershipFromAddress(address) {

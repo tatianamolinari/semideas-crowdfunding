@@ -21,12 +21,16 @@
     "homepage": "https://github.com/tatianamolinari/tesina-crowdfunding#readme",
     "devDependencies": {
         "@openzeppelin/test-helpers": "^0.5.11",
+        "babel-register": "^6.26.0",
         "hardhat": "^2.2.1",
-        "ipfs-http-client": "^50.1.1",
-        "openzeppelin-test-helpers": "^0.5.1"
+        "ipfs-http-client": "^33.1.1",
+        "openzeppelin-test-helpers": "^0.5.1",
+        "ts-node": "^10.0.0",
+        "tsconfig-paths": "^3.9.0"
     },
     "dependencies": {
         "esm": "^3.2.25",
+        "ipfs-http-client": "^50.1.1",
         "web-encoding": "1.1.3"
     }
 }

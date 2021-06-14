@@ -3,8 +3,8 @@
 
 const CrowdFundingCampaing = artifacts.require("CrowdFundingCampaign.sol");
 //import { create }  from '../node_modules/ipfs-http-client'; //-------------> falla porque no le gusta el import
-const { create } = require('ipfs-http-client') //---------> falla porque no encuentra el modulo
-//const { create } = require('../node_modules/ipfs-http-client'); //---> encuentra el modulo pero falla dentro de ipfs
+//const { create } = require('ipfs-http-client') //---------> falla porque no encuentra el modulo
+const { create } = require('../node_modules/ipfs-http-client'); //---> encuentra el modulo pero falla dentro de ipfs
 
 console.log(create);
 async function main() {
@@ -23,7 +23,7 @@ async function main() {
     campaignAddressesData["campaigns"].push(response.address);
     console.log(campaignAddressesData);
     var fs = require('fs');
-    fs.writeFileSync("../client/src/contracts/campaignAddresses.json", 
+    fs.writeFileSync("./client/src/contracts/campaignAddresses.json", 
                       JSON.stringify(campaignAddressesData), 
                       function(err) {
                         if (err) {

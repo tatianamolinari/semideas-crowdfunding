@@ -21,7 +21,7 @@ contract CrowdFundingCampaign {
     }
 
     /** @dev Struct destruct proposal
-        This struct represents the proposals that members can make to get their founds back.
+        This struct represents the proposal that members can make to get their founds back.
     **/
     struct DestructProposal{
         uint approvalsCount;

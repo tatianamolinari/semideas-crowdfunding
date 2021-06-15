@@ -46,7 +46,7 @@ class ContainerInfo extends React.Component {
     componentDidMount = async() => {
         try {
 
-          const ipfsData = await ipfsService.getJsonFromIPFSHash("QmSbt6Mq6pRtGBWczpnQVHKhu5HWn77cMSHSM9Rp56rfCT")
+          const ipfsData = await ipfsService.getJsonFromIPFSHash("QmeM6cPGv2ZFVqRMzUMgMqnVuMoF3DzAiUoGaZAm3NtkWd")
 
             const correctNetwork = await campaignService.isCorrectNetwork();
             if (!correctNetwork){
@@ -57,7 +57,7 @@ class ContainerInfo extends React.Component {
               });
             }
             else {
-              const instance = await campaignService.setInstanceFromAddress("0x182B901CBe2302107A99Ec97A569811648878c4E");
+              const instance = await campaignService.setInstanceFromAddress("0x7E2bBBd6DF16F13539de5D4B12844b4dc90F795C");
               const campaignInfo = await campaignService.getCampaignInfo();
               const isMember = await campaignService.getMembership();
               const balance = await campaignService.getBalance();

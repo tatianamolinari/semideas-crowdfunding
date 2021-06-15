@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import {Dimmer, Loader }  from 'semantic-ui-react';
 
-import { fromIntToStatus, hexBytesToAddress, addressToHexBytes } from "../../helpers/utils.js"
+import { fromIntToStatus } from "../../helpers/utils.js"
 import { ipfsService } from "../../services/ipfsService.js"
 import { campaignService } from "../../services/campaignService.js"
 
@@ -11,6 +11,8 @@ import DisplayProposals from "../proposals/DisplayProposals"
 import DisplayProgressUpdates from "../progressUpdates/DisplayProgressUpdates"
 import ErrorMessage from "../errors/ErrorMessage"
 import MenuButton from "../buttons/MenuButton"
+
+import deployedCampaignsInfo from "../../contracts/campaignAddresses.json"
 
 
 class ContainerInfo extends React.Component {
@@ -46,7 +48,13 @@ class ContainerInfo extends React.Component {
     componentDidMount = async() => {
         try {
 
-          const ipfsData = await ipfsService.getJsonFromIPFSHash("QmeM6cPGv2ZFVqRMzUMgMqnVuMoF3DzAiUoGaZAm3NtkWd")
+          console.log(deployedCampaignsInfo)
+
+            const campaign = deployedCampaignsInfo["campaigns"][1]
+            const ipfsPath = campaign["ipfsPath"]
+            const address = campaign["address"]
+
+            const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath)
 
             const correctNetwork = await campaignService.isCorrectNetwork();
             if (!correctNetwork){
@@ -57,7 +65,7 @@ class ContainerInfo extends React.Component {
               });
             }
             else {
-              const instance = await campaignService.setInstanceFromAddress("0x7E2bBBd6DF16F13539de5D4B12844b4dc90F795C");
+              const instance = await campaignService.setInstanceFromAddress(address);
               const campaignInfo = await campaignService.getCampaignInfo();
               const isMember = await campaignService.getMembership();
               const balance = await campaignService.getBalance();

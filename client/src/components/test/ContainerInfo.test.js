@@ -7,12 +7,17 @@ var enzyme = require('enzyme');
 var Adapter = require('enzyme-adapter-react-16');
 enzyme.configure({ adapter: new Adapter() });
 import {shallow} from 'enzyme';
+import { ipfsService } from '../../services/ipfsService.js';
+jest.mock('../../services/ipfsService.js');
 
 import ContainerInfo from "../campaign/ContainerInfo";
 import ErrorMessage from "../errors/ErrorMessage";
 import MenuButton from "../buttons/MenuButton";
   
 it("Check that renders the error message when error is true", () => {
+    /*ipfsService.mockReturnValueOnce({
+        prop1: "dummy"
+    });*/
     const wrapper =  shallow(<ContainerInfo active="general_data"/>);
     wrapper.setState({ error: true });
     expect(wrapper.find(ErrorMessage).exists()).toBeTruthy();

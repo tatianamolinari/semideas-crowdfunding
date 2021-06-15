@@ -16,7 +16,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "coverage": "react-scripts test --coverage ----watchAll",
+    "coverage": "react-scripts test --env=./src/components/test/setupEnv.js --coverage ----watchAll ",
     "testj": "jest",
     "eject": "react-scripts eject"
   },
@@ -53,5 +53,5 @@
     "react-test-renderer": "^17.0.2",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3"
-  }
+    }
 }

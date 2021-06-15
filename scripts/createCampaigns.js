@@ -6,7 +6,6 @@ const CrowdFundingCampaing = artifacts.require("CrowdFundingCampaign.sol");
 //const { create } = require('ipfs-http-client') //---------> falla porque no encuentra el modulo
 const { create } = require('../node_modules/ipfs-http-client'); //---> encuentra el modulo pero falla dentro de ipfs
 const fs = require('fs');
-const Web3 = require('web3');
 const bs58 = require('bs58');
 const ipfs_client = create('https://ipfs.infura.io:5001');
 

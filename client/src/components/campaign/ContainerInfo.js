@@ -46,34 +46,7 @@ class ContainerInfo extends React.Component {
     componentDidMount = async() => {
         try {
 
-          
-            const input = [
-              {
-                'id': '0x10',
-                'date': '14.07.2018'
-              },
-              {
-                'id': '0x20',
-                'date': '14.07.2018'
-              },
-              {
-                'id': '0x30',
-                'date': '14.17.2019'
-              }
-            ]
-
-            
-            const result = await ipfsService.addJson(input);
-            const original = await ipfsService.getJsonFromIPFSHash(result.path);
-            console.log(original);
-
-            const hashAddres = "QmWmyoMoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz";
-            const hexResult = addressToHexBytes(hashAddres); 
-            const parsedAddress = hexBytesToAddress(hexResult);
-            
-            console.log(hashAddres);
-            console.log(hexResult);
-            console.log(parsedAddress);
+          const ipfsData = await ipfsService.getJsonFromIPFSHash("QmSbt6Mq6pRtGBWczpnQVHKhu5HWn77cMSHSM9Rp56rfCT")
 
             const correctNetwork = await campaignService.isCorrectNetwork();
             if (!correctNetwork){
@@ -84,7 +57,7 @@ class ContainerInfo extends React.Component {
               });
             }
             else {
-              const instance = await campaignService.setInstance(); //setInstanceFromAddress("0x1E43Ef8Fe9e98DB1bE1CBf9DDe81EcfC6Ad1B302");
+              const instance = await campaignService.setInstanceFromAddress("0x182B901CBe2302107A99Ec97A569811648878c4E");
               const campaignInfo = await campaignService.getCampaignInfo();
               const isMember = await campaignService.getMembership();
               const balance = await campaignService.getBalance();
@@ -101,12 +74,13 @@ class ContainerInfo extends React.Component {
                   goal: campaignInfo.goal,
                   minimunContribution: campaignInfo.minimunContribution,
                   membersCount: campaignInfo.membersCount,
-                  isOwner: isOwner
+                  isOwner: isOwner,
+                  ipfsData: ipfsData
               });
             }
         } catch (error) {
             alert(
-                `Failed to load web3, accounts, or contract. Check console for details.`,
+                `Failed to load web3, ipfs data, accounts, or contract. Check console for details.`,
             );
             console.error(error);
         }
@@ -166,6 +140,7 @@ class ContainerInfo extends React.Component {
                         this.state.loaded  && !this.state.error && 
                          <Col className="display-content" lg={9}>
                           <DisplayContent
+                          ipfsData={this.state.ipfsData}
                           data={{ 
                             status: this.state.status,
                             owner: this.state.owner,

@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "Nuevo repositorio para refactoring de tesina",
     "main": "truffle-config.js",
+    "type": "module",
     "directories": {
         "test": "test"
     },

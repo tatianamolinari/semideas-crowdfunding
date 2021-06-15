@@ -1,5 +1,5 @@
 
-const bs58 = require('bs58')
+const bs58 = require('bs58');
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

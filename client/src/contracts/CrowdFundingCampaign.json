@@ -15623,13 +15623,15 @@
             }
           ],
           "name": "campaignCreated",
-          "type": "event"
+          "type": "event",
+          "signature": "0x7a0ced2ebfa0348c1bb2ad8b93cccf47c0327bcce7d31ef5bbf1df0963de236e"
         },
         "0x91eece65bbb3195524f803743167f72997d625af1d1698c2eff3d0a54e22945c": {
           "anonymous": false,
           "inputs": [],
           "name": "changeStatusCampaign",
-          "type": "event"
+          "type": "event",
+          "signature": "0x91eece65bbb3195524f803743167f72997d625af1d1698c2eff3d0a54e22945c"
         },
         "0xc95a86df0db5b70c1293ecf6809b04b1e69f91ddaa05b8912d28dbf590477553": {
           "anonymous": false,
@@ -15642,13 +15644,15 @@
             }
           ],
           "name": "destructProposalCreated",
-          "type": "event"
+          "type": "event",
+          "signature": "0xc95a86df0db5b70c1293ecf6809b04b1e69f91ddaa05b8912d28dbf590477553"
         },
         "0x645665e8674f75953a5c3a468125fb84ae3b8b3fa0fcec823b34b6421cd800ca": {
           "anonymous": false,
           "inputs": [],
           "name": "newContribution",
-          "type": "event"
+          "type": "event",
+          "signature": "0x645665e8674f75953a5c3a468125fb84ae3b8b3fa0fcec823b34b6421cd800ca"
         },
         "0x47aac9c0b41a2c10c090f2fb431f4ca2fffb55452918ebc47f7b4b160b178b55": {
           "anonymous": false,
@@ -15661,7 +15665,8 @@
             }
           ],
           "name": "progressUpdate",
-          "type": "event"
+          "type": "event",
+          "signature": "0x47aac9c0b41a2c10c090f2fb431f4ca2fffb55452918ebc47f7b4b160b178b55"
         },
         "0xdf3af04813197e32521106616bbfaf01af69d2e70f2f872720142b52953414e3": {
           "anonymous": false,
@@ -15674,16 +15679,17 @@
             }
           ],
           "name": "proposalCreated",
-          "type": "event"
+          "type": "event",
+          "signature": "0xdf3af04813197e32521106616bbfaf01af69d2e70f2f872720142b52953414e3"
         }
       },
       "links": {},
-      "address": "0xf2fD461b4fD290D3D3059A6C9030408AfB5Ee62B",
-      "transactionHash": "0xcddc98d0b831234c2a8bbdb317dee9cd85930274182d38d7240efee39bfabf0f"
+      "address": "0x1A01CAF658e5885E88002C358c8b14Cf84603CFc",
+      "transactionHash": "0x96fd4a161331c11061815e1bcda5dff4f7a1f7161054a73bc23e520375f8eaf2"
     }
   },
-  "schemaVersion": "3.0.23",
-  "updatedAt": "2021-06-14T01:42:06.469Z",
+  "schemaVersion": "3.0.22",
+  "updatedAt": "2021-06-15T02:31:26.077Z",
   "networkType": "ethereum",
   "devdoc": {
     "events": {

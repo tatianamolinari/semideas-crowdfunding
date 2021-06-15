@@ -1,5 +1,7 @@
 import React from "react";
 import { Badge } from "react-bootstrap";
+import { Label, Icon } from 'semantic-ui-react'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 import { fromStatusToBadgeClass } from "../../helpers/utils.js";
 import { campaignService } from "../../services/campaignService.js"
@@ -17,6 +19,7 @@ class DisplayContent extends React.Component {
     isMember: this.props.data.isMember,
     balance: this.props.data.balance,
     membersCount: this.props.data.membersCount,
+    progress: 0
   };
 
   actualizeContributionInfo = async() =>  {
@@ -25,8 +28,13 @@ class DisplayContent extends React.Component {
       const isMember = await campaignService.getMembership();
       const balance = await campaignService.getBalance();
       const membersCount = await campaignService.getMembersCount();
+
+      const progress = this.getProgress();
       
-      this.setState({ isMember: isMember, balance: balance, membersCount: membersCount});
+      this.setState({ isMember: isMember, 
+                      balance: balance, 
+                      membersCount: membersCount,
+                      progress: progress });
     }
     catch (error) {
       alert(
@@ -38,8 +46,16 @@ class DisplayContent extends React.Component {
 
   componentDidMount = async() => {
 
+    const progress = this.getProgress();
+    this.setState({ progress: progress });
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
     await campaignService.suscribeToNewContribution(actualizeInfo);
+  }
+
+  getProgress() {
+
+    const progress = (((parseInt(this.state.balance)/parseInt(this.props.data.goal)))* 100).toFixed(2);
+    return Math.min(progress,100);
   }
 
 
@@ -67,14 +83,21 @@ class DisplayContent extends React.Component {
                 <p className="aling-right"> Fecha de creación {created_at}</p>
                 <ImagesDetail images={images}/>
                 <h5> Estado: <Badge variant={badge_status}> { this.props.data.status } </Badge> </h5>
+                <div className="main-info-campaign">
+                  <div>  <Icon fitted name='user circle' /> Owner: <span data-testid="owner">{ this.props.data.owner }</span>. </div>   
+                  <div>  <Icon fitted name='group' /> Cantidad de miembros: <span data-testid="membersCount">{ this.state.membersCount }</span>. </div>
+                </div>
+                
                 <p className="description"> {descripcion} </p>
                 <hr/>
-                <div> Para que esta campaña comience se deben recaudar <span data-testid="goal">{ this.props.data.goal }</span> wei o más. </div>
-                <div> Contribuciones totales: <span data-testid="balance">{ this.state.balance }</span> wei. </div>
-                <div> La contribución mínima es de <span data-testid="minimunContribution">{ this.props.data.minimunContribution }</span> wei.</div> 
-                <div> Autor: <span data-testid="owner">{ this.props.data.owner }</span>. </div>   
-                <div> Cantidad de miembros contribuyentes: <span data-testid="membersCount">{ this.state.membersCount }</span>. </div>
-               
+                
+                <h5> Contribuciones </h5>
+                <div> Para que esta campaña comience se deben recaudar <Label color="green"> <span data-testid="goal">{ this.props.data.goal }</span> wei </Label> o más. </div>
+                <div> La contribución mínima es de <Label color="teal"><span data-testid="minimunContribution">{ this.props.data.minimunContribution }</span> wei</Label></div> 
+                <div className="progress-container">
+                  <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei contribuidos`} />
+                </div>
+              
                 { (!this.state.isMember) && (!this.props.data.isOwner)
                   &&  
                   <div className="contribute-row" data-testid="contribution-row">

@@ -30,13 +30,6 @@ it("Check DisplayContent goal render", () => {
 
 });
 
-it("Check DisplayContent balance render", () => {
-
-    const { getByText } = within(getByTestId('balance'));
-    expect(getByText('25')).toBeInTheDocument();
-
-});
-
 it("Check DisplayContent minimunContribution render", () => {
 
     const { getByText } = within(getByTestId('minimunContribution'));

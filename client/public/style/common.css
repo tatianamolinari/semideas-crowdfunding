@@ -156,6 +156,10 @@ h5 {
     font-size: 1.25em !important;
 }
 
+.main-info-campaign {
+    font-size: 1.25em !important;
+}
+
 .proposal-info .description {
     margin-top: 2em;
     margin-bottom: 2em;
@@ -294,6 +298,18 @@ hr {
     margin: auto;
     width: 60%;
 }
+.progress-container {
+    padding: 0.25em;
+    margin-top: 0.5em !important;
+}
+
+.progress {
+    height: 2em !important;
+    font-size: 1em !important;
+    background-color: #A0A0A0 !important;
+}
+
+
 
 @font-face {
     font-family: 'DMSans-Regular';

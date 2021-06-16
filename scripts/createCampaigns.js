@@ -1,12 +1,13 @@
 
 
 
-const CrowdFundingCampaing = artifacts.require("CrowdFundingCampaign.sol");
+const CrowdFundingCampaign = artifacts.require("CrowdFundingCampaign.sol");
 //import { create }  from '../node_modules/ipfs-http-client'; //-------------> falla porque no le gusta el import
 //const { create } = require('ipfs-http-client') //---------> falla porque no encuentra el modulo
 const { create } = require('../node_modules/ipfs-http-client'); //---> encuentra el modulo pero falla dentro de ipfs
 const fs = require('fs');
 const bs58 = require('bs58');
+const Web3 = require("web3");
 const ipfs_client = create('https://ipfs.infura.io:5001');
 
 async function saveJsonIPFS(json_value){
@@ -51,10 +52,14 @@ function getBasicInfo(){
     return basic_info;
 }
 
-async function main() {
+function getWeb3(){
+    const provider = new Web3.providers.HttpProvider("http://127.0.0.1:7545");
+    const web3 = new Web3(provider);
+    return web3;
+}
 
-    
-    const jsonInfo = getBasicInfo();
+async function createCampaigns(jsonInfo){
+    const campaigns = []
     const campaignsData = {};
     campaignsData["campaigns"] = [];
 
@@ -67,16 +72,17 @@ async function main() {
 
         const ipfsHash = "0x" + addressToHexBytes(path);
 
-        const response = await CrowdFundingCampaing.new(
+        const campaign = await CrowdFundingCampaign.new(
                                 campaignInfo["minimunContribution"], 
                                 campaignInfo["goal"], 
                                 ipfsHash);
 
         const campaingInfo = {}
-        campaingInfo["address"] = response.address
+        campaingInfo["address"] = campaign.address
         campaingInfo["ipfsPath"] = path
 
         campaignsData["campaigns"].push(campaingInfo);
+        campaigns.push(campaign);
     }
 
 
@@ -89,6 +95,43 @@ async function main() {
                         }
                         console.log("complete");
                     });
+    
+    return campaigns;
+
+}
+
+async function sendContributions(web3, addr, jsonInfo, campaigns){
+
+    let response = false;
+    let i = 0;
+    for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
+
+        for (const contributionInfo of campaignInfo["contributions"]) {
+            const value = contributionInfo["value"];
+            const addr_index = contributionInfo["accountIndex"];
+            const campaign = campaigns[i]
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.methods['contribute()'].estimateGas({ from: addr[addr_index], value: value });      
+            const transaction = await campaign.methods['contribute()'].sendTransaction({ from: addr[addr_index], gasPrice: gasprice, gas: gas, value: value }) ; 
+            response = response && (transaction.type == "mined");
+        };
+        i=i+1;
+    };
+    return true;  
+
+}
+
+async function main() {
+
+    const web3 = getWeb3();
+    const addr = await web3.eth.getAccounts();
+    const jsonInfo = getBasicInfo();
+    const campaigns = await createCampaigns(jsonInfo);
+    const contributed = await sendContributions(web3, addr, jsonInfo, campaigns);
+    console.log(contributed);
+    
+
+    
 }
 
 module.exports = function(callback) {

@@ -6,7 +6,8 @@
             "created_date": "11/02/2021",
             "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
             "minimunContribution": 20,
-            "goal": 500
+            "goal": 500,
+            "contributions": []
         },
         {
             "title": "Choose CTHULHU",
@@ -14,7 +15,29 @@
             "created_date": "19/12/2020",
             "imagesPath": ["./scripts/images/choose1.jpg", "./scripts/images/choose2.jpg", "./scripts/images/choose3.jpg"],
             "minimunContribution": 100,
-            "goal": 10000
+            "goal": 10000,
+            "contributions": [
+                { 
+                    "accountIndex": 1,
+                    "value": 300
+                },
+                { 
+                    "accountIndex": 2,
+                    "value": 1000
+                },
+                { 
+                    "accountIndex": 3,
+                    "value": 250
+                },
+                { 
+                    "accountIndex": 4,
+                    "value": 3000
+                },
+                { 
+                    "accountIndex": 5,
+                    "value": 400
+                }
+            ]
         }
         
     ]

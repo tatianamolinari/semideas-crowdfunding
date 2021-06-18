@@ -3,7 +3,6 @@
     "version": "1.0.0",
     "description": "Nuevo repositorio para refactoring de tesina",
     "main": "truffle-config.js",
-    "type": "module",
     "directories": {
         "test": "test"
     },
@@ -21,14 +20,18 @@
     },
     "homepage": "https://github.com/tatianamolinari/tesina-crowdfunding#readme",
     "devDependencies": {
+        "@nomiclabs/hardhat-truffle5": "^2.0.0",
+        "@nomiclabs/hardhat-web3": "^2.0.0",
         "@openzeppelin/test-helpers": "^0.5.11",
         "babel-register": "^6.26.0",
-        "hardhat": "^2.2.1",
+        "chai-as-promised": "^7.1.1",
+        "hardhat": "^2.4.0",
         "ipfs-http-client": "^50.1.0",
         "openzeppelin-test-helpers": "^0.5.1",
         "truffle": "^5.3.10",
         "ts-node": "^10.0.0",
-        "tsconfig-paths": "^3.9.0"
+        "tsconfig-paths": "^3.9.0",
+        "web3": "^1.3.6"
     },
     "dependencies": {
         "esm": "^3.2.25",

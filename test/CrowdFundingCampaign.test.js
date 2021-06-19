@@ -111,7 +111,7 @@ contract("CrowdFundingCampaign Test", async accounts => {
         let aftercampaignBalance = await web3.eth.getBalance(campaign.address);
         let afterContributorBalance = await web3.eth.getBalance(anotherMemberAccount);
 
-        expect(parseInt(afterContributorBalance)).to.be.lessThan(parseInt(contributorBalance) - 300);
+        expect(parseInt(afterContributorBalance)).to.be.lessThanOrEqual(parseInt(contributorBalance) - 300);
         expect(parseInt(aftercampaignBalance)).to.be.equal(parseInt(campaignBalance) + 300);
 
 

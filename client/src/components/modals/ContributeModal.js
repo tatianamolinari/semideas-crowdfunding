@@ -106,6 +106,7 @@ class ContributeModal extends React.Component {
         data-testid="cuntributionButton">
               Quiero contribuir
         </Button>
+        
         <Modal show={this.state.show} onHide={this.handleClose}
         data-testid="contributionModal"
         aria-labelledby="contained-modal-title-vcenter"

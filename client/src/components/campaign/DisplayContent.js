@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge } from "react-bootstrap";
-import { Label, Icon } from 'semantic-ui-react'
+import { Label, Icon, Button } from 'semantic-ui-react'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 
 import { fromIntToStatus, fromStatusToBadgeClass } from "../../helpers/utils.js";
@@ -9,21 +9,30 @@ import { ipfsService } from "../../services/ipfsService.js"
 
 import ImagesDetail from "./ImagesDetail.js";
 import ContributeModal from "../modals/ContributeModal"
+import MessageModal from "../modals/MessageModal"
 
 
 class DisplayContent extends React.Component {
 
   state = {
     active: this.props.active,
-    loaded: false,
+    
     isOwner: this.props.data.isOwner,
     isMember: this.props.data.isMember,
     balance: this.props.data.balance,
     membersCount: this.props.data.membersCount,
     status: this.props.data.status,
+
     rol: null,
     progress: 0,
-    badge_status:''
+    badge_status:'',
+
+    loaded: false,
+    changeActiveLoading: false,
+
+    showMessage: false,
+    message: '',
+    title: ''
   };
 
   actualizeContributionInfo = async() =>  {
@@ -50,7 +59,7 @@ class DisplayContent extends React.Component {
     }
   }
 
-  actualizeStatusInfo = async() =>  {
+  actualizeStatusInfo = async () =>  {
 
     try {
       const enum_status = await campaignService.getStatus();
@@ -75,8 +84,63 @@ class DisplayContent extends React.Component {
     else if (isMember) {
       this.setState({ rol: "Eres miembro" });
     }
+  }
+
+  activeCampaign = async() =>  {
+   
+      try {
+        const accounts = await campaignService.getAccounts();
+
+        if(accounts.length===0)
+        {
+          const mssj = "Para contribuir debes haber iniciado sesión en la wallet de metamask.";
+          this.setState({ showMessage: true, message: mssj});
+          console.log(mssj);
+        }
+        else {
+
+          this.setState({ changeActiveLoading: true});
+
+          campaignService.setActive().then((statusResponse) => {
+            let title, message = "";
+
+            if (statusResponse.error) {
+              title = "Hubo un error al contribuir";
+              switch (statusResponse.errorMsg) {
+                case "Acción denegada":
+                  message = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
+                  break;
+                case "Nonce error":
+                  message = "Error de nonce: El nonce de la cuenta elegida y de la transacción son diferentes.";
+                  break;
+                case "Gas insuficiente":
+                  message = "La operación llevó más gas que el que pusiste como límite.";
+                  break;
+                default: 
+                  message = "Error desconocido";
+                  break;
+              }
+            }
+            else {
+              title = "Bienvenido al proyecto";
+              message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
+            }
+
+            this.setState({ changeActiveLoading: false, 
+                            message: message, 
+                            showMessage: true, 
+                            title: title});
+          });
+        }
+      }
+      catch(error)  {
+        console.log("Este error traspasó");
+        console.log(error);
+      }
 
   }
+
+  handleMessageClose = () => this.setState({ showMessage: false});
 
 
   componentDidMount = async() => {
@@ -155,6 +219,26 @@ class DisplayContent extends React.Component {
                       minimunContribution={this.props.data.minimunContribution}
                       contributeLoading={false}/>
                   </div> }
+
+                { this.state.progress >= 100 && this.state.isOwner && this.state.status=="Creada"
+                  &&
+                    <div>
+                      { this.state.showMessage &&
+                        <MessageModal
+                        showMessage={this.state.showMessage}
+                        handleMessageClose={this.handleMessageClose}
+                        message={this.state.message}
+                        title={this.state.title} />
+                      }
+                      <Button
+                        loading={this.state.changeActiveLoading}
+                        className="normal-button"
+                        onClick={this.activeCampaign}
+                        data-testid="changeActiveButton">
+                          Activar campaña
+                      </Button>
+                    </div>
+                }
 
               </div>);
   }

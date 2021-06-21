@@ -76,13 +76,20 @@ class CampaignService {
     return (this.getMembershipFromAddress(this.accounts[0]))
   }
 
-  async getBalance(){
+  async getBalance() {
     return (await this.web3.eth.getBalance(this.instance.options.address));
   }
 
-  async getMembersCount(){
+  async getMembersCount() {
     return (await this.instance.methods.membersCount().call());
   }
+
+  async getStatus() {
+    return (await this.instance.methods.getStatus().call());
+  }
+
+
+/** Suscripción a eventos */
 
   async suscribeToNewContribution(actualizeFunction){
 
@@ -126,6 +133,9 @@ class CampaignService {
 
   }
 
+
+/** Manejo de trasacciones y errores */
+
   transactionOnError(error, receipt, statusResponse, resolve)  { 
     statusResponse.error = true;
       
@@ -164,6 +174,8 @@ class CampaignService {
   }
 
 
+/** Trasancciones que cambian el estado de la campaña */
+
   async contribute(value) {
     const gasprice = await this.web3.eth.getGasPrice();
     const gas = await this.instance.methods.contribute().estimateGas({ from: this.accounts[0], value: value });      
@@ -183,6 +195,27 @@ class CampaignService {
 
     return promise;
   }
+
+  async setActive() {
+    const gasprice = await this.web3.eth.getGasPrice();
+    const gas = await this.instance.methods.setActive().estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.setActive().send({ from: this.accounts[0], gasPrice: gasprice}) ;    
+    var service = this;
+
+    const promise = new Promise(function(resolve, reject) {
+
+      const statusResponse = new Object();
+      statusResponse.error = false;
+      statusResponse.errorMsg = "";
+
+      transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+
+    });
+
+    return promise;
+  }
+
 }
 
 export const campaignService = new CampaignService()

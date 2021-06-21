@@ -102,6 +102,26 @@ class CampaignService {
         console.log("hubo un error");
         console.log(error);
       });
+  }
+
+  async suscribeToChangeStatus(actualizeFunction){
+
+    const currentBlock = await this.getCurrentBlock();
+
+    this.instance.events.changeStatusCampaign({
+      fromBlock: currentBlock
+      }, function(error, event){ console.log(event); })
+      .on("connected", function(subscriptionId){
+          console.log(subscriptionId);
+      })
+      .on('data', function(event){
+          actualizeFunction();
+          console.log(event); 
+      })
+      .on('error', function(error, receipt) {
+        console.log("hubo un error");
+        console.log(error);
+      });
 
 
   }

@@ -3,7 +3,7 @@ import { Badge } from "react-bootstrap";
 import { Label, Icon } from 'semantic-ui-react'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 
-import { fromStatusToBadgeClass } from "../../helpers/utils.js";
+import { fromIntToStatus, fromStatusToBadgeClass } from "../../helpers/utils.js";
 import { campaignService } from "../../services/campaignService.js"
 import { ipfsService } from "../../services/ipfsService.js"
 
@@ -19,7 +19,9 @@ class DisplayContent extends React.Component {
     isMember: this.props.data.isMember,
     balance: this.props.data.balance,
     membersCount: this.props.data.membersCount,
-    progress: 0
+    status: this.props.data.status,
+    progress: 0,
+    badge_status:''
   };
 
   actualizeContributionInfo = async() =>  {
@@ -42,14 +44,36 @@ class DisplayContent extends React.Component {
       );
       console.error(error);
     }
-}
+  }
+
+  actualizeStatusInfo = async() =>  {
+
+    try {
+      const enum_status = await campaignService.getStatus();
+      const status = fromIntToStatus(enum_status);
+      const badge_status = fromStatusToBadgeClass(status);
+      
+      this.setState({ status: status, badge_status: badge_status });
+    }
+    catch (error) {
+      alert(
+          `Failed to load web3, accounts, or contract. Check console for details.`,
+      );
+      console.error(error);
+    }
+  }
 
   componentDidMount = async() => {
 
     const progress = this.getProgress();
+    const badge_status = fromStatusToBadgeClass(this.state.status);
+    this.setState({ badge_status: badge_status });
     this.setState({ progress: progress });
+    
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
     await campaignService.suscribeToNewContribution(actualizeInfo);
+    const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
+    await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
   }
 
   getProgress() {
@@ -61,7 +85,6 @@ class DisplayContent extends React.Component {
 
 
   render() {
-    const badge_status = fromStatusToBadgeClass(this.props.data.status);
 
     let images = ["/images/prueba/prueba1.jpg","/images/prueba/prueba2.jpg","/images/prueba/prueba3.jpg","/images/prueba/prueba4.jpg"]
     let descripcion = "Lorem ipsum dolor sit amet consectetur adipiscing elit quis, condimentum odio class etiam justo euismod orci, lobortis cras aptent mauris nullam semper senectus. Etiam ligula malesuada sapien magna tincidunt scelerisque ridiculus vel, aenean aliquam arcu eget facilisis placerat cubilia nibh purus, eleifend mi sociis ad vitae nam tempor. Imperdiet arcu parturient libero suscipit accumsan erat convallis velit metus bibendum taciti, auctor neque felis per augue in maecenas vulputate enim. Montes senectus urna eros accumsan lobortis cras ante convallis lacus, volutpat ullamcorper platea fermentum morbi class hac laoreet pretium sagittis, luctus cursus pellentesque interdum sed nullam porta est. Morbi mattis tincidunt ligula ad blandit per varius vulputate lobortis, nam curae urna netus bibendum a non aenean, consequat ut nascetur mi viverra lectus ultrices dis. A magnis molestie ultrices suscipit euismod litora fames volutpat erat vehicula venenatis mattis neque nam interdum, tincidunt orci condimentum augue natoque magna libero arcu dui taciti mus sed hendrerit class."
@@ -82,7 +105,7 @@ class DisplayContent extends React.Component {
                 <h3 className="name"> {title} </h3>
                 <p className="aling-right"> Fecha de creación {created_at}</p>
                 <ImagesDetail images={images}/>
-                <h5> Estado: <Badge variant={badge_status}> { this.props.data.status } </Badge> </h5>
+                <h5> Estado: <Badge variant={this.state.badge_status}> { this.state.status } </Badge> </h5>
                 <div className="main-info-campaign">
                   <div>  <Icon fitted name='user circle' /> Owner: <span data-testid="owner">{ this.props.data.owner }</span>. </div>   
                   <div>  <Icon fitted name='group' /> Cantidad de miembros: <span data-testid="membersCount">{ this.state.membersCount }</span>. </div>
@@ -98,7 +121,7 @@ class DisplayContent extends React.Component {
                   <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei contribuidos`} />
                 </div>
               
-                { (!this.state.isMember) && (!this.props.data.isOwner)
+                { (!this.state.isMember) && (!this.props.data.isOwner) && this.state.status=="Creada"
                   &&  
                   <div className="contribute-row" data-testid="contribution-row">
                      <ContributeModal 

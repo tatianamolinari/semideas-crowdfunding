@@ -43,6 +43,10 @@
                 { 
                     "accountIndex": 6,
                     "value": 1500
+                },
+                { 
+                    "accountIndex": 7,
+                    "value": 1500
                 }
             ],
             "active": { 

@@ -10,6 +10,11 @@ const bs58 = require('bs58');
 const Web3 = require("web3");
 const ipfs_client = create('https://ipfs.infura.io:5001');
 
+
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function saveJsonIPFS(json_value){
     
     const result = await ipfs_client.add(JSON.stringify(json_value));
@@ -129,15 +134,17 @@ async function changeActive(web3, addr, jsonInfo, campaigns){
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
         {
-            console.log(campaignInfo["title"])
-            console.log(campaignInfo["active"]["status"]);
             const campaign = campaigns[i]
             const gasprice = await web3.eth.getGasPrice();
+            //const balance = await web3.eth.getBalance(campaign.address);
+            //const goal = await campaign.methods['goal()'].call()
+            //console.log(campaign.methods);
+            //console.log(`${i} ${campaignInfo['title']} goal: ${goal} balance: ${balance} ${campaigns[i]} status ${campaignInfo["active"]["status"]}`);
             const gas = await campaign.methods['setActive()'].estimateGas({ from: addr[0] });      
             const transaction = await campaign.methods['setActive()'].sendTransaction({ from: addr[0], gasPrice: gasprice, gas: gas }) ; 
             response = response && (transaction.type == "mined");
-            i=i+1;
         }
+        i=i+1;
 
     };
     return response;  
@@ -154,8 +161,8 @@ async function main() {
     const campaigns = await createCampaigns(jsonInfo);
     const contributed = await sendContributions(web3, addr, jsonInfo, campaigns);
     console.log(contributed);
-    //const actived = await changeActive(web3, addr, jsonInfo, campaigns)
-    //console.log(actived);
+    const actived = await changeActive(web3, addr, jsonInfo, campaigns)
+    console.log(actived);
     
 
     

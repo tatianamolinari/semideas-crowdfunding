@@ -27,9 +27,8 @@ async function saveImageIPFS(path_image){
     return result.path;
 }
 
-async function saveCampaignInfoIPFS(imagesPath,title,description,date)
-{
-    const campaignData = {};
+async function saveInfoIPFS(imagesPath,title,description,date){
+    const jsonData = {};
     const ipfsImagesPaths = [];
 
     for (const path of imagesPath) {
@@ -37,12 +36,12 @@ async function saveCampaignInfoIPFS(imagesPath,title,description,date)
         ipfsImagesPaths.push(ipfsPath);
     }
 
-    campaignData["title"] = title;
-    campaignData["description"] = description;
-    campaignData["created_date"] = date;
-    campaignData["images"] = ipfsImagesPaths;
+    jsonData["title"] = title;
+    jsonData["description"] = description;
+    jsonData["created_date"] = date;
+    jsonData["images"] = ipfsImagesPaths;
 
-    const path = await saveJsonIPFS(campaignData);
+    const path = await saveJsonIPFS(jsonData);
     return path;
 }
 
@@ -70,10 +69,10 @@ async function createCampaigns(jsonInfo){
 
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
     
-        const path = await saveCampaignInfoIPFS(campaignInfo["imagesPath"],
-                                            campaignInfo["title"],
-                                            campaignInfo["description"],
-                                            campaignInfo["created_date"]);
+        const path = await saveInfoIPFS(campaignInfo["imagesPath"],
+                                        campaignInfo["title"],
+                                        campaignInfo["description"],
+                                        campaignInfo["created_date"]);
 
         const ipfsHash = "0x" + addressToHexBytes(path);
 
@@ -112,7 +111,7 @@ async function sendContributions(web3, addr, jsonInfo, campaigns){
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
 
         for (const contributionInfo of campaignInfo["contributions"]) {
-            console.log(`${i} ${contributionInfo["value"]} ${campaignInfo['title']} ${campaigns[i]}`);
+            //console.log(`${i} ${contributionInfo["value"]} ${campaignInfo['title']} ${campaigns[i]}`);
             const value = contributionInfo["value"];
             const addr_index = contributionInfo["accountIndex"];
             const campaign = campaigns[i]
@@ -151,6 +150,41 @@ async function changeActive(web3, addr, jsonInfo, campaigns){
 
 }
 
+async function progressUpdates(web3, addr, jsonInfo, campaigns){
+
+    let response = false;
+    let i = 0;
+    for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
+        if (campaignInfo["active"]["status"])
+        {
+            for (const progressUpdates of campaignInfo["progressUpdates"]) {
+                const path = await saveInfoIPFS(progressUpdates["imagesPath"],
+                                                progressUpdates["title"],
+                                                progressUpdates["description"],
+                                                progressUpdates["created_date"]);
+
+                const ipfsHash = "0x" + addressToHexBytes(path);
+
+                const campaign = campaigns[i]
+                //console.log(campaign);
+                //console.log(campaign.keys)
+                const membersCount = await campaign.membersCount();
+                console.log(membersCount);
+                const gasprice = await web3.eth.getGasPrice();
+                //console.log(campaign.methods)
+                const gas = await campaign.saveProgressUpdate().estimateGas({ from: addr[0] });      
+                console.log(gas);
+                const transaction = await campaign.methods['saveProgressUpdate(bytes32)'].sendTransaction({ from: addr[0], gasPrice: gasprice, gas: gas, ipfsHash: ipfsHash }) ; 
+                response = response && (transaction.type == "mined");
+            }
+        }
+        i=i+1;
+
+    };
+    return response;  
+
+}
+
 
 
 async function main() {
@@ -163,6 +197,7 @@ async function main() {
     console.log(contributed);
     const actived = await changeActive(web3, addr, jsonInfo, campaigns)
     console.log(actived);
+    const progress = await progressUpdates(web3, addr, jsonInfo, campaigns)
     
 
     

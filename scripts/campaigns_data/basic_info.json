@@ -54,6 +54,55 @@
             }
         },
         {
+            "title": "Una mano por una pata",
+            "description": "Hoy en día estamos ante una situación nunca antes vista para la mayoría de nosotros: Nos enfrentamos a una pandemia que nos ha golpeado en muchos aspectos: economico, afectivo y salud (entre otros). Sin embargo, al igual que en las peores crisis que hemos atravesado como país algo siempre resurge entre nosotros: la solidaridad. Eso, que también nos caracteriza, nos hay llevado a ayudarnos los unos a los otros de muchisimas maneras: volutarios en comedores, personas que recorren las calles ayudando a otras y alcanzandoles un plato de comida y compañía, jóvenes que se ofrecen a hacerles las compras a sus vecinos de avanzada edad, voluntarios para probar el desarrollo de vacunas. Lamentablemente si bien podemos hacer mucho, la ayuda no alcanza para todos y, cuando la situación es tan díficil, sin quererlo surgen los grandes olvidados: los callejeritos. Al principio de la pandemía hubo un boom de adopciones por el cual se adoptaron tanto perros como gatos. Sin embargo, de la misma manera se generó un boom de abandonos. Esto, sumado a la crisis economica que hizo que menos gente se involucrara con el rescate de callejeritos, generó una expansión en las colonias de gatos y perros por centros urbanos. Desde la organización Patitas Felices propones llevar a cabo un rescate masivo dentro del conurbano sur de gatos y perros callejeros, brindando atención veterinaria, aplicando las vacunas y castrando a la mayor cantidad posible de ellos para evitar que la situación empeore, dandoles refugio en una casona recientemete comprada que debemos reacondicionar y buscandoles un hogar ¿Nos ayudas dando una mano por una pata?",
+            "created_date": "11/02/2021",
+            "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
+            "minimunContribution": 20,
+            "goal": 5000,
+            "contributions": [
+                { 
+                    "accountIndex": 1,
+                    "value": 20
+                },
+                { 
+                    "accountIndex": 2,
+                    "value": 500
+                },
+                { 
+                    "accountIndex": 3,
+                    "value": 320
+                },
+                { 
+                    "accountIndex": 4,
+                    "value": 800
+                },
+                { 
+                    "accountIndex": 5,
+                    "value": 600
+                },
+                { 
+                    "accountIndex": 6,
+                    "value": 1500
+                },
+                { 
+                    "accountIndex": 7,
+                    "value": 1500
+                }
+            ],
+            "active": { 
+                "status": true
+            },
+            "progressUpdates": [
+                {
+                    "title": "Primeros rescatados",
+                    "description": "El día de hoy nos han avisado de una camada de cinco gatitos abandonados en un terreno baldío ubicado en la localidad de Lanús, más precisamente en montechingolo (calle Centenario Uruguayo, altura 1445). Hemos ido y nos encontramos con los gatitos que ven en la foto y llevandolos a la veterinaria de confianza de manera gratuita hemos checkeado que se encuentran bien de salud. Todavía tenemos leche maternizada de una camada anterior y creemos que por ahora alcanzara para la proxima semana. Los siguientes pasos son desparacitarlos, cuidarlos hasta que tengan 45 días y luego darlos en adopción responsable.",
+                    "created_date": "20/02/2021",
+                    "imagesPath": ["./scripts/images/progress/p1_gatitos1.jpg", "./scripts/images/progress/p1_gatitos2.jpg", "./scripts/images/progress/p1_gatitos3.jpg", "./scripts/images/progress/p1_gatitos4.jpg"]
+                }
+            ]
+        },
+        {
             "title": "Choose CTHULHU",
             "description": "A finales de los años 70 y sobre todo durante la década de los 80, se vivió un fenómeno literario increíble que cambió la forma de entender la lectura en el mundo: la era del “librojuego”. Con sencillas historias narradas en segunda persona, como si el lector asumiese la personalidad del protagonista del libro, se le ofrecía la posibilidad de elegir entre diferentes caminos y formas de resolver los problemas planteados en la trama. En Choose Cthulhu hemos ido un paso más allá: nuestro desarrollo propuesto de un librojuego no son es meramente una aventura genérica; hemos querido que experimentes en primera persona los acontecimientos narrados en el ciclo de LOS MITOS DE CTHULHU del escritor e icono de la cultura popular H.P. Lovecraft (Si no lo conoces no sé a qué estás esperando…) Para eso necesitamo de tu ayuda para financiar el desarrollo y prometemos que al terminarlo quienes hayan sido colaboradores recibirán un 50% de descuento en nuestros productos con tope de un descuento por tipo de producto ¿Nos ayudas a llevar el terror cosmico desde otro punto de vista a todos los que deseen vivirlo en carne propia?",
             "created_date": "19/12/2020",

@@ -309,6 +309,10 @@ hr {
     background-color: #A0A0A0 !important;
 }
 
+h3 .ui.label:first-child {
+    margin-left: 1em !important;
+    margin-bottom: 0.5em !important;
+}
 
 
 @font-face {

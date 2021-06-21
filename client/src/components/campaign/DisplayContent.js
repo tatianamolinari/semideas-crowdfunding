@@ -16,10 +16,12 @@ class DisplayContent extends React.Component {
   state = {
     active: this.props.active,
     loaded: false,
+    isOwner: this.props.data.isOwner,
     isMember: this.props.data.isMember,
     balance: this.props.data.balance,
     membersCount: this.props.data.membersCount,
     status: this.props.data.status,
+    rol: null,
     progress: 0,
     badge_status:''
   };
@@ -30,6 +32,8 @@ class DisplayContent extends React.Component {
       const isMember = await campaignService.getMembership();
       const balance = await campaignService.getBalance();
       const membersCount = await campaignService.getMembersCount();
+
+      this.actualizeRol(this.state.isOwner, isMember);
 
       const progress = this.getProgress();
       
@@ -62,13 +66,28 @@ class DisplayContent extends React.Component {
       console.error(error);
     }
   }
+  
+  actualizeRol = (isOwner,isMember) =>
+  {
+    if (isOwner){
+      this.setState({ rol: "Eres el owner" });
+    }
+    else if (isMember) {
+      this.setState({ rol: "Eres miembro" });
+    }
+
+  }
+
 
   componentDidMount = async() => {
 
     const progress = this.getProgress();
     const badge_status = fromStatusToBadgeClass(this.state.status);
+    
     this.setState({ badge_status: badge_status });
     this.setState({ progress: progress });
+
+    this.actualizeRol(this.state.isOwner, this.state.isMember);
     
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
     await campaignService.suscribeToNewContribution(actualizeInfo);
@@ -102,7 +121,15 @@ class DisplayContent extends React.Component {
     }
     
     return (  <div className="campaign-info" id="general_data_container"> 
-                <h3 className="name"> {title} </h3>
+                <h3 className="name"> {title} 
+                  { (this.state.rol) && 
+                  <Label color="teal">
+                    <span data-testid="rol">
+                      { this.state.rol }
+                    </span>
+                  </Label>
+                  }
+                </h3> 
                 <p className="aling-right"> Fecha de creación {created_at}</p>
                 <ImagesDetail images={images}/>
                 <h5> Estado: <Badge variant={this.state.badge_status}> { this.state.status } </Badge> </h5>
@@ -121,7 +148,7 @@ class DisplayContent extends React.Component {
                   <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei contribuidos`} />
                 </div>
               
-                { (!this.state.isMember) && (!this.props.data.isOwner) && this.state.status=="Creada"
+                { (!this.state.isMember) && (!this.state.isOwner) && this.state.status=="Creada"
                   &&  
                   <div className="contribute-row" data-testid="contribution-row">
                      <ContributeModal 

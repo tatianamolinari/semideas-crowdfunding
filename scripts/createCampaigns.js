@@ -116,8 +116,8 @@ async function sendContributions(web3, addr, jsonInfo, campaigns){
             const addr_index = contributionInfo["accountIndex"];
             const campaign = campaigns[i]
             const gasprice = await web3.eth.getGasPrice();
-            const gas = await campaign.methods['contribute()'].estimateGas({ from: addr[addr_index], value: value });      
-            const transaction = await campaign.methods['contribute()'].sendTransaction({ from: addr[addr_index], gasPrice: gasprice, gas: gas, value: value }) ; 
+            const gas = await campaign.contribute.estimateGas({ from: addr[addr_index], value: value });      
+            const transaction = await campaign.contribute.sendTransaction({ from: addr[addr_index], gasPrice: gasprice, gas: gas, value: value }) ; 
             response = response && (transaction.logs.type == "mined");
         };
         i=i+1;
@@ -139,8 +139,8 @@ async function changeActive(web3, addr, jsonInfo, campaigns){
             //const goal = await campaign.methods['goal()'].call()
             //console.log(campaign.methods);
             //console.log(`${i} ${campaignInfo['title']} goal: ${goal} balance: ${balance} ${campaigns[i]} status ${campaignInfo["active"]["status"]}`);
-            const gas = await campaign.methods['setActive()'].estimateGas({ from: addr[0] });      
-            const transaction = await campaign.methods['setActive()'].sendTransaction({ from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+            const gas = await campaign.setActive.estimateGas({ from: addr[0] });      
+            const transaction = await campaign.setActive.sendTransaction({ from: addr[0], gasPrice: gasprice, gas: gas }) ; 
             response = response && (transaction.type == "mined");
         }
         i=i+1;
@@ -164,17 +164,11 @@ async function progressUpdates(web3, addr, jsonInfo, campaigns){
                                                 progressUpdates["created_date"]);
 
                 const ipfsHash = "0x" + addressToHexBytes(path);
-
+                
                 const campaign = campaigns[i]
-                //console.log(campaign);
-                //console.log(campaign.keys)
-                const membersCount = await campaign.membersCount();
-                console.log(membersCount);
                 const gasprice = await web3.eth.getGasPrice();
-                //console.log(campaign.methods)
-                const gas = await campaign.saveProgressUpdate().estimateGas({ from: addr[0] });      
-                console.log(gas);
-                const transaction = await campaign.methods['saveProgressUpdate(bytes32)'].sendTransaction({ from: addr[0], gasPrice: gasprice, gas: gas, ipfsHash: ipfsHash }) ; 
+                const gas = await campaign.saveProgressUpdate.estimateGas(ipfsHash, { from: addr[0] });      
+                const transaction = await campaign.saveProgressUpdate.sendTransaction(ipfsHash, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
                 response = response && (transaction.type == "mined");
             }
         }
@@ -198,6 +192,7 @@ async function main() {
     const actived = await changeActive(web3, addr, jsonInfo, campaigns)
     console.log(actived);
     const progress = await progressUpdates(web3, addr, jsonInfo, campaigns)
+    console.log(progress);
     
 
     

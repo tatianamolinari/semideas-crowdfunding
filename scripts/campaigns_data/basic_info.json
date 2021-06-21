@@ -141,15 +141,7 @@
             ],
             "active": { 
                 "status": true
-            },
-            "progressUpdates": [
-                {
-                    "title": "Primer update",
-                    "description": "",
-                    "created_date": "20/02/2021",
-                    "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"]
-                }
-            ]
+            }
         }
         
     ]

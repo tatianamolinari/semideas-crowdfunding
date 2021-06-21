@@ -107,19 +107,44 @@ async function sendContributions(web3, addr, jsonInfo, campaigns){
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
 
         for (const contributionInfo of campaignInfo["contributions"]) {
+            console.log(`${i} ${contributionInfo["value"]} ${campaignInfo['title']} ${campaigns[i]}`);
             const value = contributionInfo["value"];
             const addr_index = contributionInfo["accountIndex"];
             const campaign = campaigns[i]
             const gasprice = await web3.eth.getGasPrice();
             const gas = await campaign.methods['contribute()'].estimateGas({ from: addr[addr_index], value: value });      
             const transaction = await campaign.methods['contribute()'].sendTransaction({ from: addr[addr_index], gasPrice: gasprice, gas: gas, value: value }) ; 
-            response = response && (transaction.type == "mined");
+            response = response && (transaction.logs.type == "mined");
         };
         i=i+1;
     };
-    return true;  
+    return response;  
 
 }
+
+async function changeActive(web3, addr, jsonInfo, campaigns){
+
+    let response = false;
+    let i = 0;
+    for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
+        if (campaignInfo["active"]["status"])
+        {
+            console.log(campaignInfo["title"])
+            console.log(campaignInfo["active"]["status"]);
+            const campaign = campaigns[i]
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.methods['setActive()'].estimateGas({ from: addr[0] });      
+            const transaction = await campaign.methods['setActive()'].sendTransaction({ from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+            response = response && (transaction.type == "mined");
+            i=i+1;
+        }
+
+    };
+    return response;  
+
+}
+
+
 
 async function main() {
 
@@ -129,6 +154,8 @@ async function main() {
     const campaigns = await createCampaigns(jsonInfo);
     const contributed = await sendContributions(web3, addr, jsonInfo, campaigns);
     console.log(contributed);
+    //const actived = await changeActive(web3, addr, jsonInfo, campaigns)
+    //console.log(actived);
     
 
     

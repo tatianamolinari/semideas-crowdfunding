@@ -10,6 +10,7 @@ contract("CrowdFundingCampaign Test", async accounts => {
 
     const [authorAddress, memberAccount, anotherMemberAccount, recipientProposalAccount, noMemberAccount] = accounts;
     const proposalCreatedHash = "0x7465737400000000000000000000000000000000000000000000000000000000";
+    const progressUpdateHash =  "0x2465737400000000000000000000000000000000000000000000000000000000";
 
     beforeEach(async() => {
         this.campaign = await CrowdFundingCampaign.deployed()
@@ -197,9 +198,6 @@ contract("CrowdFundingCampaign Test", async accounts => {
         expect(log.event).to.equal('proposalCreated');
         expect(log.args._ipfshash).to.equal(proposalCreatedHash);
 
-        console.log(log.args._ipfshash);
-        console.log(proposalCreatedHash);
-
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
 
         let result = await campaign.getProposal(0);
@@ -375,6 +373,34 @@ contract("CrowdFundingCampaign Test", async accounts => {
         approvalsCount = result['0'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
+        return true;
+
+    });
+
+    it("Owner creates a Progress Update", async() => {
+
+        let campaign = this.campaign;
+
+        const tx = await campaign.saveProgressUpdate(progressUpdateHash); //, { from: memberAccount });
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+
+        const log = logs[0];
+        expect(log.event).to.equal('progressUpdate');
+        expect(log.args._ipfshash).to.equal(progressUpdateHash);
+
+        return true;
+
+    });
+
+    it("Only owwner creates a Progress Update, not members", async() => {
+
+        let campaign = this.campaign;
+
+        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
+        expect(campaign.saveProgressUpdate(progressUpdateHash, { from: memberAccount })).to.eventually.be.rejectedWith("Sender is not the owner.");
+       
         return true;
 
     });

@@ -6,8 +6,48 @@
             "created_date": "11/02/2021",
             "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
             "minimunContribution": 20,
-            "goal": 500,
-            "contributions": []
+            "goal": 5000,
+            "contributions": [],
+            "active": { 
+                "status": false
+            }
+        },
+        {
+            "title": "Una mano por una pata",
+            "description": "Hoy en día estamos ante una situación nunca antes vista para la mayoría de nosotros: Nos enfrentamos a una pandemia que nos ha golpeado en muchos aspectos: economico, afectivo y salud (entre otros). Sin embargo, al igual que en las peores crisis que hemos atravesado como país algo siempre resurge entre nosotros: la solidaridad. Eso, que también nos caracteriza, nos hay llevado a ayudarnos los unos a los otros de muchisimas maneras: volutarios en comedores, personas que recorren las calles ayudando a otras y alcanzandoles un plato de comida y compañía, jóvenes que se ofrecen a hacerles las compras a sus vecinos de avanzada edad, voluntarios para probar el desarrollo de vacunas. Lamentablemente si bien podemos hacer mucho, la ayuda no alcanza para todos y, cuando la situación es tan díficil, sin quererlo surgen los grandes olvidados: los callejeritos. Al principio de la pandemía hubo un boom de adopciones por el cual se adoptaron tanto perros como gatos. Sin embargo, de la misma manera se generó un boom de abandonos. Esto, sumado a la crisis economica que hizo que menos gente se involucrara con el rescate de callejeritos, generó una expansión en las colonias de gatos y perros por centros urbanos. Desde la organización Patitas Felices propones llevar a cabo un rescate masivo dentro del conurbano sur de gatos y perros callejeros, brindando atención veterinaria, aplicando las vacunas y castrando a la mayor cantidad posible de ellos para evitar que la situación empeore, dandoles refugio en una casona recientemete comprada que debemos reacondicionar y buscandoles un hogar ¿Nos ayudas dando una mano por una pata?",
+            "created_date": "11/02/2021",
+            "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
+            "minimunContribution": 20,
+            "goal": 5000,
+            "contributions": [
+                { 
+                    "accountIndex": 1,
+                    "value": 20
+                },
+                { 
+                    "accountIndex": 2,
+                    "value": 500
+                },
+                { 
+                    "accountIndex": 3,
+                    "value": 320
+                },
+                { 
+                    "accountIndex": 4,
+                    "value": 800
+                },
+                { 
+                    "accountIndex": 5,
+                    "value": 600
+                },
+                { 
+                    "accountIndex": 6,
+                    "value": 1500
+                }
+            ],
+            "active": { 
+                "status": true
+            }
         },
         {
             "title": "Choose CTHULHU",
@@ -15,11 +55,11 @@
             "created_date": "19/12/2020",
             "imagesPath": ["./scripts/images/choose1.jpg", "./scripts/images/choose2.jpg", "./scripts/images/choose3.jpg"],
             "minimunContribution": 100,
-            "goal": 10000,
+            "goal": 10300,
             "contributions": [
                 { 
                     "accountIndex": 1,
-                    "value": 300
+                    "value": 1500
                 },
                 { 
                     "accountIndex": 2,
@@ -36,6 +76,25 @@
                 { 
                     "accountIndex": 5,
                     "value": 400
+                },
+                { 
+                    "accountIndex": 6,
+                    "value": 4500
+                },
+                { 
+                    "accountIndex": 7,
+                    "value": 300
+                }
+            ],
+            "active": { 
+                "status": true
+            },
+            "progressUpdates": [
+                {
+                    "title": "Primer update",
+                    "description": "",
+                    "created_date": "20/02/2021",
+                    "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"]
                 }
             ]
         }

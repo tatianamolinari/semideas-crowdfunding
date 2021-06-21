@@ -145,6 +145,14 @@ contract CrowdFundingCampaign {
          
     }
 
+    /** @dev Allow only owner to save a new progress Update data ipfs hash.
+     *  @param _ipfshash url hash of the progress update data (description and pictures) previusly stored in IPFS.
+     */
+    function saveProgressUpdate(bytes32 _ipfshash) 
+        public restricted statusActive {
+        emit progressUpdate(_ipfshash); 
+    }
+
     /** @dev Allow only owner to create a new proposal to get more founds.
      *  @param _value founds in wei that the owner want to withdraw.
      *  @param _recipient address where the founds are going to be after withdraw them.

@@ -50,11 +50,11 @@ class ContainerInfo extends React.Component {
 
           console.log(deployedCampaignsInfo)
 
-            const campaign = deployedCampaignsInfo["campaigns"][1]
+            const campaign = deployedCampaignsInfo["campaigns"][2]
             const ipfsPath = campaign["ipfsPath"]
             const address = campaign["address"]
 
-            const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath)
+            const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath);
 
             const correctNetwork = await campaignService.isCorrectNetwork();
             if (!correctNetwork){

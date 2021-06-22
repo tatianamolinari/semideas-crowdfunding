@@ -89,6 +89,17 @@ class CampaignService {
   }
 
 
+/** Get past events */
+
+async getProgressUpdates() {
+  
+  const block = await this.web3.eth.getBlockNumber();
+  const opts = { fromBlock: block - 100, toBlock: block }
+  const events = await this.instance.getPastEvents('progressUpdate', opts);
+  return events;
+}
+
+
 /** Suscripción a eventos */
 
   async suscribeToNewContribution(actualizeFunction){
@@ -123,6 +134,29 @@ class CampaignService {
       })
       .on('data', function(event){
           actualizeFunction();
+          console.log(event); 
+      })
+      .on('error', function(error, receipt) {
+        console.log("hubo un error");
+        console.log(error);
+      });
+
+
+  }
+
+  async suscribeToProgressUpdate(actualizeFunction){
+
+    const currentBlock = await this.getCurrentBlock();
+
+    this.instance.events.progressUpdate({
+      fromBlock: currentBlock
+      }, function(error, event){ console.log(event); })
+      .on("connected", function(subscriptionId){
+          console.log(subscriptionId);
+      })
+      .on('data', function(event){
+          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+          actualizeFunction(event);
           console.log(event); 
       })
       .on('error', function(error, receipt) {

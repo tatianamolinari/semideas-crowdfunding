@@ -10,7 +10,7 @@ class ItemProgressUpdates extends React.Component {
       return ( 
        
                 <Item>
-                  <Item.Image size='small' src='/images/prueba/prueba1.jpg' />
+                  <Item.Image size='small' src={this.props.image} />
                   <Item.Content onClick={this.props.onClick} className="div-clickleable">
                     <Item.Header data-testid="title">{this.props.title}</Item.Header>
                     <Item.Meta>Description</Item.Meta>

@@ -100,6 +100,14 @@ async getProgressUpdates() {
   return events;
 }
 
+async getProposals() {
+  
+  const block = await this.web3.eth.getBlockNumber();
+  const opts = { fromBlock: block - 100, toBlock: block }
+  const events = await this.instance.getPastEvents('proposalCreated', opts);
+  return events;
+}
+
 
 /** Suscripción a eventos */
 

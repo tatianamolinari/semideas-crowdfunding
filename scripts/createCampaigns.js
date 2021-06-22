@@ -167,6 +167,38 @@ async function progressUpdates(web3, addr, jsonInfo, campaigns){
 
 }
 
+async function proposals(web3, addr, jsonInfo, campaigns){
+
+    let response = false;
+    let i = 0;
+    for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
+        if (campaignInfo["active"]["status"])
+        {
+            for (const proposal of campaignInfo["proposals"]) {
+                const path = await saveInfoIPFS([],
+                                                proposal["title"],
+                                                proposal["description"],
+                                                proposal["created_date"]);
+
+                const ipfsHash = "0x" + addressToHexBytes(path);
+
+                const value = proposal["value"]
+                const recipient = addr[proposal["add_i"]]
+
+                const campaign = campaigns[i]
+                const gasprice = await web3.eth.getGasPrice();
+                const gas = await campaign.createProposal.estimateGas(value, recipient, ipfsHash, { from: addr[0] });      
+                const transaction = await campaign.createProposal.sendTransaction(value, recipient, ipfsHash, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+                response = response && (transaction.type == "mined");
+            }
+        }
+        i=i+1;
+
+    };
+    return response;  
+
+}
+
 
 async function main() {
 
@@ -181,6 +213,8 @@ async function main() {
     console.log(`Actived passed: ${actived}`);
     const progress = await progressUpdates(web3, addr, jsonInfo, campaigns)
     console.log(`Progress creation passed: ${progress}`);     
+    const proposalsS = await proposals(web3, addr, jsonInfo, campaigns);
+    console.log(`Proposals creation passed: ${proposalsS}`);  
 }
 
 module.exports = function(callback) {

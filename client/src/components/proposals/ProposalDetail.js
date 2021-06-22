@@ -9,18 +9,14 @@ class ProposalDetail extends React.Component {
     loaded: false,
   };
 
-  getProposalData(index) {
-
-    const recipient = "0xDF0fd73D8e1539290a73073d466c3a933Ca895D5" ;
-    const value = 5;
-    const approvalsCount = 0 ;
-    const status = "3" ;
+  setProposalData(index) {
 
     const proposal_data = {
-      recipient: recipient,
-      value: value,
-      approvalsCount: approvalsCount,
-      status: fromIntToStatus(status)
+      recipient: this.props.recipient,
+      value: this.props.value,
+      approvalsCount: this.props.approvalsCount,
+      disapprovalsCount: this.props.disapprovalsCount,
+      status: fromIntToStatus(this.props.status)
     }
 
     this.setState({
@@ -31,7 +27,7 @@ class ProposalDetail extends React.Component {
   componentDidMount = async() => {
     try {
 
-      this.getProposalData(this.props.index_proposal);
+      this.setProposalData();
 
       this.setState({
           loaded: true,

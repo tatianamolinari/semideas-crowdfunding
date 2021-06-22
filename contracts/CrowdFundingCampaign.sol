@@ -16,6 +16,7 @@ contract CrowdFundingCampaign {
         uint value;
         address recipient;
         uint approvalsCount;
+        uint disapprovalsCount;
         mapping(address => bool) approvals;
         Status status;
     }
@@ -167,6 +168,7 @@ contract CrowdFundingCampaign {
             recipient : _recipient,
             value : _value,
             approvalsCount : 0,
+            disapprovalsCount: 0,
             status: Status.ACTIVE
         });
 
@@ -239,9 +241,9 @@ contract CrowdFundingCampaign {
     /** @dev Function to get the data of a proposal.
      *  @param _index index of the proposal to return
      */
-    function getProposal(uint _index) public view returns (address, uint, uint, Status) {
+    function getProposal(uint _index) public view returns (address, uint, uint, uint, Status) {
         Proposal storage proposal = proposals[_index];
-        return (proposal.recipient, proposal.value, proposal.approvalsCount, proposal.status);
+        return (proposal.recipient, proposal.value, proposal.approvalsCount, proposal.disapprovalsCount, proposal.status);
     } 
 
     /** @dev Function to get the total number of proposals.

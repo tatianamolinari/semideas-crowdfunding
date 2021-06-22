@@ -89,6 +89,20 @@ class CampaignService {
     return (await this.instance.methods.getStatus().call());
   }
 
+  async getProposalInfo(index) {
+    const proposalValues = await this.instance.methods.getProposal(index).call();
+    const proposalInfo = getValuesFromHash(proposalValues);
+             
+    const proposalData = {};
+    proposalData.recipient = proposalInfo[0];
+    proposalData.value = proposalInfo[1];
+    proposalData.approvalsCount = proposalInfo[2]
+    proposalData.disapprovalsCount = proposalInfo[3];
+    proposalData.status = proposalInfo[4];
+
+    return proposalData;
+  }
+
 
 /** Get past events */
 

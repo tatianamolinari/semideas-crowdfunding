@@ -61,9 +61,19 @@ class DisplayProposals extends React.Component {
     this.getProposals(activePage);
   }
 
-  showProposal(index) {
+  async showProposal(index) {
 
-    this.setState({ proposal_data : this.state.proposals[index] });
+    const proposalData = this.state.proposals[index];
+    if (!proposalData["recipient"])
+    {
+      const proposalInfo = await campaignService.getProposalInfo(index);
+      proposalData["recipient"] = proposalInfo.recipient;
+      proposalData["value"] = proposalInfo.value;
+      proposalData["approvalsCount"] = proposalInfo.approvalsCount;
+      proposalData["disapprovalsCount"] = proposalInfo.disapprovalsCount;
+      proposalData["status"] = proposalInfo.status;
+    }
+    this.setState({ proposal_data : proposalData });
     this.setState({ active: "proposals_detail"});
   }
 
@@ -133,12 +143,17 @@ class DisplayProposals extends React.Component {
                 { this.state.active==="proposals_detail" &&
                 <div  id="proposals_detail">
                   <ProposalDetail
-                  index_proposal={this.state.proposal_data.index_proposal}
-                  title={this.state.proposal_data.title}
-                  description={this.state.proposal_data.description}
-                  proposal_date={this.state.proposal_data.proposal_date}
-                  isMember={this.props.isMember}
-                  isOwner={this.props.isOwner}/>   
+                    index_proposal={this.state.proposal_data.index_proposal}
+                    title={this.state.proposal_data.title}
+                    description={this.state.proposal_data.description}
+                    proposal_date={this.state.proposal_data.proposal_date}
+                    isMember={this.props.isMember}
+                    isOwner={this.props.isOwner}
+                    recipient={this.state.proposal_data.recipient}
+                    value={this.state.proposal_data.value}
+                    approvalsCount={this.state.proposal_data.approvalsCount}
+                    disapprovalsCount={this.state.proposal_data.disapprovalsCount}
+                    status={this.state.proposal_data.status} />  
                   <Row className="proposal-footer">
                     <Col lg={6} className="aling-left">
                       <button className="normal-button"

@@ -24,15 +24,17 @@ class DisplayProgressUpdates extends React.Component {
     activePage:1
   };
 
-  async getProgressUpdates() {
-    const allProgressUpdates = [...this.state.pastProgressUpdates].reverse();
+  async getProgressUpdates(activePage) {
+    const allProgressUpdates = this.state.pastProgressUpdates;
     const progress_updates = []
-    const i_progress_update = this.state.totalProgressUpdates - 1 - ((this.state.activePage-1)*(this.state.per_page));
-    const last_i = i_progress_update - (this.state.per_page);
+    const i_progress_update = this.state.totalProgressUpdates - 1 - ((activePage-1)*(this.state.per_page));
+    const last_i = Math.max(-1, i_progress_update - (this.state.per_page));
     
+    console.log(`${i_progress_update} ${last_i} ${activePage}`)
+
     for(let i=i_progress_update; (i >= 0 && i > last_i) ; i--){
-      const pu = allProgressUpdates[i];
-      const ipfsPath = hexBytesToAddress(pu.returnValues[0].substring(2));
+      const puHash = allProgressUpdates[i];
+      const ipfsPath = hexBytesToAddress(puHash.substring(2));
 
       const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath);
       
@@ -54,9 +56,11 @@ class DisplayProgressUpdates extends React.Component {
   }
 
   handlePaginationChange = (e, { activePage }) => {
-    this.setState({ activePage, loaded: false });
-    this.getProgressUpdates();
-
+    console.log(e);
+    this.setState({ activePage: activePage, loaded: false });
+    this.getProgressUpdates(activePage);
+    console.log("aaaaa");
+    console.log(activePage);
   }
 
   showProgressUpdate(index) {
@@ -72,11 +76,12 @@ class DisplayProgressUpdates extends React.Component {
       //await campaignService.suscribeToProgressUpdate(actualizeProgressUpdates);
 
       const pastProgressUpdates = await campaignService.getProgressUpdates();
-      this.setState({ pastProgressUpdates : pastProgressUpdates, 
+      this.setState({ 
+                      pastProgressUpdates : pastProgressUpdates.map(pu =>  pu.returnValues[0]), 
                       totalProgressUpdates: pastProgressUpdates.length,
-                      totalPages: (pastProgressUpdates.length/4)
-                       });
-      await this.getProgressUpdates();
+                      totalPages: Math.ceil(pastProgressUpdates.length/4)
+                    });
+      await this.getProgressUpdates(1);
 
 
     } catch (error) {
@@ -113,11 +118,13 @@ class DisplayProgressUpdates extends React.Component {
                       {progress_updates_nodes}
                     </Item.Group>           
                   </Row>
-                  <Pagination
-                    activePage={this.state.activePage}
-                    onPageChange={this.handlePaginationChange}
-                    totalPages={this.state.totalPages}
-                  />
+                  <Row className="justify-content-md-center">
+                    <Pagination
+                      activePage={this.state.activePage}
+                      onPageChange={this.handlePaginationChange}
+                      totalPages={this.state.totalPages}
+                    />
+                  </Row>
                 </div>
                 }
 

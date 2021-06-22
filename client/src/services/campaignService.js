@@ -156,7 +156,6 @@ async getProgressUpdates() {
           console.log(subscriptionId);
       })
       .on('data', function(event){
-          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
           actualizeFunction(event);
           console.log(event); 
       })

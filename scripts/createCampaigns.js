@@ -2,18 +2,11 @@
 
 
 const CrowdFundingCampaign = artifacts.require("CrowdFundingCampaign.sol");
-//import { create }  from '../node_modules/ipfs-http-client'; //-------------> falla porque no le gusta el import
-//const { create } = require('ipfs-http-client') //---------> falla porque no encuentra el modulo
-const { create } = require('../node_modules/ipfs-http-client'); //---> encuentra el modulo pero falla dentro de ipfs
+const { create } = require('../node_modules/ipfs-http-client');
 const fs = require('fs');
 const bs58 = require('bs58');
 const Web3 = require("web3");
 const ipfs_client = create('https://ipfs.infura.io:5001');
-
-
-async function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 async function saveJsonIPFS(json_value){
     
@@ -111,7 +104,6 @@ async function sendContributions(web3, addr, jsonInfo, campaigns){
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
 
         for (const contributionInfo of campaignInfo["contributions"]) {
-            //console.log(`${i} ${contributionInfo["value"]} ${campaignInfo['title']} ${campaigns[i]}`);
             const value = contributionInfo["value"];
             const addr_index = contributionInfo["accountIndex"];
             const campaign = campaigns[i]
@@ -135,10 +127,6 @@ async function changeActive(web3, addr, jsonInfo, campaigns){
         {
             const campaign = campaigns[i]
             const gasprice = await web3.eth.getGasPrice();
-            //const balance = await web3.eth.getBalance(campaign.address);
-            //const goal = await campaign.methods['goal()'].call()
-            //console.log(campaign.methods);
-            //console.log(`${i} ${campaignInfo['title']} goal: ${goal} balance: ${balance} ${campaigns[i]} status ${campaignInfo["active"]["status"]}`);
             const gas = await campaign.setActive.estimateGas({ from: addr[0] });      
             const transaction = await campaign.setActive.sendTransaction({ from: addr[0], gasPrice: gasprice, gas: gas }) ; 
             response = response && (transaction.type == "mined");
@@ -164,7 +152,7 @@ async function progressUpdates(web3, addr, jsonInfo, campaigns){
                                                 progressUpdates["created_date"]);
 
                 const ipfsHash = "0x" + addressToHexBytes(path);
-                
+
                 const campaign = campaigns[i]
                 const gasprice = await web3.eth.getGasPrice();
                 const gas = await campaign.saveProgressUpdate.estimateGas(ipfsHash, { from: addr[0] });      
@@ -180,22 +168,19 @@ async function progressUpdates(web3, addr, jsonInfo, campaigns){
 }
 
 
-
 async function main() {
 
     const web3 = getWeb3();
     const addr = await web3.eth.getAccounts();
     const jsonInfo = getBasicInfo();
     const campaigns = await createCampaigns(jsonInfo);
+    console.log(`Creation passed: ${campaigns.length} new campaigns`);
     const contributed = await sendContributions(web3, addr, jsonInfo, campaigns);
-    console.log(contributed);
-    const actived = await changeActive(web3, addr, jsonInfo, campaigns)
-    console.log(actived);
+    console.log(`Contributed passed: ${contributed}`);
+    const actived = await changeActive(web3, addr, jsonInfo, campaigns);
+    console.log(`Actived passed: ${actived}`);
     const progress = await progressUpdates(web3, addr, jsonInfo, campaigns)
-    console.log(progress);
-    
-
-    
+    console.log(`Progress creation passed: ${progress}`);     
 }
 
 module.exports = function(callback) {

@@ -99,6 +99,18 @@
                     "description": "El día de hoy nos han avisado de una camada de cinco gatitos abandonados en un terreno baldío ubicado en la localidad de Lanús, más precisamente en montechingolo (calle Centenario Uruguayo, altura 1445). Hemos ido y nos encontramos con los gatitos que ven en la foto y llevandolos a la veterinaria de confianza de manera gratuita hemos checkeado que se encuentran bien de salud. Todavía tenemos leche maternizada de una camada anterior y creemos que por ahora alcanzara para la proxima semana. Los siguientes pasos son desparacitarlos, cuidarlos hasta que tengan 45 días y luego darlos en adopción responsable.",
                     "created_date": "20/02/2021",
                     "imagesPath": ["./scripts/images/progress/p1_gatitos1.jpg", "./scripts/images/progress/p1_gatitos2.jpg", "./scripts/images/progress/p1_gatitos3.jpg", "./scripts/images/progress/p1_gatitos4.jpg"]
+                },
+                {
+                    "title": "Compramos piedritas",
+                    "description": "Gracias por liberar fondos. Con lo liberado de la última petición subimos fotos de las piedritas sanitarinas y las bandejas que compramos para poder poner en las diferentes habitaciones y mantener a los gatos adultos separados por sexo (y evitar que procreen antes de que sean castrados) y distribuirlos de manera practica para evitar peleas y problemas que pueda causar el hacinamiento de gatos.",
+                    "created_date": "22/02/2021",
+                    "imagesPath": ["./scripts/images/progress/p2_piedritas1.jpg", "./scripts/images/progress/p2_piedritas2.jpg", "./scripts/images/progress/p2_piedritas3.jpg"]
+                },
+                {
+                    "title": "Tickets de pago en veterinaria",
+                    "description": "Con lo liberado por el último pedido de fondos hemos comprado gasas para curaciones de los perritos y gatitos lastimados, antibioticos, jeringas, algodón y gasas.",
+                    "created_date": "24/02/2021",
+                    "imagesPath": ["./scripts/images/progress/p3_tickets1.jpg", "./scripts/images/progress/p3_tickets2.jpg"]
                 }
             ]
         },
@@ -141,7 +153,8 @@
             ],
             "active": { 
                 "status": true
-            }
+            },
+            "progressUpdates": []
         }
         
     ]

@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { Icon, Item }  from 'semantic-ui-react'
+import { Icon, Item, Pagination }  from 'semantic-ui-react'
 
 import ItemProgressUpdates from "./ItemProgressUpdates.js";
 import ProgressUpdateDetail from "./ProgressUpdateDetail.js";
@@ -16,19 +16,21 @@ class DisplayProgressUpdates extends React.Component {
     active: this.props.active,
     progress_update_data: {},
     progress_updates: [],
+    pastProgressUpdates: [],
+    totalPages: 0,
+    totalProgressUpdates: 0,
     loaded: false,
-    page:1
+    per_page: 4,
+    activePage:1
   };
 
-  async getProgressUpdates(totalProgressUpdates, pastProgressUpdates) {
-
-    const allProgressUpdates = pastProgressUpdates.reverse();
+  async getProgressUpdates() {
+    const allProgressUpdates = [...this.state.pastProgressUpdates].reverse();
     const progress_updates = []
-    const i_progress_update = totalProgressUpdates - 1 - ((this.state.page-1)*4);
-    const last_i = i_progress_update - 4;
-    console.log(`First i progress update ${i_progress_update} & Last i progress update ${last_i} with totalProgressUpdates ${totalProgressUpdates} - page ${this.state.page} `) 
+    const i_progress_update = this.state.totalProgressUpdates - 1 - ((this.state.activePage-1)*(this.state.per_page));
+    const last_i = i_progress_update - (this.state.per_page);
     
-    for(let i=i_progress_update; (i >= 0 && i >= last_i) ; i--){
+    for(let i=i_progress_update; (i >= 0 && i > last_i) ; i--){
       const pu = allProgressUpdates[i];
       const ipfsPath = hexBytesToAddress(pu.returnValues[0].substring(2));
 
@@ -43,8 +45,18 @@ class DisplayProgressUpdates extends React.Component {
           "images": ipfsData.images.map(path =>  ipfsService.getIPFSUrlFromPath(path))
         });
     }
-    
-    return progress_updates;
+
+    this.setState({
+      loaded: true,
+      progress_updates: progress_updates
+    });
+
+  }
+
+  handlePaginationChange = (e, { activePage }) => {
+    this.setState({ activePage, loaded: false });
+    this.getProgressUpdates();
+
   }
 
   showProgressUpdate(index) {
@@ -60,14 +72,12 @@ class DisplayProgressUpdates extends React.Component {
       //await campaignService.suscribeToProgressUpdate(actualizeProgressUpdates);
 
       const pastProgressUpdates = await campaignService.getProgressUpdates();
+      this.setState({ pastProgressUpdates : pastProgressUpdates, 
+                      totalProgressUpdates: pastProgressUpdates.length,
+                      totalPages: (pastProgressUpdates.length/4)
+                       });
+      await this.getProgressUpdates();
 
-      const totalProgressUpdates = pastProgressUpdates.length; 
-      const progress_updates = await this.getProgressUpdates(totalProgressUpdates,pastProgressUpdates);
- 
-      this.setState({
-          loaded: true,
-          progress_updates: progress_updates
-      });
 
     } catch (error) {
         alert(
@@ -97,16 +107,24 @@ class DisplayProgressUpdates extends React.Component {
     return (  <div className="proposal-info" id="progress_container" style={{display: "none"}}>            
                 
                 { this.state.active==="progress_updates_list" && progress_updates_nodes.length>0 &&
-                <Row  id="progress_updates_list">
-                  <Item.Group>
-                    {progress_updates_nodes}
-                  </Item.Group>           
-                </Row> }
+                <div>
+                  <Row  id="progress_updates_list">
+                    <Item.Group>
+                      {progress_updates_nodes}
+                    </Item.Group>           
+                  </Row>
+                  <Pagination
+                    activePage={this.state.activePage}
+                    onPageChange={this.handlePaginationChange}
+                    totalPages={this.state.totalPages}
+                  />
+                </div>
+                }
 
                 { this.state.active==="progress_updates_list" && progress_updates_nodes.length===0 &&
                 <div>  
                     <h1> Aún no hay avances del proyecto para mostrar. </h1>
-                    <p> No dejes de estar pendiente a las nuevas actualizaciones que el autor pueda subir.</p>
+                    <p> No dejes de estar pendiente a las nuevas actualizaciones que el owner pueda subir.</p>
                 </div>
                
                 }

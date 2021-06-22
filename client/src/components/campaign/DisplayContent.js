@@ -212,7 +212,7 @@ class DisplayContent extends React.Component {
                   <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei contribuidos`} />
                 </div>
               
-                { (!this.state.isMember) && (!this.state.isOwner) && this.state.status=="Creada"
+                { (!this.state.isMember) && (!this.state.isOwner) && this.state.status==="Creada"
                   &&  
                   <div className="contribute-row" data-testid="contribution-row">
                      <ContributeModal 
@@ -220,7 +220,7 @@ class DisplayContent extends React.Component {
                       contributeLoading={false}/>
                   </div> }
 
-                { this.state.progress >= 100 && this.state.isOwner && this.state.status=="Creada"
+                { this.state.progress >= 100 && this.state.isOwner && this.state.status==="Creada"
                   &&
                     <div>
                       { this.state.showMessage &&

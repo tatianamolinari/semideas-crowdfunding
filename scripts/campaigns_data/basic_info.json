@@ -111,7 +111,26 @@
                     "description": "Con lo liberado por el último pedido de fondos hemos comprado gasas para curaciones de los perritos y gatitos lastimados, antibioticos, jeringas, algodón y gasas.",
                     "created_date": "24/02/2021",
                     "imagesPath": ["./scripts/images/progress/p3_tickets1.jpg", "./scripts/images/progress/p3_tickets2.jpg"]
+                },
+                {
+                    "title": "Nuevos perritos encontrados",
+                    "description": "Hemos encontrado estos 7 cachorros abandonados en una plaza de Lomas. Ya han sido revisados gratuitamente por nuestra veterinaria de confianza y hemos constado que a pesar de ser muy pequeños gozan de buena salud. Aún tenemos leche maternizada para poder alimentarlos pero seguramente dentro de unos días debamos pedir liberación de fondos para comprar más ya que son muchos los cachorros que tenemos en este momento y debemos alimentar cada 2hs con leche maternizada para asegurarnos que crezacan fuertes y sanos y no se descompongan ¡Gracias por colaborar con nosotros, sin ustedes esto no sería posible!",
+                    "created_date": "24/02/2021",
+                    "imagesPath": ["./scripts/images/progress/p4_perritos1.jpg", "./scripts/images/progress/p4_perritos2.jpg", "./scripts/images/progress/p4_perritos3.jpg"]
+                },
+                {
+                    "title": "Material para las cuchas",
+                    "description": "Les mostramos el material que hemos comprado con las últimas dos liberaciones de fondos que nos han autorizado. Hemos comprado madera, chapa y hemos mandado a hacer las tapas de las cuchas para finalmente comenzar con el proceso de cortado de madera y armado de las mismas para luego poder lijarlas, impermiabilizarlas y barnizarlas con el objetivo de ponerlas en los puntos estrategicos del conurbano antes de que comience el invierno y así poder ayudar a los perritos y gatitos callejeros a resguardarse del frío, dejarles comida y bebida y entrar más rápido en confianza con nosotros para poder ayudarlos a salir definitivamente de las calles y sus peligros.",
+                    "created_date": "26/03/2021",
+                    "imagesPath": ["./scripts/images/progress/p5_cuchas1.jpg", "./scripts/images/progress/p5_cuchas2.jpg", "./scripts/images/progress/p5_cuchas3.jpg"]
+                },
+                {
+                    "title": "Cuchas terminadas",
+                    "description": "He aquí las fotos de las cuchas terminadas. Hemos realizado en total unas 115 cuchas que serán distribuidas los próximos días por diferentes municipios del conurbano sur donde hay una red de vecinos dispuestos a cuidarlas de robos y vandalismo y avisarnos cuando algún callejerito se refugie y podamos comenzar con el proceso de captación y ayuda. Como pueden ver en las fotos son sencillas y de tamaño para un perro mediano que es el tamaño más común de los perros de la calle y también sirve para gatos o los perritos más pequeños.",
+                    "created_date": "30/04/2021",
+                    "imagesPath": ["./scripts/images/progress/p6_cuchas1.jpg", "./scripts/images/progress/p6_cuchas2.jpg", "./scripts/images/progress/p6_cuchas3.jpg"]
                 }
+
             ]
         },
         {

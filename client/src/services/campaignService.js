@@ -27,6 +27,7 @@ class CampaignService {
 
   async isCorrectNetwork() {
     const initialized = await this.init();
+    console.log(`Now initialized is ${initialized}`);
     return CrowdFundingCampaign.networks[this.networkId];
   }
 
@@ -58,7 +59,7 @@ class CampaignService {
     const campaignValues = await this.instance.methods.getCampaignInfo().call();
     const campaignInfo = getValuesFromHash(campaignValues);
              
-    const campaignData = new Object();
+    const campaignData = {};
     campaignData.owner = campaignInfo[0];
     campaignData.status = await campaignInfo[1];
     campaignData.goal = campaignInfo[2]
@@ -195,7 +196,6 @@ async getProgressUpdates() {
   }
 
   transactionOnReipt(receipt, statusResponse, resolve){
-    {
       console.log('reciept', receipt);
       if(receipt.status === '0x1' || receipt.status === 1  || receipt.status===true ){
         console.log('Transaction Success');
@@ -203,7 +203,6 @@ async getProgressUpdates() {
       else {
         console.log('Transaction receipt but failed')
       }
-    }
     resolve(statusResponse);
   }
 
@@ -218,7 +217,7 @@ async getProgressUpdates() {
 
     const promise = new Promise(function(resolve, reject) {
 
-      const statusResponse = new Object();
+      const statusResponse = {};
       statusResponse.error = false;
       statusResponse.errorMsg = "";
 
@@ -233,12 +232,12 @@ async getProgressUpdates() {
   async setActive() {
     const gasprice = await this.web3.eth.getGasPrice();
     const gas = await this.instance.methods.setActive().estimateGas({ from: this.accounts[0] });      
-    const transaction = this.instance.methods.setActive().send({ from: this.accounts[0], gasPrice: gasprice}) ;    
+    const transaction = this.instance.methods.setActive().send({ from: this.accounts[0], gasPrice: gasprice, gas: gas}) ;    
     var service = this;
 
     const promise = new Promise(function(resolve, reject) {
 
-      const statusResponse = new Object();
+      const statusResponse = {};
       statusResponse.error = false;
       statusResponse.errorMsg = "";
 

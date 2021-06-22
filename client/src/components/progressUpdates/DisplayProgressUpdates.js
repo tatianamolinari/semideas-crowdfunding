@@ -56,11 +56,8 @@ class DisplayProgressUpdates extends React.Component {
   }
 
   handlePaginationChange = (e, { activePage }) => {
-    console.log(e);
     this.setState({ activePage: activePage, loaded: false });
     this.getProgressUpdates(activePage);
-    console.log("aaaaa");
-    console.log(activePage);
   }
 
   showProgressUpdate(index) {
@@ -79,7 +76,7 @@ class DisplayProgressUpdates extends React.Component {
       this.setState({ 
                       pastProgressUpdates : pastProgressUpdates.map(pu =>  pu.returnValues[0]), 
                       totalProgressUpdates: pastProgressUpdates.length,
-                      totalPages: Math.ceil(pastProgressUpdates.length/4)
+                      totalPages: Math.ceil(pastProgressUpdates.length/this.state.per_page)
                     });
       await this.getProgressUpdates(1);
 

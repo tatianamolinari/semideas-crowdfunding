@@ -1,57 +1,83 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { Icon }  from 'semantic-ui-react'
+import { Icon, Pagination }  from 'semantic-ui-react'
 
 
 import CardProposal from "./CardProposal.js";
 import ProposalDetail from "./ProposalDetail.js";
+
+import { campaignService } from "../../services/campaignService.js"
+import { ipfsService } from "../../services/ipfsService.js"
+import { hexBytesToAddress } from "../../helpers/utils.js"
 
 class DisplayProposals extends React.Component {
 
   state = {
     active: this.props.active,
     proposal_data: {},
+    pastProposals: [],
     proposals: [],
     loaded: false,
-    page:1
+    activePage:1,
+    totalProposals: 0,
+    totalPages: 0,
+    per_page: 3
+    
   };
 
-  getProposals(totalProposals) {
+  async getProposals(activePage) {
 
-    const i_proposal = totalProposals - 1 - ((this.state.page-1)*6);
-    const last_i = i_proposal - 6;
-    console.log(`First i proposal ${i_proposal} & Last i proposal ${last_i} with totalProposals ${totalProposals} - page ${this.state.page} `) 
+    const allProposals = this.state.pastProposals;
     const proposals = []
+    const i_proposal = this.state.totalProposals - 1 - ((activePage-1)*(this.state.per_page));
+    const last_i = Math.max(-1, i_proposal - (this.state.per_page));
     
-    for(let i=i_proposal; (i >= 0 && i >= last_i) ; i--){
-      proposals.push(
-        {"index_proposal": i,
-         "title":`Titulo proposal ${i}`, 
-         "description":"Lorem ipsum dolor sit amet consectetur adipiscing elit quis, condimentum odio class etiam justo euismod orci, lobortis cras aptent mauris nullam semper senectus. Etiam ligula malesuada sapien magna tincidunt scelerisque ridiculus vel, aenean aliquam arcu eget facilisis placerat cubilia nibh purus, eleifend mi sociis ad vitae nam tempor. Imperdiet arcu parturient libero suscipit accumsan erat convallis velit metus bibendum taciti, auctor neque felis per augue in maecenas vulputate enim. Montes senectus urna eros accumsan lobortis cras ante convallis lacus, volutpat ullamcorper platea fermentum morbi class hac laoreet pretium sagittis, luctus cursus pellentesque interdum sed nullam porta est. Morbi mattis tincidunt ligula ad blandit per varius vulputate lobortis, nam curae urna netus bibendum a non aenean, consequat ut nascetur mi viverra lectus ultrices dis. A magnis molestie ultrices suscipit euismod litora fames volutpat erat vehicula venenatis mattis neque nam interdum, tincidunt orci condimentum augue natoque magna libero arcu dui taciti mus sed hendrerit class.",
-         "proposal_date": `05/03/0${i+1}`});
-      }
+    console.log(`${i_proposal} ${last_i} ${activePage}`)
 
-    return proposals;
+    for(let i=i_proposal; (i >= 0 && i > last_i) ; i--){
+      const pHash = allProposals[i];
+      const ipfsPath = hexBytesToAddress(pHash.substring(2));
+
+      const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath);
+      
+      proposals.push(
+        {
+          "index_proposal": i,
+          "title": ipfsData.title, 
+          "description": ipfsData.description ,
+          "proposal_date": ipfsData.created_date
+        });
+    }
+
+    this.setState({
+      loaded: true,
+      proposals: proposals
+    });
+
+  }
+
+  handlePaginationChange = (e, { activePage }) => {
+    this.setState({ activePage: activePage, loaded: false });
+    this.getProposals(activePage);
   }
 
   showProposal(index) {
 
-    this.setState({ proposal_data : this.state.proposals[index]});
+    this.setState({ proposal_data : this.state.proposals[index] });
     this.setState({ active: "proposals_detail"});
   }
 
   componentDidMount = async() => {
     try {
 
-      const totalProposals = 5; await this.props.instance.methods.getProposalsCount().call();
-      const proposals = this.getProposals(totalProposals);
+      const pastProposals = await campaignService.getProposals();
+      this.setState({ 
+                      pastProposals : pastProposals.map(pu =>  pu.returnValues[0]), 
+                      totalProposals: pastProposals.length,
+                      totalPages: Math.ceil(pastProposals.length/this.state.per_page)
+                    });
 
-      console.log(proposals);
- 
-      this.setState({
-          loaded: true,
-          proposals: proposals
-      });
+      await this.getProposals(1);
 
     } catch (error) {
         alert(
@@ -82,9 +108,18 @@ class DisplayProposals extends React.Component {
     return (  <div className="proposal-info" id="proposals_container" style={{display: "none"}}>            
                 
                 { this.state.active==="proposals_list" && proposal_nodes.length>0 &&
-                <Row  id="proposals_list">
-                {proposal_nodes}                
-                </Row> }
+                <div>
+                  <Row  id="proposals_list">
+                  {proposal_nodes}                
+                  </Row> 
+                  <Row className="justify-content-md-center">
+                    <Pagination
+                      activePage={this.state.activePage}
+                      onPageChange={this.handlePaginationChange}
+                      totalPages={this.state.totalPages}
+                    />
+                  </Row>
+                </div>}
 
                 { this.state.active==="proposals_list" && proposal_nodes.length===0 &&
                 <div>  

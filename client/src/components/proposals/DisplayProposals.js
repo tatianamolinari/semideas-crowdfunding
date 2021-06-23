@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { Icon, Pagination }  from 'semantic-ui-react'
+import { Icon, Pagination, Button, Label }  from 'semantic-ui-react'
 
 
 import CardProposal from "./CardProposal.js";
@@ -153,7 +153,33 @@ class DisplayProposals extends React.Component {
                     value={this.state.proposal_data.value}
                     approvalsCount={this.state.proposal_data.approvalsCount}
                     disapprovalsCount={this.state.proposal_data.disapprovalsCount}
-                    status={this.state.proposal_data.status} />  
+                    status={this.state.proposal_data.status} />
+  { this.props.isMember && (!this.props.isOwner) && <div></div> }
+                    <Row className="proposal-footer">
+                      <Col lg={6} className="aling-left">
+                        <Button as='div' labelPosition='right'>
+                          <Button icon>
+                            <Icon name='thumbs up'/>
+                            Aprobar
+                          </Button>
+                          <Label as='a' basic pointing='left'>
+                            {this.state.proposal_data.approvalsCount}
+                          </Label>
+                        </Button>
+                      </Col>
+                      <Col lg={6} className="aling-right">
+                        <Button as='div' labelPosition='left'>
+                          <Label as='a' basic pointing='right'>
+                          {this.state.proposal_data.disapprovalsCount}
+                          </Label>
+                          <Button icon>
+                            <Icon name='thumbs down'/>
+                            Desaprobar
+                          </Button>
+                        </Button>
+                      </Col>
+                    </Row>
+
                   <Row className="proposal-footer">
                     <Col lg={6} className="aling-left">
                       <button className="normal-button"
@@ -161,13 +187,6 @@ class DisplayProposals extends React.Component {
                          <Icon name='angle left' /> Volver
                       </button>
                     </Col>
-                    { this.props.isMember && (!this.props.isOwner)
-                      &&
-                      <Col lg={6} className="aling-right">  
-                        <button className="normal-button">
-                          Aprobar <Icon name='thumbs up'/>
-                        </button>
-                      </Col>}
                   </Row>
                 </div>}
               </div>

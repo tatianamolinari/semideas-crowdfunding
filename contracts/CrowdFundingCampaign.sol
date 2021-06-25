@@ -82,6 +82,9 @@ contract CrowdFundingCampaign {
     modifier beInTimeProposal(uint _index)
         { require (now <= proposals[_index].limitTime, "The proposal is close for voting."); _; }
 
+    modifier passedTimeProposal(uint _index)
+        { require (now > proposals[_index].limitTime, "The proposal is still open for voting."); _; }
+
     modifier destructProposalActive(uint _index) {
         require(
             destructProposals[_index].status == Status.ACTIVE,
@@ -112,6 +115,10 @@ contract CrowdFundingCampaign {
      *  @param _ipfshash The url hash of the proposal data stored in IPFS.
      */
     event proposalCreated(bytes32 indexed _ipfshash);
+
+    /** @dev Emitted when a proposal is Closed.
+     */
+    event proposalClosed();
 
      /** @dev Emitted when a member creates a proposal to destruct the campaign and get the founds back.
      *  @param _ipfshash The url hash of the destruct proposal data stored in IPFS.
@@ -193,6 +200,23 @@ contract CrowdFundingCampaign {
         proposal.voters[msg.sender] = true;
         proposal.approvalsCount++;
         
+    }
+
+    /** @dev Allow only members to close an active proposal that already has its voting time over.
+     *  @param _index index of the proposal the member wants to approve.
+     */
+    function closeProposal(uint _index) public membering statusActive proposalActive(_index) passedTimeProposal(_index) {
+
+        Proposal storage proposal = proposals[_index];
+
+        if (proposal.approvalsCount < proposal.disapprovalsCount) {
+            proposal.status = Status.APPROVED; 
+        }
+        else {
+            proposal.status = Status.DISAPPROVED;
+        }
+
+        emit proposalClosed();
     }
 
     /** @dev Allow only members to create a new proposal to finish de proyect and get the founds back.

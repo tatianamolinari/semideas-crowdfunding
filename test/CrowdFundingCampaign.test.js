@@ -17,7 +17,7 @@ contract("CrowdFundingCampaign Test", async accounts => {
     })
 
     it("Checking CrowdFunding Campaign values from scratch", async() => {
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
         expect(campaign).to.be.instanceof(CrowdFundingCampaign);
 
@@ -28,37 +28,27 @@ contract("CrowdFundingCampaign Test", async accounts => {
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaign.membersCount()).to.eventually.be.a.bignumber.equal(new BN(0));
-
-        return true;
-
     });
 
     it("The owner should not be able to be an inversor", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
         expect(campaign.owner()).to.eventually.be.equal(authorAddress);
         expect(campaign.contribute({ from: authorAddress, value: web3.utils.toWei("10", "wei") })).to.eventually.be.rejectedWith("Sender is already a member.");
-
-
-        return true;
-
     });
 
     it("The inversor should invest more than de minimun contribution", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
         expect(campaign.contribute({ from: memberAccount, value: web3.utils.toWei("2", "wei") })).to.eventually.be.rejectedWith("The contribution is insuficient");
         await time.advanceBlock();
-
-        return true;
-
     });
 
     it("A not member should be able to contribute with more than minimun contribution and then be a member", async() => {
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
-        let notIsMember = await campaign.isMember(memberAccount);
+        const notIsMember = await campaign.isMember(memberAccount);
         expect(notIsMember).to.be.equal(false);
 
         const tx = await campaign.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") });
@@ -69,61 +59,46 @@ contract("CrowdFundingCampaign Test", async accounts => {
         const log = logs[0];
         expect(log.event).to.equal('newContribution'); 
 
-        let nowIsMember = await campaign.isMember(memberAccount);
+        const nowIsMember = await campaign.isMember(memberAccount);
         expect(nowIsMember).to.be.equal(true);
-
-        return true;
-
     });
 
     it("An already member should not be able to contribute", async() => {
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
-        let notIsMember = await campaign.isMember(memberAccount);
+        const notIsMember = await campaign.isMember(memberAccount);
         expect(notIsMember).to.be.equal(true);
 
         expect(campaign.contribute({ from: memberAccount, value: web3.utils.toWei("5", "wei") })).to.eventually.be.rejectedWith("Sender is already a member.");
-
-
-        return true;
-
     });
 
     it("Can't set campaign active until reach the goal", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaign.setActive()).to.eventually.be.rejectedWith("The contributions are insufficient");
-
-
-        return true;
-
     });
 
     it("When a not member contributes should transfer the contribution to the campaign", async() => {
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
-        let campaignBalance = await web3.eth.getBalance(campaign.address);
-        let contributorBalance = await web3.eth.getBalance(anotherMemberAccount);
+        const campaignBalance = await web3.eth.getBalance(campaign.address);
+        const contributorBalance = await web3.eth.getBalance(anotherMemberAccount);
 
         await campaign.contribute({ from: anotherMemberAccount, value: web3.utils.toWei("300", "wei") });
 
-        let aftercampaignBalance = await web3.eth.getBalance(campaign.address);
-        let afterContributorBalance = await web3.eth.getBalance(anotherMemberAccount);
+        const aftercampaignBalance = await web3.eth.getBalance(campaign.address);
+        const afterContributorBalance = await web3.eth.getBalance(anotherMemberAccount);
 
         expect(parseInt(afterContributorBalance)).to.be.lessThanOrEqual(parseInt(contributorBalance) - 300);
         expect(parseInt(aftercampaignBalance)).to.be.equal(parseInt(campaignBalance) + 300);
-
-
-        return true;
-
     });
 
 
     it("Can't create a new proposal if the campaign is not ACTIVE", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
         expect(campaign.owner()).to.eventually.be.equal(authorAddress);
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
@@ -131,26 +106,19 @@ contract("CrowdFundingCampaign Test", async accounts => {
 
         expect(campaign.createProposal(3, memberAccount, proposalCreatedHash)).to.eventually.be.rejectedWith("The campaign status is not active.");;
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
-
-
-        return true;
-
     });
 
     it("Only owner set campaign active", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
         expect(campaign.owner()).to.eventually.not.be.equal(memberAccount);
         expect(campaign.setActive({ from: memberAccount })).to.eventually.be.rejectedWith("Sender is not the owner.");
-
-        return true;
-
     });
 
     it("Owner set campaign active", async() => {
 
-        let campaign = this.campaign; 
+        const campaign = this.campaign; 
 
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(0));
 
@@ -163,23 +131,17 @@ contract("CrowdFundingCampaign Test", async accounts => {
         expect(log.event).to.equal('changeStatusCampaign');
 
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(3));
-
-        return true;
-
     });
 
 
     it("Only the owner should be able to create proposals", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
         expect(campaign.owner()).to.eventually.not.be.equal(memberAccount);
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaign.createProposal(3, memberAccount, proposalCreatedHash, { from: memberAccount })).to.eventually.be.rejectedWith("Sender is not the owner.");
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
-
-        return true;
-
     });
 
     it("Owner creates a new proposal and a proposalCreated event is emited", async() => {
@@ -224,87 +186,90 @@ contract("CrowdFundingCampaign Test", async accounts => {
         expect(status).to.be.a.a.bignumber.equal(new BN(3));
         expect(diffMinutes).to.be.lessThan(1);
         expect(diffMinutes).to.be.greaterThan(0);
-
-        return true;
-
     });
 
 
     it("Only members can vote a proposal", async() => {
 
-        let campaign = this.campaign;
-        let i_proposal = 0
+        const campaign = this.campaign;
+        const i_proposal = 0
 
-        let result = await campaign.getProposal(i_proposal);
-        let approvalsCount = result['2'];
+        const result = await campaign.getProposal(i_proposal);
+        const approvalsCount = result['2'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
         expect(campaign.aproveProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
 
-        result = await campaign.getProposal(i_proposal);
-        approvalsCount = result['2'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
-
-        return true;
-
+        const afterResult = await campaign.getProposal(i_proposal);
+        const afterApprovalsCount = afterResult['2'];
+        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(0));
     });
 
     it("Members vote a proposal", async() => {
 
-        let campaign = this.campaign;
-        let i_proposal = 0
+        const campaign = this.campaign;
+        const i_proposal = 0
 
-        let result = await campaign.getProposal(i_proposal);
-        let approvalsCount = result['2'];
+        const result = await campaign.getProposal(i_proposal);
+        const approvalsCount = result['2'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
         await campaign.aproveProposal(i_proposal, { from: memberAccount });
 
-        result = await campaign.getProposal(i_proposal);
-        approvalsCount = result['2'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
-
-        return true;
-
+        const afterResult = await campaign.getProposal(i_proposal);
+        const afterApprovalsCount = afterResult['2'];
+        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
     it("Member can not vote a proposal twice", async() => {
 
-        let campaign = this.campaign;
-        let i_proposal = 0
+        const campaign = this.campaign;
+        const i_proposal = 0
 
-        let result = await campaign.getProposal(i_proposal);
-        let approvalsCount = result['2'];
+        const result = await campaign.getProposal(i_proposal);
+        const approvalsCount = result['2'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.aproveProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The proposal has been already voted by the sender");;
 
-        result = await campaign.getProposal(i_proposal);
-        approvalsCount = result['2'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
-
-        return true;
-
+        const afterResult = await campaign.getProposal(i_proposal);
+        const afterApprovalsCount = afterResult['2'];
+        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
-    it("Only members should be able to create destrcut proposals", async() => {
+    it("Only members can close a proposal", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
+        const i_proposal = 0
+
+        expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
+        expect(campaign.closeProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
+    });
+
+    it("Members can not close a proposal until vote time is finish", async() => {
+
+        const campaign = this.campaign;
+        const i_proposal = 0
+
+        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
+        expect(campaign.closeProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The proposal is still open for voting");
+    });
+
+    it("Only members should be able to create destruct proposals", async() => {
+
+        const campaign = this.campaign;
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
         expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaign.createDestructProposal(proposalCreatedHash, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
         expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
-
-        return true;
-
     });
 
-    it("Member creates a destrcut proposal", async() => {
+    it("Member creates a destruct proposal", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
         expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
@@ -319,80 +284,68 @@ contract("CrowdFundingCampaign Test", async accounts => {
         expect(log.args._ipfshash).to.equal(proposalCreatedHash);
 
         expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
-        let result = await campaign.getDestuctProposal(0);
+        const result = await campaign.getDestuctProposal(0);
 
-        let approvalsCount = result['0'];
-        let status = result['1'];
+        const approvalsCount = result['0'];
+        const status = result['1'];
 
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
         expect(status).to.be.a.a.bignumber.equal(new BN(3));
-
-        return true;
-
     });
 
-    it("Only members can vote a destrcut proposal", async() => {
+    it("Only members can vote a destruct proposal", async() => {
 
-        let campaign = this.campaign;
-        let i_proposal = 0
+        const campaign = this.campaign;
+        const i_proposal = 0
 
-        let result = await campaign.getDestuctProposal(i_proposal);
-        let approvalsCount = result['0'];
+        const result = await campaign.getDestuctProposal(i_proposal);
+        const approvalsCount = result['0'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
         expect(campaign.aproveDestructProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
 
-        result = await campaign.getDestuctProposal(i_proposal);
-        approvalsCount = result['0'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
-
-        return true;
-
+        const afterResult = await campaign.getDestuctProposal(i_proposal);
+        const afterApprovalsCount = afterResult['0'];
+        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(0));
     });
 
-    it("Members vote a destrcut proposal", async() => {
+    it("Members vote a destruct proposal", async() => {
 
-        let campaign = this.campaign;
-        let i_proposal = 0
+        const campaign = this.campaign;
+        const i_proposal = 0
 
-        let result = await campaign.getDestuctProposal(i_proposal);
-        let approvalsCount = result['0'];
+        const result = await campaign.getDestuctProposal(i_proposal);
+        const approvalsCount = result['0'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
         await campaign.aproveDestructProposal(i_proposal, { from: anotherMemberAccount });
 
-        result = await campaign.getDestuctProposal(i_proposal);
-        approvalsCount = result['0'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
-
-        return true;
-
+        const afterResult = await campaign.getDestuctProposal(i_proposal);
+        const afterApprovalsCount = afterResult['0'];
+        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
-    it("Member can not vote a proposal twice", async() => {
+    it("Member can not vote a destruct proposal twice", async() => {
 
-        let campaign = this.campaign;
-        let i_proposal = 0
+        const campaign = this.campaign;
+        const i_proposal = 0
 
-        let result = await campaign.getDestuctProposal(i_proposal);
-        let approvalsCount = result['0'];
+        const result = await campaign.getDestuctProposal(i_proposal);
+        const approvalsCount = result['0'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.aproveDestructProposal(i_proposal, { from: anotherMemberAccount })).to.eventually.be.rejectedWith("The proposal has been already approved by the sender");;
 
-        result = await campaign.getDestuctProposal(i_proposal);
-        approvalsCount = result['0'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
-
-        return true;
-
+        const afterResult = await campaign.getDestuctProposal(i_proposal);
+        const afterApprovalsCount = afterResult['0'];
+        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
     it("Owner creates a Progress Update", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
         const tx = await campaign.saveProgressUpdate(progressUpdateHash); //, { from: memberAccount });
         const { logs } = tx;
@@ -402,20 +355,14 @@ contract("CrowdFundingCampaign Test", async accounts => {
         const log = logs[0];
         expect(log.event).to.equal('progressUpdate');
         expect(log.args._ipfshash).to.equal(progressUpdateHash);
-
-        return true;
-
     });
 
-    it("Only owwner creates a Progress Update, not members", async() => {
+    it("Only owner creates a Progress Update, not members", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
         expect(campaign.saveProgressUpdate(progressUpdateHash, { from: memberAccount })).to.eventually.be.rejectedWith("Sender is not the owner.");
-       
-        return true;
-
     });
 
 

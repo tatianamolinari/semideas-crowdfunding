@@ -184,7 +184,10 @@ contract("CrowdFundingCampaign Test", async accounts => {
 
     it("Owner creates a new proposal and a proposalCreated event is emited", async() => {
 
-        let campaign = this.campaign;
+        const campaign = this.campaign;
+        
+        const limitDateExpected = new Date();
+        limitDateExpected.setDate(limitDateExpected.getDate() + 7);
 
         expect(campaign.owner()).to.eventually.be.equal(authorAddress);
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
@@ -200,17 +203,27 @@ contract("CrowdFundingCampaign Test", async accounts => {
 
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
 
-        let result = await campaign.getProposal(0);
+        const result = await campaign.getProposal(0);
 
-        let recipient = result['0'];
-        let value = result['1'];
-        let approvalsCount = result['2'];
-        let status = result['3'];
+        const recipient = result['0'];
+        const value = result['1'];
+        const approvalsCount = result['2'];
+        const disapprovalsCount = result['3'];
+        const status = result['4'];
+        const limitTimestamp = result['5'];
+        
+        const limitDate = new Date(limitTimestamp.toNumber() * 1000);
+        const diffTime = Math.abs(limitDate - limitDateExpected);
+        const diffMinutes = diffTime / (1000*60); 
+
 
         expect(recipient).to.be.equal(recipientProposalAccount);
         expect(value).to.be.a.bignumber.equal(new BN(3));
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
         expect(status).to.be.a.a.bignumber.equal(new BN(3));
+        expect(diffMinutes).to.be.lessThan(1);
+        expect(diffMinutes).to.be.greaterThan(0);
 
         return true;
 
@@ -266,7 +279,7 @@ contract("CrowdFundingCampaign Test", async accounts => {
         let approvalsCount = result['2'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
-        expect(campaign.aproveProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The proposal has been already approved by the sender");;
+        expect(campaign.aproveProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The proposal has been already voted by the sender");;
 
         result = await campaign.getProposal(i_proposal);
         approvalsCount = result['2'];

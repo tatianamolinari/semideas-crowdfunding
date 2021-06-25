@@ -17,8 +17,9 @@ contract CrowdFundingCampaign {
         address recipient;
         uint approvalsCount;
         uint disapprovalsCount;
-        mapping(address => bool) approvals;
+        mapping(address => bool) voters;
         Status status;
+        uint limitTime;
     }
 
     /** @dev Struct destruct proposal
@@ -77,6 +78,9 @@ contract CrowdFundingCampaign {
 
     modifier proposalApproved(uint _index) 
         { require(proposals[_index].status == Status.APPROVED, "The proposal is not approved." ); _; }
+
+    modifier beInTimeProposal(uint _index)
+        { require (now <= proposals[_index].limitTime, "The proposal is close for voting."); _; }
 
     modifier destructProposalActive(uint _index) {
         require(
@@ -169,7 +173,8 @@ contract CrowdFundingCampaign {
             value : _value,
             approvalsCount : 0,
             disapprovalsCount: 0,
-            status: Status.ACTIVE
+            status: Status.ACTIVE,
+            limitTime: now + 604800 // 7 days
         });
 
         proposals.push(newProposal);
@@ -177,15 +182,15 @@ contract CrowdFundingCampaign {
          
     }
 
-    /** @dev Allow only members to approve an active proposal that they haven't approved before.
+    /** @dev Allow only members to approve an active proposal that they haven't voted before.
      *  @param _index index of the proposal the member wants to approve.
      */
-    function aproveProposal(uint _index) public membering statusActive proposalActive(_index) {
+    function aproveProposal(uint _index) public membering statusActive proposalActive(_index) beInTimeProposal(_index) {
 
         Proposal storage proposal = proposals[_index];
-        require(!proposal.approvals[msg.sender], "The proposal has been already approved by the sender");
+        require(!proposal.voters[msg.sender], "The proposal has been already voted by the sender");
 
-        proposal.approvals[msg.sender] = true;
+        proposal.voters[msg.sender] = true;
         proposal.approvalsCount++;
         
     }
@@ -241,9 +246,9 @@ contract CrowdFundingCampaign {
     /** @dev Function to get the data of a proposal.
      *  @param _index index of the proposal to return
      */
-    function getProposal(uint _index) public view returns (address, uint, uint, uint, Status) {
+    function getProposal(uint _index) public view returns (address, uint, uint, uint, Status, uint) {
         Proposal storage proposal = proposals[_index];
-        return (proposal.recipient, proposal.value, proposal.approvalsCount, proposal.disapprovalsCount, proposal.status);
+        return (proposal.recipient, proposal.value, proposal.approvalsCount, proposal.disapprovalsCount, proposal.status, proposal.limitTime);
     } 
 
     /** @dev Function to get the total number of proposals.

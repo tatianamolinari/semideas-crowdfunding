@@ -28,6 +28,25 @@ contract("CrowdFundingCampaign Test", async accounts => {
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaign.membersCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+
+        const campaingInfo = campaign.getCampaignInfo();
+    });
+
+    it("Checking CrowdFunding Campaign values from method get campaign info", async() => {
+        const campaign = this.campaign;
+        const campaingInfo = await campaign.getCampaignInfo();
+
+        const owner = campaingInfo['0'];
+        const status = campaingInfo['1'];
+        const goal = campaingInfo['2'];
+        const minimunContribution = campaingInfo['3'];
+        const membersCount = campaingInfo['4'];
+
+        expect(owner).to.be.equal(authorAddress);
+        expect(status).to.be.a.bignumber.equal(new BN(0));
+        expect(goal).to.be.a.bignumber.equal(new BN(300));
+        expect(minimunContribution).to.be.a.bignumber.equal(new BN(5));
+        expect(membersCount).to.be.a.bignumber.equal(new BN(0));
     });
 
     it("The owner should not be able to be an inversor", async() => {
@@ -148,7 +167,8 @@ contract("CrowdFundingCampaign Test", async accounts => {
 
         const campaign = this.campaign;
         
-        const limitDateExpected = new Date();
+        const lastTimeBlock = await time.latest()
+        const limitDateExpected = new Date(lastTimeBlock.toNumber() * 1000);
         limitDateExpected.setDate(limitDateExpected.getDate() + 7);
 
         expect(campaign.owner()).to.eventually.be.equal(authorAddress);
@@ -173,15 +193,10 @@ contract("CrowdFundingCampaign Test", async accounts => {
         const disapprovalsCount = result['3'];
         const status = result['4'];
         const limitTimestamp = result['5'];
-
-        console.log(result)
         
         const limitDate = new Date(limitTimestamp.toNumber() * 1000);
-        console.log(limitDate);
-        console.log(limitDateExpected);
         const diffTime = Math.abs(limitDate - limitDateExpected);
         const diffMinutes = diffTime / (1000*60); 
-
 
         expect(recipient).to.be.equal(recipientProposalAccount);
         expect(value).to.be.a.bignumber.equal(new BN(3));
@@ -419,7 +434,8 @@ contract("CrowdFundingCampaign Test", async accounts => {
 
         const campaign = this.campaign;
         
-        const limitDateExpected = new Date();
+        const lastTimeBlock = await time.latest()
+        const limitDateExpected = new Date(lastTimeBlock.toNumber() * 1000);
         limitDateExpected.setDate(limitDateExpected.getDate() + 7);
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
@@ -441,12 +457,8 @@ contract("CrowdFundingCampaign Test", async accounts => {
         const disapprovalsCount = result['1'];
         const status = result['2'];
         const limitTimestamp = result['3'];
-
-        console.log(result)
         
         const limitDate = new Date(limitTimestamp.toNumber() * 1000);
-        console.log(limitDate);
-        console.log(limitDateExpected);
         const diffTime = Math.abs(limitDate - limitDateExpected);
         const diffMinutes = diffTime / (1000*60);
 

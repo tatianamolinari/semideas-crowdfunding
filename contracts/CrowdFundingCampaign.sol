@@ -27,8 +27,10 @@ contract CrowdFundingCampaign {
     **/
     struct DestructProposal{
         uint approvalsCount;
-        mapping(address => bool) approvals;
+        uint disapprovalsCount;
+        mapping(address => bool) voters;
         Status status;
+        uint limitTime;
     }
 
     /* Storage */
@@ -99,6 +101,14 @@ contract CrowdFundingCampaign {
         _;
     }
 
+    modifier beInTimeDestructProposal(uint _index) { 
+        require (now <= destructProposals[_index].limitTime, "The destruct proposal is close for voting."); _; 
+    }
+
+    modifier passedTimeDestructProposal(uint _index) { 
+        require (now > destructProposals[_index].limitTime, "The destruct proposal is still open for voting."); _; 
+    }
+
 
     /* Events */
 
@@ -124,6 +134,10 @@ contract CrowdFundingCampaign {
      *  @param _ipfshash The url hash of the destruct proposal data stored in IPFS.
      */
     event destructProposalCreated(bytes32 indexed _ipfshash);
+
+    /** @dev Emitted when a  destruct proposal is Closed.
+     */
+    event destructProposalClosed();
 
     /** @dev Emitted when the author creates a progress update to show how the proyect is going.
      *  @param _ipfshash The url hash of the progress update data stored in IPFS.
@@ -192,13 +206,26 @@ contract CrowdFundingCampaign {
     /** @dev Allow only members to approve an active proposal that they haven't voted before.
      *  @param _index index of the proposal the member wants to approve.
      */
-    function aproveProposal(uint _index) public membering statusActive proposalActive(_index) beInTimeProposal(_index) {
+    function approveProposal(uint _index) public membering statusActive proposalActive(_index) beInTimeProposal(_index) {
 
         Proposal storage proposal = proposals[_index];
         require(!proposal.voters[msg.sender], "The proposal has been already voted by the sender");
 
         proposal.voters[msg.sender] = true;
         proposal.approvalsCount++;
+        
+    }
+
+    /** @dev Allow only members to disapprove an active proposal that they haven't voted before.
+     *  @param _index index of the proposal the member wants to disapprove.
+     */
+    function disapproveProposal(uint _index) public membering statusActive proposalActive(_index) beInTimeProposal(_index) {
+
+        Proposal storage proposal = proposals[_index];
+        require(!proposal.voters[msg.sender], "The proposal has been already voted by the sender");
+
+        proposal.voters[msg.sender] = true;
+        proposal.disapprovalsCount++;
         
     }
 
@@ -209,7 +236,7 @@ contract CrowdFundingCampaign {
 
         Proposal storage proposal = proposals[_index];
 
-        if (proposal.approvalsCount < proposal.disapprovalsCount) {
+        if (proposal.approvalsCount > proposal.disapprovalsCount) {
             proposal.status = Status.APPROVED; 
         }
         else {
@@ -226,7 +253,9 @@ contract CrowdFundingCampaign {
         
         DestructProposal memory newDProposal = DestructProposal({
             approvalsCount : 0,
-            status: Status.ACTIVE
+            disapprovalsCount: 0,
+            status: Status.ACTIVE,
+            limitTime: now + 604800 // 7 days
         });
 
         destructProposals.push(newDProposal);
@@ -234,17 +263,47 @@ contract CrowdFundingCampaign {
          
     }
 
-    /** @dev Allow only members to approve an active destrcut proposal that they haven't approved before.
-     *  @param _index index of the destrcut proposal the member wants to approve.
+    /** @dev Allow only members to approve an active destruct proposal that they haven't voted before.
+     *  @param _index index of the destruct proposal the member wants to approve.
      */
-    function aproveDestructProposal(uint _index) public membering statusActive proposalActive(_index) {
+    function aproveDestructProposal(uint _index) public membering statusActive destructProposalActive(_index) beInTimeDestructProposal(_index) {
 
         DestructProposal storage dProposal = destructProposals[_index];
-        require(!dProposal.approvals[msg.sender], "The proposal has been already approved by the sender");
+        require(!dProposal.voters[msg.sender], "The destruct proposal has been already voted by the sender");
 
-        dProposal.approvals[msg.sender] = true;
+        dProposal.voters[msg.sender] = true;
         dProposal.approvalsCount++;
         
+    }
+
+    /** @dev Allow only members to disapprove an active destruct proposal that they haven't voted before.
+     *  @param _index index of the destruct proposal the member wants to disapprove.
+     */
+    function disapproveDestructProposal(uint _index) public membering statusActive destructProposalActive(_index) beInTimeDestructProposal(_index) {
+
+        DestructProposal storage dProposal = destructProposals[_index];
+        require(!dProposal.voters[msg.sender], "The destruct proposal has been already voted by the sender");
+
+        dProposal.voters[msg.sender] = true;
+        dProposal.disapprovalsCount++;
+        
+    }
+
+    /** @dev Allow only members to close an active proposal that already has its voting time over.
+     *  @param _index index of the proposal the member wants to approve.
+     */
+    function closeDestructProposal(uint _index) public membering statusActive destructProposalActive(_index) passedTimeDestructProposal(_index) {
+
+        DestructProposal storage dProposal = destructProposals[_index];
+
+        if (dProposal.approvalsCount > dProposal.disapprovalsCount) {
+            dProposal.status = Status.APPROVED; 
+        }
+        else {
+            dProposal.status = Status.DISAPPROVED;
+        }
+
+        emit destructProposalClosed();
     }
 
      /* Aux functions */
@@ -284,9 +343,9 @@ contract CrowdFundingCampaign {
      /** @dev Function to get the data of destruct proposal.
      *  @param _index index of the destruct proposal to return
      */
-    function getDestuctProposal(uint _index) public view returns (uint, Status) {
+    function getDestructProposal(uint _index) public view returns (uint, uint, Status, uint) {
         DestructProposal storage dProposal = destructProposals[_index];
-        return (dProposal.approvalsCount, dProposal.status);
+        return (dProposal.approvalsCount, dProposal.disapprovalsCount, dProposal.status, dProposal.limitTime);
     } 
 
     /** @dev Function to get the total number of destruct proposals.

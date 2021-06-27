@@ -1,6 +1,5 @@
 const CrowdfundingCampaign = artifacts.require("CrowdfundingCampaign");
 
-//var chai = require('chai');
 const { time } = require('openzeppelin-test-helpers');
 const chai = require("./setupchai.js");
 const BN = web3.utils.BN;
@@ -13,7 +12,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
     const progressUpdateHash =  "0x2465737400000000000000000000000000000000000000000000000000000000";
 
     beforeEach(async() => {
-        this.campaign = await CrowdfundingCampaign.deployed()
+        this.campaign = await CrowdfundingCampaign.deployed();
     })
 
     it("Checking CrowdFunding Campaign values from scratch", async() => {

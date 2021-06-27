@@ -1,5 +1,5 @@
 import getWeb3 from "../getWeb3";
-import CrowdFundingCampaign from "../contracts/CrowdFundingCampaign.json";
+import CrowdfundingCampaignDemo from "../contracts/CrowdfundingCampaignDemo.json";
 
 import { getValuesFromHash } from "../helpers/utils.js"
 
@@ -28,7 +28,7 @@ class CampaignService {
   async isCorrectNetwork() {
     const initialized = await this.init();
     console.log(`Now initialized is ${initialized}`);
-    return CrowdFundingCampaign.networks[this.networkId];
+    return CrowdfundingCampaignDemo.networks[this.networkId];
   }
 
   async getCurrentBlock(){
@@ -37,16 +37,16 @@ class CampaignService {
 
   async setInstance() {
     this.instance = await new this.web3.eth.Contract(
-      CrowdFundingCampaign.abi,
-      CrowdFundingCampaign.networks[this.networkId] && CrowdFundingCampaign.networks[this.networkId].address,
+      CrowdfundingCampaignDemo.abi,
+      CrowdfundingCampaignDemo.networks[this.networkId] && CrowdfundingCampaignDemo.networks[this.networkId].address,
     );
     return this.instance;
   }
 
   async setInstanceFromAddress(address) {
     this.instance = await new this.web3.eth.Contract(
-      CrowdFundingCampaign.abi,
-      CrowdFundingCampaign.networks[this.networkId] && address,
+      CrowdfundingCampaignDemo.abi,
+      CrowdfundingCampaignDemo.networks[this.networkId] && address,
     );
     return this.instance;
   }

@@ -2,6 +2,7 @@
 
 
 const CrowdfundingCampaign = artifacts.require("CrowdfundingCampaign.sol");
+const CrowdfundingCampaignDemo = artifacts.require("CrowdfundingCampaignDemo.sol");
 const { create } = require('../node_modules/ipfs-http-client');
 const fs = require('fs');
 const bs58 = require('bs58');
@@ -69,7 +70,7 @@ async function createCampaigns(jsonInfo){
 
         const ipfsHash = "0x" + addressToHexBytes(path);
 
-        const campaign = await CrowdfundingCampaign.new(
+        const campaign = await CrowdfundingCampaignDemo.new(
                                 campaignInfo["minimunContribution"], 
                                 campaignInfo["goal"], 
                                 ipfsHash);
@@ -203,9 +204,7 @@ async function proposals(web3, addr, jsonInfo, campaigns){
 async function main() {
 
     const web3 = getWeb3();
-    console.log(web3.eth.accounts)
     const addr = await web3.eth.getAccounts();
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
     const jsonInfo = getBasicInfo();
     const campaigns = await createCampaigns(jsonInfo);
     console.log(`Creation passed: ${campaigns.length} new campaigns`);
@@ -219,10 +218,6 @@ async function main() {
     console.log(`Proposals creation passed: ${proposalsS}`);  
 }
 
-
-main()
-  .then(() => process.exit(0))
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+module.exports = function(callback) {
+    main().then(() => callback()).catch((err) => callback(err));
+}

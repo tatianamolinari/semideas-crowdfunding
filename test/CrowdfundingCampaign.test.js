@@ -1,4 +1,4 @@
-const CrowdFundingCampaign = artifacts.require("CrowdFundingCampaign");
+const CrowdfundingCampaign = artifacts.require("CrowdfundingCampaign");
 
 //var chai = require('chai');
 const { time } = require('openzeppelin-test-helpers');
@@ -6,20 +6,20 @@ const chai = require("./setupchai.js");
 const BN = web3.utils.BN;
 const expect = chai.expect;
 
-contract("CrowdFundingCampaign Test", async accounts => {
+contract("CrowdfundingCampaign Test", async accounts => {
 
     const [authorAddress, memberAccount, otherMemberAccount, anotherMemberAccount, recipientProposalAccount, noMemberAccount] = accounts;
     const proposalCreatedHash = "0x7465737400000000000000000000000000000000000000000000000000000000";
     const progressUpdateHash =  "0x2465737400000000000000000000000000000000000000000000000000000000";
 
     beforeEach(async() => {
-        this.campaign = await CrowdFundingCampaign.deployed()
+        this.campaign = await CrowdfundingCampaign.deployed()
     })
 
     it("Checking CrowdFunding Campaign values from scratch", async() => {
         const campaign = this.campaign;
 
-        expect(campaign).to.be.instanceof(CrowdFundingCampaign);
+        expect(campaign).to.be.instanceof(CrowdfundingCampaign);
 
         expect(campaign.minimunContribution()).to.eventually.be.a.bignumber.equal(new BN(5));
         expect(campaign.goal()).to.eventually.be.a.bignumber.equal(new BN(300));
@@ -167,7 +167,7 @@ contract("CrowdFundingCampaign Test", async accounts => {
 
         const campaign = this.campaign;
         
-        const lastTimeBlock = await time.latest()
+        const lastTimeBlock = await time.latest();
         const limitDateExpected = new Date(lastTimeBlock.toNumber() * 1000);
         limitDateExpected.setDate(limitDateExpected.getDate() + 7);
 
@@ -434,7 +434,7 @@ contract("CrowdFundingCampaign Test", async accounts => {
 
         const campaign = this.campaign;
         
-        const lastTimeBlock = await time.latest()
+        const lastTimeBlock = await time.latest();
         const limitDateExpected = new Date(lastTimeBlock.toNumber() * 1000);
         limitDateExpected.setDate(limitDateExpected.getDate() + 7);
 

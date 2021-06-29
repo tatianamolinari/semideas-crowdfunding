@@ -1,7 +1,7 @@
 
 
 
-const CrowdfundingCampaign = artifacts.require("CrowdfundingCampaign.sol");
+//const CrowdfundingCampaign = artifacts.require("CrowdfundingCampaign.sol");
 const CrowdfundingCampaignDemo = artifacts.require("CrowdfundingCampaignDemo.sol");
 const { create } = require('../node_modules/ipfs-http-client');
 const fs = require('fs');
@@ -175,6 +175,7 @@ async function proposals(web3, addr, jsonInfo, campaigns){
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
         {
+            let i_proposal = 0;
             for (const proposal of campaignInfo["proposals"]) {
                 const path = await saveInfoIPFS([],
                                                 proposal["title"],
@@ -191,12 +192,65 @@ async function proposals(web3, addr, jsonInfo, campaigns){
                 const gas = await campaign.createProposal.estimateGas(value, recipient, ipfsHash, { from: addr[0] });      
                 const transaction = await campaign.createProposal.sendTransaction(value, recipient, ipfsHash, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
                 response = response && (transaction.type == "mined");
+
+                await voteProposals(web3, addr, i_proposal, proposal, campaign);
+                await activateProposals(web3, addr, i_proposal, proposal, campaign);
+
+                i_proposal = i_proposal + 1;
             }
         }
         i=i+1;
 
     };
     return response;  
+
+}
+
+async function voteProposals(web3, addr, i_proposal, jsonInfoProposal, campaign){
+
+    let response = false;
+    for (const vote of jsonInfoProposal["votes"]) {
+        const member = addr[vote["accountIndex"]]
+
+        if (vote["value"]) {
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.approveProposal.estimateGas(i_proposal, { from: member });      
+            const transaction = await campaign.approveProposal.sendTransaction(i_proposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
+            response = response && (transaction.type == "mined");
+        }
+        else {
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.disapproveProposal.estimateGas(i_proposal, { from: member });      
+            const transaction = await campaign.disapproveProposal.sendTransaction(i_proposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
+            response = response && (transaction.type == "mined");
+        }
+    };
+    return response;  
+
+}
+
+async function activateProposals(web3, addr, i_proposal, proposal, campaign){
+
+    let response = false;
+    
+    if (proposal["timeReached"]) {
+        const gasprice = await web3.eth.getGasPrice();
+        const gas = await campaign.changeLimitProposal.estimateGas(i_proposal, { from: addr[0] });      
+        const transaction = await campaign.changeLimitProposal.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+        response = response && (transaction.type == "mined");
+    }
+
+    if (proposal["closed"]) {
+        const gasprice = await web3.eth.getGasPrice();
+        const gas = await campaign.closeProposal.estimateGas(i_proposal, { from: addr[0] });      
+        const transaction = await campaign.closeProposal.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+        response = response && (transaction.type == "mined");
+    }
+
+    //const p = await campaign.getProposal.call(i_proposal);
+    //console.log(p);
+
+    return response;
 
 }
 

@@ -329,9 +329,19 @@ contract CrowdfundingCampaign {
     /** @dev Function to get the data of a proposal.
      *  @param _index index of the proposal to return
      */
-    function getProposal(uint _index) public view returns (address, uint, uint, uint, Status, uint) {
+    function getProposal(uint _index) public view returns (address, uint, uint, uint, Status, uint, bool, bool) {
         Proposal storage proposal = proposals[_index];
-        return (proposal.recipient, proposal.value, proposal.approvalsCount, proposal.disapprovalsCount, proposal.status, proposal.limitTime);
+        bool inTime = now <= proposal.limitTime;
+        bool senderHasVote = proposal.voters[msg.sender];
+        return (proposal.recipient, proposal.value, proposal.approvalsCount, proposal.disapprovalsCount, proposal.status, proposal.limitTime, inTime, senderHasVote);
+    } 
+
+     /** @dev Function to know if a member has already vot a proposal.
+     *  @param _index index of the proposal
+     */
+    function hasVotedProposal(uint _index) public view returns (bool) {
+        Proposal storage proposal = proposals[_index];
+        return proposal.voters[msg.sender];
     } 
 
     /** @dev Function to get the total number of proposals.
@@ -343,9 +353,19 @@ contract CrowdfundingCampaign {
      /** @dev Function to get the data of destruct proposal.
      *  @param _index index of the destruct proposal to return
      */
-    function getDestructProposal(uint _index) public view returns (uint, uint, Status, uint) {
+    function getDestructProposal(uint _index) public view returns (uint, uint, Status, uint, bool, bool) {
         DestructProposal storage dProposal = destructProposals[_index];
-        return (dProposal.approvalsCount, dProposal.disapprovalsCount, dProposal.status, dProposal.limitTime);
+        bool inTime = now <= dProposal.limitTime;
+        bool senderHasVote = dProposal.voters[msg.sender];
+        return (dProposal.approvalsCount, dProposal.disapprovalsCount, dProposal.status, dProposal.limitTime, inTime, senderHasVote);
+    } 
+
+    /** @dev Function to know if a member has already vot a destruct proposal.
+     *  @param _index index of the proposal
+     */
+    function hasVotedDestructProposal(uint _index) public view returns (bool) {
+        DestructProposal storage dProposal = destructProposals[_index];
+        return dProposal.voters[msg.sender];
     } 
 
     /** @dev Function to get the total number of destruct proposals.

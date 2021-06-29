@@ -30,7 +30,7 @@ class DisplayProgressUpdates extends React.Component {
     const i_progress_update = this.state.totalProgressUpdates - 1 - ((activePage-1)*(this.state.per_page));
     const last_i = Math.max(-1, i_progress_update - (this.state.per_page));
     
-    console.log(`${i_progress_update} ${last_i} ${activePage}`)
+    //console.log(`${i_progress_update} ${last_i} ${activePage}`)
 
     for(let i=i_progress_update; (i >= 0 && i > last_i) ; i--){
       const puHash = allProgressUpdates[i];

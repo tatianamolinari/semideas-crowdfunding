@@ -224,6 +224,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(0));
     });
 
+    it("Before vote a destruct hasVotedProposal should be false", async() => {
+
+        const campaign = this.campaign;
+        const i_proposal = 0
+
+        expect(campaign.hasVotedProposal(i_proposal, { from: memberAccount })).to.eventually.be.false;
+    });
+
     it("Members can approve a proposal", async() => {
 
         const campaign = this.campaign;
@@ -239,6 +247,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const afterResult = await campaign.getProposal(i_proposal);
         const afterApprovalsCount = afterResult['2'];
         expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
+    });
+
+    it("Before vote a destruct hasVotedProposal should be true", async() => {
+
+        const campaign = this.campaign;
+        const i_proposal = 0
+
+        expect(campaign.hasVotedProposal(i_proposal, { from: memberAccount })).to.eventually.be.true;
     });
 
     it("Member can not approve a proposal twice", async() => {
@@ -485,6 +501,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(0));
     });
 
+    it("Before vote a destruct hasVotedDestructProposal should be false", async() => {
+
+        const campaign = this.campaign;
+        const i_proposal = 0
+
+        expect(campaign.hasVotedDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.false;
+    });
+
     it("Members vote a destruct proposal", async() => {
 
         const campaign = this.campaign;
@@ -500,6 +524,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const afterResult = await campaign.getDestructProposal(i_proposal);
         const afterApprovalsCount = afterResult['0'];
         expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
+    });
+
+    it("After vote a destruct hasVotedDestructProposal should be true", async() => {
+
+        const campaign = this.campaign;
+        const i_proposal = 0
+
+        expect(campaign.hasVotedDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.true;
     });
 
     it("Member can not approve a destruct proposal twice", async() => {

@@ -43,7 +43,7 @@ function fromStatusToBadgeClass(status) {
             badge_class = "success";
             break;
         case 'Desaprobada':
-            badge_class = "secondary";
+            badge_class = "danger";
             break;
         case 'Activa':
             badge_class = "active";

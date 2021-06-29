@@ -37,7 +37,6 @@ class IPFSService {
     async getFileFromIPFSHash(hash){
         const content = [];
         for await (const file of this.ipfs_client.get(`/ipfs/${hash}`)) {
-            console.log(file.type, file.path)
             if (!file.content) continue;
             for await (const chunk of file.content) {
                 content.push(chunk)

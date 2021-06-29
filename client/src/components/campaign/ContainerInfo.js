@@ -48,8 +48,6 @@ class ContainerInfo extends React.Component {
     componentDidMount = async() => {
         try {
 
-          console.log(deployedCampaignsInfo)
-
             const campaign = deployedCampaignsInfo["campaigns"][2]
             const ipfsPath = campaign["ipfsPath"]
             const address = campaign["address"]

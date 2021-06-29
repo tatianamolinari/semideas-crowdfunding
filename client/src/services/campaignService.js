@@ -91,16 +91,26 @@ class CampaignService {
 
   async getProposalInfo(index) {
     const proposalValues = await this.instance.methods.getProposal(index).call();
+    console.log(proposalValues)
     const proposalInfo = getValuesFromHash(proposalValues);
              
+    console.log(proposalInfo);
     const proposalData = {};
     proposalData.recipient = proposalInfo[0];
     proposalData.value = proposalInfo[1];
     proposalData.approvalsCount = proposalInfo[2]
     proposalData.disapprovalsCount = proposalInfo[3];
     proposalData.status = proposalInfo[4];
+    proposalData.limitTime = proposalInfo[5];
+    proposalData.inTime = proposalInfo[6];
+    proposalData.senderHasVote = proposalInfo[7];
 
     return proposalData;
+  }
+
+  async hasVotedProposal(index) {
+    const hasVoted = await this.instance.methods.hasVotedProposal(index).call();
+    return hasVoted;
   }
 
 
@@ -133,11 +143,11 @@ async getProposals() {
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
-          console.log(subscriptionId);
+          //console.log(subscriptionId);
       })
       .on('data', function(event){
           actualizeFunction();
-          console.log(event); 
+          //console.log(event); 
       })
       .on('error', function(error, receipt) {
         console.log("hubo un error");
@@ -153,11 +163,11 @@ async getProposals() {
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
-          console.log(subscriptionId);
+          //console.log(subscriptionId);
       })
       .on('data', function(event){
           actualizeFunction();
-          console.log(event); 
+          //console.log(event); 
       })
       .on('error', function(error, receipt) {
         console.log("hubo un error");
@@ -254,6 +264,27 @@ async getProposals() {
     const gasprice = await this.web3.eth.getGasPrice();
     const gas = await this.instance.methods.setActive().estimateGas({ from: this.accounts[0] });      
     const transaction = this.instance.methods.setActive().send({ from: this.accounts[0], gasPrice: gasprice, gas: gas}) ;    
+    var service = this;
+
+    const promise = new Promise(function(resolve, reject) {
+
+      const statusResponse = {};
+      statusResponse.error = false;
+      statusResponse.errorMsg = "";
+
+      transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+
+    });
+
+    return promise;
+  }
+
+  async approveProposal(index) {
+
+    const gasprice = await this.web3.eth.getGasPrice();
+    const gas = await this.instance.methods.approveProposal(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.approveProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
     var service = this;
 
     const promise = new Promise(function(resolve, reject) {

@@ -174,7 +174,7 @@ class DisplayContent extends React.Component {
     let created_at = "10/03/2021"
     let title = "Este titulo está mockeado"
 
-    console.log(this.props);
+    //console.log(this.props);
     if (this.props.ipfsData) {
 
       images = this.props.ipfsData.images.map(path =>  ipfsService.getIPFSUrlFromPath(path));

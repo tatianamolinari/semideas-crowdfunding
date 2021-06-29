@@ -32,7 +32,7 @@ class DisplayProposals extends React.Component {
     const i_proposal = this.state.totalProposals - 1 - ((activePage-1)*(this.state.per_page));
     const last_i = Math.max(-1, i_proposal - (this.state.per_page));
     
-    console.log(`${i_proposal} ${last_i} ${activePage}`)
+    //console.log(`${i_proposal} ${last_i} ${activePage}`)
 
     for(let i=i_proposal; (i >= 0 && i > last_i) ; i--){
       const pHash = allProposals[i];
@@ -64,17 +64,95 @@ class DisplayProposals extends React.Component {
   async showProposal(index) {
 
     const proposalData = this.state.proposals[index];
-    if (!proposalData["recipient"])
-    {
-      const proposalInfo = await campaignService.getProposalInfo(index);
-      proposalData["recipient"] = proposalInfo.recipient;
-      proposalData["value"] = proposalInfo.value;
-      proposalData["approvalsCount"] = proposalInfo.approvalsCount;
-      proposalData["disapprovalsCount"] = proposalInfo.disapprovalsCount;
-      proposalData["status"] = proposalInfo.status;
-    }
-    this.setState({ proposal_data : proposalData });
+
+    const proposalInfo = await campaignService.getProposalInfo(proposalData["index_proposal"]);
+    
+    proposalData["recipient"] = proposalInfo.recipient;
+    proposalData["value"] = proposalInfo.value;
+    proposalData["approvalsCount"] = proposalInfo.approvalsCount;
+    proposalData["disapprovalsCount"] = proposalInfo.disapprovalsCount;
+    proposalData["status"] = proposalInfo.status;
+
+    const canVote = (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
+   
+    this.setState({ proposal_data : proposalData, canVote: canVote });
     this.setState({ active: "proposals_detail"});
+    
+  }
+
+  async disapprove() {
+    const index = this.state.proposal_data["index_proposal"];
+    campaignService.approveProposal(index).then((statusResponse) => {
+      let title, message = "";
+
+      if (statusResponse.error) {
+        title = "Hubo un error al contribuir";
+        switch (statusResponse.errorMsg) {
+          case "Acción denegada":
+            message = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
+            break;
+          case "Nonce error":
+            message = "Error de nonce: El nonce de la cuenta elegida y de la transacción son diferentes.";
+            break;
+          case "Gas insuficiente":
+            message = "La operación llevó más gas que el que pusiste como límite.";
+            break;
+          default: 
+            message = "Error desconocido";
+            break;
+        }
+      }
+      else {
+        title = "Bienvenido al proyecto";
+        message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
+      }
+
+      this.setState({ voteLoading: false, 
+                      message: message, 
+                      showMessage: true, 
+                      title: title});
+    });
+  }
+
+
+  async approve() {
+    const index = this.state.proposal_data["index_proposal"];
+
+    console.log(this.state.proposal_data)
+    console.log(index)
+
+    campaignService.approveProposal(index).then((statusResponse) => {
+      let title, message = "";
+
+      if (statusResponse.error) {
+        title = "Hubo un error al contribuir";
+        switch (statusResponse.errorMsg) {
+          case "Acción denegada":
+            message = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
+            break;
+          case "Nonce error":
+            message = "Error de nonce: El nonce de la cuenta elegida y de la transacción son diferentes.";
+            break;
+          case "Gas insuficiente":
+            message = "La operación llevó más gas que el que pusiste como límite.";
+            break;
+          default: 
+            message = "Error desconocido";
+            break;
+        }
+      }
+      else {
+        title = "Bienvenido al proyecto";
+        message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
+      }
+
+      this.setState({ voteLoading: false, 
+                      message: message, 
+                      showMessage: true, 
+                      title: title});
+    });
+
+    //await this.showProposal(index);
   }
 
   componentDidMount = async() => {
@@ -141,44 +219,49 @@ class DisplayProposals extends React.Component {
                 
                 
                 { this.state.active==="proposals_detail" &&
-                <div  id="proposals_detail">
-                  <ProposalDetail
-                    index_proposal={this.state.proposal_data.index_proposal}
-                    title={this.state.proposal_data.title}
-                    description={this.state.proposal_data.description}
-                    proposal_date={this.state.proposal_data.proposal_date}
-                    isMember={this.props.isMember}
-                    isOwner={this.props.isOwner}
-                    recipient={this.state.proposal_data.recipient}
-                    value={this.state.proposal_data.value}
-                    approvalsCount={this.state.proposal_data.approvalsCount}
-                    disapprovalsCount={this.state.proposal_data.disapprovalsCount}
-                    status={this.state.proposal_data.status} />
-  { this.props.isMember && (!this.props.isOwner) && <div></div> }
-                    <Row className="proposal-footer">
-                      <Col lg={6} className="aling-left">
-                        <Button as='div' labelPosition='right'>
-                          <Button icon>
-                            <Icon name='thumbs up'/>
-                            Aprobar
+                  <div  id="proposals_detail">
+                    <ProposalDetail
+                      index_proposal={this.state.proposal_data.index_proposal}
+                      title={this.state.proposal_data.title}
+                      description={this.state.proposal_data.description}
+                      proposal_date={this.state.proposal_data.proposal_date}
+                      isMember={this.props.isMember}
+                      isOwner={this.props.isOwner}
+                      recipient={this.state.proposal_data.recipient}
+                      value={this.state.proposal_data.value}
+                      approvalsCount={this.state.proposal_data.approvalsCount}
+                      disapprovalsCount={this.state.proposal_data.disapprovalsCount}
+                      status={this.state.proposal_data.status} />
+                  { this.state.canVote &&
+                    <div>
+                      <Row className="proposal-footer">
+                        <Col lg={6} className="aling-left">
+                          <Button as='div' labelPosition='right'
+                          onClick= {() => { this.approve()  }}>
+                            <Button icon>
+                              <Icon name='thumbs up'/>
+                              Aprobar
+                            </Button>
+                            <Label as='a' basic pointing='left'>
+                              {this.state.proposal_data.approvalsCount}
+                            </Label>
                           </Button>
-                          <Label as='a' basic pointing='left'>
-                            {this.state.proposal_data.approvalsCount}
-                          </Label>
-                        </Button>
-                      </Col>
-                      <Col lg={6} className="aling-right">
-                        <Button as='div' labelPosition='left'>
-                          <Label as='a' basic pointing='right'>
-                          {this.state.proposal_data.disapprovalsCount}
-                          </Label>
-                          <Button icon>
-                            <Icon name='thumbs down'/>
-                            Desaprobar
+                        </Col>
+                        <Col lg={6} className="aling-right">
+                          <Button as='div' labelPosition='left' 
+                          onClick= {() => { this.disapprove()  }}>
+                            <Label as='a' basic pointing='right'>
+                            {this.state.proposal_data.disapprovalsCount}
+                            </Label>
+                            <Button icon>
+                              <Icon name='thumbs down'/>
+                              Desaprobar
+                            </Button>
                           </Button>
-                        </Button>
-                      </Col>
-                    </Row>
+                        </Col>
+                      </Row>
+                  </div>
+                }
 
                   <Row className="proposal-footer">
                     <Col lg={6} className="aling-left">
@@ -188,9 +271,10 @@ class DisplayProposals extends React.Component {
                       </button>
                     </Col>
                   </Row>
-                </div>}
+                </div>
+              }
               </div>
-              );
+            );
   }
 }
 

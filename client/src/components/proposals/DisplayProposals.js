@@ -21,8 +21,9 @@ class DisplayProposals extends React.Component {
     activePage:1,
     totalProposals: 0,
     totalPages: 0,
-    per_page: 3
-    
+    per_page: 3,
+    loadingClose: false,
+    loadingVote: false    
   };
 
   async getProposals(activePage) {
@@ -74,13 +75,16 @@ class DisplayProposals extends React.Component {
     proposalData["status"] = proposalInfo.status;
 
     const canVote = (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
+    const canClose = this.props.isMember && !(proposalInfo.inTime) && proposalInfo.status==='3';
    
-    this.setState({ proposal_data : proposalData, canVote: canVote });
+    this.setState({ proposal_data : proposalData, canVote: canVote, canClose: canClose });
     this.setState({ active: "proposals_detail"});
     
   }
-
+  
   async disapprove() {
+
+    this.setState({ loadingVote: true});
     const index = this.state.proposal_data["index_proposal"];
     campaignService.approveProposal(index).then((statusResponse) => {
       let title, message = "";
@@ -248,12 +252,13 @@ class DisplayProposals extends React.Component {
                           </Button>
                         </Col>
                         <Col lg={6} className="aling-right">
-                          <Button as='div' labelPosition='left' 
-                          onClick= {() => { this.disapprove()  }}>
+                          <Button as='div' labelPosition='left'>
                             <Label as='a' basic pointing='right'>
                             {this.state.proposal_data.disapprovalsCount}
                             </Label>
-                            <Button icon>
+                            <Button icon
+                            loading={this.state.loadingVote} 
+                            onClick= {() => { this.disapprove()  }}>
                               <Icon name='thumbs down'/>
                               Desaprobar
                             </Button>
@@ -261,6 +266,19 @@ class DisplayProposals extends React.Component {
                         </Col>
                       </Row>
                   </div>
+                }
+                { this.state.canClose &&
+                      <Row className="proposal-footer">
+                        <Col lg={12} className="aling-right">
+                          <Button
+                          loading={this.state.loadingClose}
+                          className="normal-button"
+                          
+                          data-testid="closeProposalButton">
+                            Cerrar Pedido
+                        </Button>
+                        </Col>
+                      </Row>
                 }
 
                   <Row className="proposal-footer">

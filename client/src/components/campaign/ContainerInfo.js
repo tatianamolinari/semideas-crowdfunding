@@ -45,52 +45,65 @@ class ContainerInfo extends React.Component {
     this.setState({ active: new_active});
   }
 
-    componentDidMount = async() => {
-        try {
 
-            const campaign = deployedCampaignsInfo["campaigns"][2]
-            const ipfsPath = campaign["ipfsPath"]
-            const address = campaign["address"]
+  loadCampaignData = async() => {
 
-            const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath);
+    try {
 
-            const correctNetwork = await campaignService.isCorrectNetwork();
-            if (!correctNetwork){
-              this.setState({
-                loaded: true,
-                error: true,
-                error_msj: "Por favor, verifica en Metamask haber seleccionado la red correcta."
-              });
-            }
-            else {
-              const instance = await campaignService.setInstanceFromAddress(address);
-              const campaignInfo = await campaignService.getCampaignInfo();
-              const isMember = await campaignService.getMembership();
-              const balance = await campaignService.getBalance();
-              const actualAccount = await campaignService.getFirstAccount();
-              const isOwner = actualAccount===campaignInfo.owner;
+      const campaign = deployedCampaignsInfo["campaigns"][this.props.indexCampaign]
+      const ipfsPath = campaign["ipfsPath"]
+      const address = campaign["address"]
 
-              this.setState({
-                  loaded: true,
-                  instance: instance,
-                  balance: balance,
-                  isMember: isMember,
-                  status: fromIntToStatus(campaignInfo.status),
-                  owner: campaignInfo.owner,
-                  goal: campaignInfo.goal,
-                  minimunContribution: campaignInfo.minimunContribution,
-                  membersCount: campaignInfo.membersCount,
-                  isOwner: isOwner,
-                  ipfsData: ipfsData
-              });
-            }
-        } catch (error) {
-            alert(
-                `Failed to load web3, ipfs data, accounts, or contract. Check console for details.`,
-            );
-            console.error(error);
-        }
-  };
+      const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath);
+
+      const correctNetwork = await campaignService.isCorrectNetwork();
+      if (!correctNetwork){
+        this.setState({
+          loaded: true,
+          error: true,
+          error_msj: "Por favor, verifica en Metamask haber seleccionado la red correcta."
+        });
+      }
+      else {
+        const instance = await campaignService.setInstanceFromAddress(address);
+        const campaignInfo = await campaignService.getCampaignInfo();
+        const isMember = await campaignService.getMembership();
+        const balance = await campaignService.getBalance();
+        const actualAccount = await campaignService.getFirstAccount();
+        const isOwner = actualAccount===campaignInfo.owner;
+
+        this.setState({
+          loaded: true,
+          instance: instance,
+          balance: balance,
+          isMember: isMember,
+          status: fromIntToStatus(campaignInfo.status),
+          owner: campaignInfo.owner,
+          goal: campaignInfo.goal,
+          minimunContribution: campaignInfo.minimunContribution,
+          membersCount: campaignInfo.membersCount,
+          isOwner: isOwner,
+          ipfsData: ipfsData
+        });
+      }
+    } catch (error) {
+      alert(`Failed to load web3, ipfs data, accounts, or contract. Check console for details.`);
+      console.error(error);
+    }
+
+  }
+
+  componentDidMount = async() => {
+    this.loadCampaignData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.indexCampaign != prevProps.indexCampaign)
+    {
+      this.setState({ loaded: false });
+      this.loadCampaignData();
+    }
+  } 
 
 
 

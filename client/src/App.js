@@ -7,12 +7,36 @@ import "./App.css";
 
 class App extends Component {
 
+    state = {
+        indexCampaign: 0
+      };
+
+      previusCampaign = () =>
+    { 
+        const new_index = this.state.indexCampaign -1 ;
+        this.setState({ indexCampaign: new_index })
+    }
+
+    nextCampaign = () =>
+    { 
+        const new_index = this.state.indexCampaign +1 ;
+        this.setState({ indexCampaign: new_index })
+    }
+
+
     render() {
 
         return ( 
             <div className = "App root" >
-                <NavBar/>
-                <ContainerInfo active="general_data"/>
+                <NavBar
+                    indexCampaign={this.state.indexCampaign}
+                    previusCampaign={this.previusCampaign}
+                    nextCampaign={this.nextCampaign}
+                />
+                <ContainerInfo 
+                    active="general_data"
+                    indexCampaign={this.state.indexCampaign}
+                />
             </div>
         );
     }

@@ -12,6 +12,15 @@ body {
   height:85vh;
 }
 
+.navigation-campaigns {
+    padding: 5em
+}
+
+.navigation-campaigns .aling-right a {
+    padding-left: 0px !important;
+    padding-right: 1em !important;
+}
+
 .nav-bar {
   height:15vh; 
   margin: 0;

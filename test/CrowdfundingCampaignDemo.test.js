@@ -57,7 +57,7 @@ contract("CrowdfundingCampaignDemo Test", async accounts => {
         
     });
 
-    it("When change limit time proposal the limit time should be 7 days earlier", async() => {
+    it("When change limit time destruct roposal the limit time should be 7 days earlier", async() => {
 
         const campaign = this.campaign;
 

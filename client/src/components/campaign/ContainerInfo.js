@@ -49,7 +49,6 @@ class ContainerInfo extends React.Component {
   loadCampaignData = async() => {
 
     try {
-
       const campaign = deployedCampaignsInfo["campaigns"][this.props.indexCampaign]
       const ipfsPath = campaign["ipfsPath"]
       const address = campaign["address"]

@@ -14,7 +14,13 @@ beforeEach(() => {
                                             description="Descripcion mockeada para test"
                                             proposal_date="11/02/2019"
                                             isMember={false}
-                                            isOwner={true}/>));
+                                            isOwner={true}
+                                            recipient="0x3eF67DA7f56FFC54c5a30996CD8C8AB4DAA2B136"
+                                            value={50}
+                                            approvalsCount={20}
+                                            disapprovalsCount={21}
+                                            status={"1"} />));
+
 });
 
 it("Check ProposalDetail title render", () => {

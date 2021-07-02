@@ -11,10 +11,11 @@ beforeEach(() => {
   ({ getByTestId } =  render(<ProgressUpdateDetail
                                 title="Progress update title"
                                 description="Descripcion mockeada para test"
-                                progress_update_date="19/12/2021"/>));
+                                progress_update_date="19/12/2021"
+                                images={["imagen1", "imagen2", "imagen3"]} />));
 });
 
-it("Check ProposalDetail title render", () => {
+it("Check ProgressUpdateDetail title render", () => {
 
     const { getByText } = within(getByTestId('titulo'));
     expect(getByText('Progress update title')).toBeInTheDocument();
@@ -22,14 +23,14 @@ it("Check ProposalDetail title render", () => {
 
 });
 
-it("Check ProposalDetail description render", () => {
+it("Check ProgressUpdateDetail description render", () => {
 
     const { getByText } = within(getByTestId('descripcion'));
     expect(getByText('Descripcion mockeada para test')).toBeInTheDocument();
 
 });
 
-it("Check ProposalDetail valor render", () => {
+it("Check ProgressUpdateDetail valor render", () => {
 
     const { getByText } = within(getByTestId('fecha_creacion'));
     expect(getByText('19/12/2021')).toBeInTheDocument();

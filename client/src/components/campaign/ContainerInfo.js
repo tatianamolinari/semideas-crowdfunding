@@ -87,7 +87,7 @@ class ContainerInfo extends React.Component {
         });
       }
     } catch (error) {
-      alert(`Failed to load web3, ipfs data, accounts, or contract. Check console for details.`);
+      //alert(`Failed to load web3, ipfs data, accounts, or contract. Check console for details.`);
       console.error(error);
     }
 
@@ -102,6 +102,9 @@ class ContainerInfo extends React.Component {
     {
       this.setState({ loaded: false });
       this.loadCampaignData();
+      if (this.state.active != "general_data") {
+        this.change_active("general_data");
+      }
     }
   } 
 

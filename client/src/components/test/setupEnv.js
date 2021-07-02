@@ -15,7 +15,7 @@ module.exports = class CustomTestEnvironment extends Environment {
         if (typeof this.global.TextDecoder === 'undefined') {
             const { TextDecoder } = require('util');
             this.global.TextDecoder = TextDecoder;
-            console.log(this.global.TextDecoder);
+            //console.log(this.global.TextDecoder);
 
         }
     }

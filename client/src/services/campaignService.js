@@ -90,11 +90,9 @@ class CampaignService {
   }
 
   async getProposalInfo(index) {
-    const proposalValues = await this.instance.methods.getProposal(index).call();
-    console.log(proposalValues)
+    const proposalValues = await this.instance.methods.getProposal(index).call({ from: this.accounts[0]});
     const proposalInfo = getValuesFromHash(proposalValues);
              
-    console.log(proposalInfo);
     const proposalData = {};
     proposalData.recipient = proposalInfo[0];
     proposalData.value = proposalInfo[1];
@@ -285,6 +283,27 @@ async getProposals() {
     const gasprice = await this.web3.eth.getGasPrice();
     const gas = await this.instance.methods.approveProposal(index).estimateGas({ from: this.accounts[0] });      
     const transaction = this.instance.methods.approveProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    var service = this;
+
+    const promise = new Promise(function(resolve, reject) {
+
+      const statusResponse = {};
+      statusResponse.error = false;
+      statusResponse.errorMsg = "";
+
+      transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+
+    });
+
+    return promise;
+  }
+
+  async disapproveProposal(index) {
+
+    const gasprice = await this.web3.eth.getGasPrice();
+    const gas = await this.instance.methods.disapproveProposal(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.disapproveProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
     var service = this;
 
     const promise = new Promise(function(resolve, reject) {

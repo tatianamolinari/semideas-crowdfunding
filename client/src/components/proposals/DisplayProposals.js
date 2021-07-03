@@ -16,6 +16,7 @@ class DisplayProposals extends React.Component {
   state = {
     active: this.props.active,
     proposal_data: {},
+    proposal_data_i: 0,
     pastProposals: [],
     proposals: [],
     loaded: false,
@@ -78,19 +79,22 @@ class DisplayProposals extends React.Component {
     proposalData["disapprovalsCount"] = proposalInfo.disapprovalsCount;
     proposalData["status"] = proposalInfo.status;
 
+    console.log(proposalInfo)
+
     const canVote = (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
     const canClose = this.props.isMember && !(proposalInfo.inTime) && proposalInfo.status==='3';
    
-    this.setState({ proposal_data : proposalData, canVote: canVote, canClose: canClose });
+    this.setState({ proposal_data_i: index, proposal_data : proposalData, canVote: canVote, canClose: canClose });
     this.setState({ active: "proposals_detail"});
-    
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaa");
   }
   
   async disapprove() {
 
     this.setState({ loadingVote: true});
     const index = this.state.proposal_data["index_proposal"];
-    campaignService.approveProposal(index).then((statusResponse) => {
+
+    campaignService.disapproveProposal(index).then((statusResponse) => {
       let title, message = "";
 
       if (statusResponse.error) {
@@ -111,8 +115,8 @@ class DisplayProposals extends React.Component {
         }
       }
       else {
-        title = "Bienvenido al proyecto";
-        message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
+        title = "Votación exitosa";
+        message = "¡Tu voto se contabilizó de manera exitosa!\n ¡Gracias por tu compromiso!"; 
       }
 
       this.setState({ loadingVote: false, 
@@ -120,15 +124,14 @@ class DisplayProposals extends React.Component {
                       showMessage: true, 
                       title_m: title});
       });
+
+      this.showProposal(this.state.proposal_data_i);
   }
 
 
   async approve() {
     this.setState({ loadingVote: true});
     const index = this.state.proposal_data["index_proposal"];
-
-    console.log(this.state.proposal_data)
-    console.log(index)
 
     campaignService.approveProposal(index).then((statusResponse) => {
       let title, message = "";
@@ -151,8 +154,8 @@ class DisplayProposals extends React.Component {
         }
       }
       else {
-        title = "Bienvenido al proyecto";
-        message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
+        title = "Votación exitosa";
+        message = "¡Tu voto se contabilizó de manera exitosa!\n ¡Gracias por tu compromiso!"; 
       }
 
       this.setState({ loadingVote: false, 
@@ -161,7 +164,7 @@ class DisplayProposals extends React.Component {
                       title_m: title});
     });
 
-    //await this.showProposal(index);
+    this.showProposal(this.state.proposal_data_i);
   }
 
   componentDidMount = async() => {

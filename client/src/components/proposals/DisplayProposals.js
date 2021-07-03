@@ -78,6 +78,8 @@ class DisplayProposals extends React.Component {
     proposalData["approvalsCount"] = proposalInfo.approvalsCount;
     proposalData["disapprovalsCount"] = proposalInfo.disapprovalsCount;
     proposalData["status"] = proposalInfo.status;
+    proposalData["limitTime"] = proposalInfo.limitTime;
+    proposalData["hasVoted"] = proposalInfo.senderHasVote;
 
     console.log(proposalInfo)
 
@@ -86,7 +88,6 @@ class DisplayProposals extends React.Component {
    
     this.setState({ proposal_data_i: index, proposal_data : proposalData, canVote: canVote, canClose: canClose });
     this.setState({ active: "proposals_detail"});
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaa");
   }
   
   async disapprove() {
@@ -251,7 +252,9 @@ class DisplayProposals extends React.Component {
                       value={this.state.proposal_data.value}
                       approvalsCount={this.state.proposal_data.approvalsCount}
                       disapprovalsCount={this.state.proposal_data.disapprovalsCount}
-                      status={this.state.proposal_data.status} />
+                      status={this.state.proposal_data.status}
+                      limitTime={this.state.proposal_data.limitTime}
+                      hasVoted={this.state.proposal_data.hasVoted} />
                   { this.state.canVote &&
                     <div>
                       <Row className="proposal-footer">

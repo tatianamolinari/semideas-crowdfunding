@@ -1,6 +1,7 @@
 import React from "react";
 import { Badge } from "react-bootstrap";
-import { fromStatusToBadgeClass, fromIntToStatus } from "../../helpers/utils.js"
+import { Label }  from 'semantic-ui-react';
+import { fromStatusToBadgeClass, fromIntToStatus } from "../../helpers/utils.js";
 
 class ProposalDetail extends React.Component {
 
@@ -18,6 +19,7 @@ class ProposalDetail extends React.Component {
       approvalsCount: this.props.approvalsCount,
       disapprovalsCount: this.props.disapprovalsCount,
       status: fromIntToStatus(this.props.status),
+      limitTime: new Date(this.props.limitTime * 1000).toLocaleDateString('en-GB'),
       badge_status: fromStatusToBadgeClass(fromIntToStatus(this.props.status))
     }
 
@@ -47,13 +49,22 @@ class ProposalDetail extends React.Component {
 
     
     return (  <div className="proposal-detail">            
-                <h3 className="title" data-testid="titulo"> {this.props.title} </h3>
+                <h3 className="title" data-testid="titulo"> {this.props.title} 
+                  { (this.props.hasVoted) && 
+                    <Label color="teal">
+                      <span data-testid="voted">
+                        Votaste este pedido
+                      </span>
+                    </Label>
+                  }
+                </h3>
                 <p className="aling-right"> Fecha de creación <span data-testid="fecha_creacion">{this.props.proposal_date}</span></p>
                 <h5 data-testid="estado"> Estado: <Badge variant={this.state.proposal_data.badge_status}> { this.state.proposal_data.status } </Badge> </h5>
                 <p className="description" data-testid="descripcion"> {this.props.description} </p>
                 <hr/>
                 <div> Fondos a retirar: <span data-testid="valor">{ this.state.proposal_data.value }</span> wei. </div>
                 <div> Destinatario: <span data-testid="destinatario">{ this.state.proposal_data.recipient }</span>. </div> 
+                <div> Fecha de cierre de votación:  <span data-testid="limite">{ this.state.proposal_data.limitTime }</span></div>
               </div>);
   }
 }

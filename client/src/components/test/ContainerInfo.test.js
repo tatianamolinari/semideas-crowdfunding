@@ -14,12 +14,10 @@ import ErrorMessage from "../errors/ErrorMessage";
 import MenuButton from "../buttons/MenuButton";
   
 it("Check that renders the error message when error is true", () => {
-    /*ipfsService.mockReturnValueOnce({prop1: "dummy"  });*/
     const wrapper =  shallow(<ContainerInfo 
                                 active="general_data"
                                 indexCampaign={0}
                             />);
-    wrapper.instance().loadCampaignData = jest.fn();
     wrapper.setState({ error: true });
     expect(wrapper.find(ErrorMessage).exists()).toBeTruthy();
 });

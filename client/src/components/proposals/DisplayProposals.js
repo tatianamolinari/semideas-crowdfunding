@@ -5,6 +5,7 @@ import { Icon, Pagination, Button, Label }  from 'semantic-ui-react'
 
 import CardProposal from "./CardProposal.js";
 import ProposalDetail from "./ProposalDetail.js";
+import MessageModal from "../modals/MessageModal"
 
 import { campaignService } from "../../services/campaignService.js"
 import { ipfsService } from "../../services/ipfsService.js"
@@ -23,7 +24,8 @@ class DisplayProposals extends React.Component {
     totalPages: 0,
     per_page: 3,
     loadingClose: false,
-    loadingVote: false    
+    loadingVote: false,
+    showMessage: false    
   };
 
   async getProposals(activePage) {
@@ -61,6 +63,8 @@ class DisplayProposals extends React.Component {
     this.setState({ activePage: activePage, loaded: false });
     this.getProposals(activePage);
   }
+
+  handleMessageClose = () => this.setState({ showMessage: false});
 
   async showProposal(index) {
 
@@ -111,15 +115,16 @@ class DisplayProposals extends React.Component {
         message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
       }
 
-      this.setState({ voteLoading: false, 
-                      message: message, 
+      this.setState({ loadingVote: false, 
+                      message_m: message, 
                       showMessage: true, 
-                      title: title});
-    });
+                      title_m: title});
+      });
   }
 
 
   async approve() {
+    this.setState({ loadingVote: true});
     const index = this.state.proposal_data["index_proposal"];
 
     console.log(this.state.proposal_data)
@@ -150,10 +155,10 @@ class DisplayProposals extends React.Component {
         message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
       }
 
-      this.setState({ voteLoading: false, 
-                      message: message, 
+      this.setState({ loadingVote: false, 
+                      message_m: message, 
                       showMessage: true, 
-                      title: title});
+                      title_m: title});
     });
 
     //await this.showProposal(index);
@@ -197,7 +202,15 @@ class DisplayProposals extends React.Component {
     }
 
 
-    return (  <div className="proposal-info" id="proposals_container" style={{display: "none"}}>            
+    return (  <div className="proposal-info" id="proposals_container" style={{display: "none"}}> 
+
+                { this.state.showMessage &&
+                  <MessageModal
+                  showMessage={this.state.showMessage}
+                  handleMessageClose={this.handleMessageClose}
+                  message={this.state.message_m}
+                  title={this.state.title_m} />
+                }           
                 
                 { this.state.active==="proposals_list" && proposal_nodes.length>0 &&
                 <div>
@@ -240,7 +253,8 @@ class DisplayProposals extends React.Component {
                     <div>
                       <Row className="proposal-footer">
                         <Col lg={6} className="aling-left">
-                          <Button as='div' labelPosition='right'
+                          <Button as='div' labelPosition='right' 
+                          disabled={this.state.loadingVote}
                           onClick= {() => { this.approve()  }}>
                             <Button icon>
                               <Icon name='thumbs up'/>
@@ -252,13 +266,14 @@ class DisplayProposals extends React.Component {
                           </Button>
                         </Col>
                         <Col lg={6} className="aling-right">
-                          <Button as='div' labelPosition='left'>
+                          <Button as='div' labelPosition='left' 
+                          disabled={this.state.loadingVote}
+                          onClick= {() => { this.disapprove()  }}
+                          >
                             <Label as='a' basic pointing='right'>
                             {this.state.proposal_data.disapprovalsCount}
                             </Label>
-                            <Button icon
-                            loading={this.state.loadingVote} 
-                            onClick= {() => { this.disapprove()  }}>
+                            <Button icon>
                               <Icon name='thumbs down'/>
                               Desaprobar
                             </Button>

@@ -449,6 +449,51 @@ contract("CrowdfundingCampaign Test", async accounts => {
         
     });
 
+    it("Can not withdraw a proposal it is not with status APPROVED", async() => {
+
+        const campaign = this.campaign;
+        const i_proposal = 0
+
+        const result = await campaign.getProposal(i_proposal);
+        const status = result['4'];
+        expect(status).to.be.a.a.bignumber.equal(new BN(2));
+
+        expect(campaign.withdraw(i_proposal, { from: authorAddress })).to.eventually.be.rejectedWith("The proposal is not approved.");
+        
+    });
+
+    it("Owner withdraw a proposal and the status and banlance change", async() => {
+
+        const campaign = this.campaign;
+        const campaignBalance = await web3.eth.getBalance(campaign.address);
+        const ownerBalance = await web3.eth.getBalance(authorAddress);
+
+        const i_proposal = 2
+
+        const result = await campaign.getProposal(i_proposal);
+        const status = result['4'];
+        expect(status).to.be.a.a.bignumber.equal(new BN(1));
+
+        const tx = await campaign.withdraw(i_proposal, { from: authorAddress });
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+
+        const log = logs[0];
+        expect(log.event).to.equal('proposalWithdraw');
+
+        const aftercampaignBalance = await web3.eth.getBalance(campaign.address);
+        const afterOwnerBalance = await web3.eth.getBalance(authorAddress);
+
+        console.log(campaignBalance);
+        console.log(aftercampaignBalance);
+        console.log(ownerBalance);
+        console.log(afterOwnerBalance);
+
+        expect(parseInt(aftercampaignBalance)).to.be.equal(parseInt(campaignBalance) - 5);
+        
+    });
+
     it("Only members should be able to create destruct proposals", async() => {
 
         const campaign = this.campaign;

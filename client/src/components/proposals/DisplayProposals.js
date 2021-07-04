@@ -216,6 +216,45 @@ class DisplayProposals extends React.Component {
 
   }
 
+  async withdraw() {
+
+    this.setState({ loadingTansfer: true});
+    const index = this.state.proposal_data["index_proposal"];
+
+    campaignService.withdraw(index).then((statusResponse) => {
+      let title, message = "";
+
+      if (statusResponse.error) {
+        title = "Hubo un error al cerrar el pedido";
+        switch (statusResponse.errorMsg) {
+          case "Acción denegada":
+            message = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
+            break;
+          case "Nonce error":
+            message = "Error de nonce: El nonce de la cuenta elegida y de la transacción son diferentes.";
+            break;
+          case "Gas insuficiente":
+            message = "La operación llevó más gas que el que pusiste como límite.";
+            break;
+          default: 
+            message = "Error desconocido";
+            break;
+        }
+      }
+      else {
+        title = "Retiro exitoso";
+        message = "¡El retiro de fondos se envío de manera exitosa!\nRevisa tu wallet para ver los fondos agregados."; 
+        this.setState({ cantWithdraw: false}); 
+      }
+
+      this.setState({ loadingTansfer: false, 
+                      message_m: message, 
+                      showMessage: true, 
+                      title_m: title});
+    });
+
+  }
+
   componentDidMount = async() => {
     try {
 

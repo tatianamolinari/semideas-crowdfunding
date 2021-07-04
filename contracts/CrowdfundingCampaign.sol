@@ -4,7 +4,7 @@ contract CrowdfundingCampaign {
 
     /* Enums */
 
-    enum Status { CREATED, APPROVED, DISAPPROVED, ACTIVE, DESTROYED }
+    enum Status { CREATED, APPROVED, DISAPPROVED, ACTIVE, DESTROYED, SUCCESSFUL }
 
     
     /* Structs */
@@ -12,7 +12,7 @@ contract CrowdfundingCampaign {
     /** @dev Struct proposal
         This struct represents the proposals that only owner can make to get more founds.
     **/
-    struct Proposal{
+    struct Proposal {
         uint value;
         address recipient;
         uint approvalsCount;
@@ -25,10 +25,11 @@ contract CrowdfundingCampaign {
     /** @dev Struct destruct proposal
         This struct represents the proposal that members can make to get their founds back.
     **/
-    struct DestructProposal{
+    struct DestructProposal {
         uint approvalsCount;
         uint disapprovalsCount;
         mapping(address => bool) voters;
+        mapping(address => bool) withdraws;
         Status status;
         uint limitTime;
     }
@@ -133,6 +134,10 @@ contract CrowdfundingCampaign {
     /** @dev Emitted when a proposal is Closed.
      */
     event proposalClosed();
+
+    /** @dev Emitted when a proposal was withdraw.
+     */
+    event proposalWithdraw();
 
      /** @dev Emitted when a member creates a proposal to destruct the campaign and get the founds back.
      *  @param _ipfshash The url hash of the destruct proposal data stored in IPFS.
@@ -250,6 +255,18 @@ contract CrowdfundingCampaign {
         }
 
         emit proposalClosed();
+    }
+
+    /** @dev Allow only members to close an active proposal that already has its voting time over.
+     *  @param _index index of the proposal the member wants to approve.
+     */
+    function withdraw(uint _index) public restricted statusActive proposalApproved(_index) {
+
+        Proposal storage proposal = proposals[_index];
+        proposal.status = Status.SUCCESSFUL; 
+        msg.sender.transfer(proposal.value);
+        
+        emit proposalWithdraw();
     }
 
     /** @dev Allow only members to create a new proposal to finish de proyect and get the founds back.

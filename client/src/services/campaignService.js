@@ -382,6 +382,27 @@ async getProposals() {
 
     return promise;
   }
+
+  async withdraw(index) {
+
+    const gasprice = await this.web3.eth.getGasPrice();
+    const gas = await this.instance.methods.withdraw(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.withdraw(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    var service = this;
+
+    const promise = new Promise(function(resolve, reject) {
+
+      const statusResponse = {};
+      statusResponse.error = false;
+      statusResponse.errorMsg = "";
+
+      transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+
+    });
+
+    return promise;
+  }
   
 
 }

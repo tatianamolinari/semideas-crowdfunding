@@ -264,7 +264,7 @@ contract CrowdfundingCampaign {
 
         Proposal storage proposal = proposals[_index];
         proposal.status = Status.SUCCESSFUL; 
-        msg.sender.transfer(proposal.value);
+        payable(proposal.recipient).transfer(proposal.value);
         
         emit proposalWithdraw();
     }

@@ -26,6 +26,7 @@ class DisplayProposals extends React.Component {
     per_page: 3,
     loadingClose: false,
     loadingVote: false,
+    loadingTansfer: false,
     showMessage: false    
   };
 
@@ -67,7 +68,7 @@ class DisplayProposals extends React.Component {
 
   handleMessageClose = () => this.setState({ showMessage: false});
 
-  async showProposal(index) {
+  async setProposalData(index) {
 
     const proposalData = this.state.proposals[index];
 
@@ -85,8 +86,18 @@ class DisplayProposals extends React.Component {
 
     const canVote = (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
     const canClose = this.props.isMember && !(proposalInfo.inTime) && proposalInfo.status==='3';
-   
-    this.setState({ proposal_data_i: index, proposal_data : proposalData, canVote: canVote, canClose: canClose });
+    const cantWithdraw = this.props.isOwner && proposalInfo.status==='1';
+
+    this.setState({ proposal_data_i: index, 
+                    proposal_data : proposalData, 
+                    canVote: canVote, 
+                    canClose: canClose,
+                    cantWithdraw: cantWithdraw });
+  }
+
+  async showProposal(index) {
+
+    await this.setProposalData(index);
     this.setState({ active: "proposals_detail"});
   }
   
@@ -99,7 +110,7 @@ class DisplayProposals extends React.Component {
       let title, message = "";
 
       if (statusResponse.error) {
-        title = "Hubo un error al contribuir";
+        title = "Hubo un error al votar";
         switch (statusResponse.errorMsg) {
           case "Acción denegada":
             message = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
@@ -117,7 +128,8 @@ class DisplayProposals extends React.Component {
       }
       else {
         title = "Votación exitosa";
-        message = "¡Tu voto se contabilizó de manera exitosa!\n ¡Gracias por tu compromiso!"; 
+        message = "¡Tu voto se envió de manera exitosa!\n ¡Gracias por tu compromiso!";
+        this.setState({ canVote: false}); 
       }
 
       this.setState({ loadingVote: false, 
@@ -125,10 +137,7 @@ class DisplayProposals extends React.Component {
                       showMessage: true, 
                       title_m: title});
       });
-
-      this.showProposal(this.state.proposal_data_i);
   }
-
 
   async approve() {
     this.setState({ loadingVote: true});
@@ -138,7 +147,7 @@ class DisplayProposals extends React.Component {
       let title, message = "";
 
       if (statusResponse.error) {
-        title = "Hubo un error al contribuir";
+        title = "Hubo un error al votar";
         switch (statusResponse.errorMsg) {
           case "Acción denegada":
             message = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
@@ -156,7 +165,8 @@ class DisplayProposals extends React.Component {
       }
       else {
         title = "Votación exitosa";
-        message = "¡Tu voto se contabilizó de manera exitosa!\n ¡Gracias por tu compromiso!"; 
+        message = "¡Tu voto se envió de manera exitosa!\n ¡Gracias por tu compromiso!"; 
+        this.setState({ canVote: false}); 
       }
 
       this.setState({ loadingVote: false, 
@@ -165,7 +175,6 @@ class DisplayProposals extends React.Component {
                       title_m: title});
     });
 
-    this.showProposal(this.state.proposal_data_i);
   }
 
   componentDidMount = async() => {
@@ -180,13 +189,16 @@ class DisplayProposals extends React.Component {
 
       await this.getProposals(1);
 
+      const actualizeProposalInfo = async() => {this.setProposalData(this.state.proposal_data_i)};
+      await campaignService.suscribeToVoteProposal(actualizeProposalInfo);
+
     } catch (error) {
         alert(
             `Failed to load web3, accounts, or data contract. Check console for details.`,
         );
         console.error(error);
     }
-};
+  }
 
   render() {
 
@@ -255,16 +267,16 @@ class DisplayProposals extends React.Component {
                       status={this.state.proposal_data.status}
                       limitTime={this.state.proposal_data.limitTime}
                       hasVoted={this.state.proposal_data.hasVoted} />
-                  { this.state.canVote &&
+                  
                     <div>
                       <Row className="proposal-footer">
                         <Col lg={6} className="aling-left">
                           <Button as='div' labelPosition='right' 
-                          disabled={this.state.loadingVote}
+                          disabled={ this.state.loadingVote ||  !this.state.canVote }
                           onClick= {() => { this.approve()  }}>
                             <Button icon>
                               <Icon name='thumbs up'/>
-                              Aprobar
+                              { this.state.canVote ? 'Aprobar' : 'Aprobados'}
                             </Button>
                             <Label as='a' basic pointing='left'>
                               {this.state.proposal_data.approvalsCount}
@@ -273,7 +285,7 @@ class DisplayProposals extends React.Component {
                         </Col>
                         <Col lg={6} className="aling-right">
                           <Button as='div' labelPosition='left' 
-                          disabled={this.state.loadingVote}
+                          disabled={ this.state.loadingVote ||  !this.state.canVote }
                           onClick= {() => { this.disapprove()  }}
                           >
                             <Label as='a' basic pointing='right'>
@@ -281,35 +293,42 @@ class DisplayProposals extends React.Component {
                             </Label>
                             <Button icon>
                               <Icon name='thumbs down'/>
-                              Desaprobar
+                              { this.state.canVote ? 'Desaprobar' : 'Desaprobados'}
                             </Button>
                           </Button>
                         </Col>
                       </Row>
                   </div>
-                }
-                { this.state.canClose &&
+                
+                  <hr style={{margin: "2em"}}/>
                       <Row className="proposal-footer">
-                        <Col lg={12} className="aling-right">
+                        <Col lg={6} className="aling-left">
+                          <Button className="normal-button no-margin"
+                          onClick={() => { this.setState({ active: "proposals_list"})  }}>
+                            <Icon name='angle left' /> Volver
+                          </Button>
+                        </Col>
+                        { this.state.canClose &&
+                        <Col lg={6} className="aling-right">
                           <Button
                           loading={this.state.loadingClose}
-                          className="normal-button"
-                          
+                          className="normal-button no-margin"                          
                           data-testid="closeProposalButton">
                             Cerrar Pedido
-                        </Button>
+                          </Button>
                         </Col>
+                        }
+                        { this.state.cantWithdraw &&
+                        <Col lg={6} className="aling-right">
+                          <Button
+                          loading={this.state.loadingTansfer}
+                          className="normal-button no-margin"                          
+                          data-testid="transfer">
+                            Transferir fondos
+                          </Button>
+                        </Col>
+                        }
                       </Row>
-                }
-
-                  <Row className="proposal-footer">
-                    <Col lg={6} className="aling-left">
-                      <button className="normal-button"
-                      onClick={() => { this.setState({ active: "proposals_list"})  }}>
-                         <Icon name='angle left' /> Volver
-                      </button>
-                    </Col>
-                  </Row>
                 </div>
               }
               </div>

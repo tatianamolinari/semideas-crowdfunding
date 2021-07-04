@@ -126,6 +126,10 @@ contract CrowdfundingCampaign {
      */
     event proposalCreated(bytes32 indexed _ipfshash);
 
+     /** @dev Emitted when a proposal is voted.
+     */
+    event proposalVoted();
+
     /** @dev Emitted when a proposal is Closed.
      */
     event proposalClosed();
@@ -213,7 +217,8 @@ contract CrowdfundingCampaign {
 
         proposal.voters[msg.sender] = true;
         proposal.approvalsCount++;
-        
+
+        emit proposalVoted();        
     }
 
     /** @dev Allow only members to disapprove an active proposal that they haven't voted before.
@@ -227,6 +232,7 @@ contract CrowdfundingCampaign {
         proposal.voters[msg.sender] = true;
         proposal.disapprovalsCount++;
         
+        emit proposalVoted();
     }
 
     /** @dev Allow only members to close an active proposal that already has its voting time over.

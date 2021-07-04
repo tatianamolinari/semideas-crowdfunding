@@ -323,12 +323,8 @@
                     "add_i": 0,
                     "votes": [
                         { 
-                            "accountIndex": 3,
-                            "value": true
-                        },
-                        { 
                             "accountIndex": 4,
-                            "value": false
+                            "value": true
                         },
                         { 
                             "accountIndex": 5,

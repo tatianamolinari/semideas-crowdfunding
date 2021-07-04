@@ -233,6 +233,14 @@ hr {
     margin :2em !important;
 }
 
+.ui.disabled.right.labeled.button {
+    opacity: .80!important;
+}
+
+.ui.disabled.left.labeled.button {
+    opacity: .80!important;
+}
+
 .normal-button {
     background-color: #0c6069 !important;
     color: #fff !important;
@@ -246,6 +254,12 @@ hr {
     margin: 1.5em !important;
     border-width: 0 !important;
     font-weight: 400 !important;
+}
+
+.normal-button.no-margin {
+    margin-left :0 !important;
+    margin-right :0 !important;
+    margin-bottom :2em !important;
 }
 
 .normal-button:hover {

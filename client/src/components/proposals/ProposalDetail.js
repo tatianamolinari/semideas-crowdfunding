@@ -60,11 +60,14 @@ class ProposalDetail extends React.Component {
                 </h3>
                 <p className="aling-right"> Fecha de creación <span data-testid="fecha_creacion">{this.props.proposal_date}</span></p>
                 <h5 data-testid="estado"> Estado: <Badge variant={this.state.proposal_data.badge_status}> { this.state.proposal_data.status } </Badge> </h5>
+                <h5> Fecha de cierre de votación:  <span data-testid="limite">{ this.state.proposal_data.limitTime }</span></h5>
                 <p className="description" data-testid="descripcion"> {this.props.description} </p>
-                <hr/>
-                <div> Fondos a retirar: <span data-testid="valor">{ this.state.proposal_data.value }</span> wei. </div>
-                <div> Destinatario: <span data-testid="destinatario">{ this.state.proposal_data.recipient }</span>. </div> 
-                <div> Fecha de cierre de votación:  <span data-testid="limite">{ this.state.proposal_data.limitTime }</span></div>
+                <hr style={{marginLeft: "6em", marginRight: "6em",  marginTop: "1.5em",  marginBottom: "1.5em"}}/>
+              
+                <h5> Datos de transferencia: </h5>
+                <div> Los fondos a retirar para de este pedido son <Label color="green"> <span data-testid="valor">{ this.state.proposal_data.value }</span></Label> wei. </div>
+                <div> Destinatario: <span data-testid="destinatario">{ this.state.proposal_data.recipient }</span>. 
+                </div> 
               </div>);
   }
 }

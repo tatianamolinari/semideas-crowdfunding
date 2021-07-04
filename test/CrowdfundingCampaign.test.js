@@ -232,7 +232,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(campaign.hasVotedProposal(i_proposal, { from: memberAccount })).to.eventually.be.false;
     });
 
-    it("Members can approve a proposal", async() => {
+    it("Members can approve a proposal and a event ProposalVoted is emited", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
@@ -242,7 +242,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
-        await campaign.approveProposal(i_proposal, { from: memberAccount });
+
+        const tx = await campaign.approveProposal(i_proposal, { from: memberAccount });
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+
+        const log = logs[0];
+        expect(log.event).to.equal('proposalVoted');
 
         const afterResult = await campaign.getProposal(i_proposal);
         const afterApprovalsCount = afterResult['2'];
@@ -290,7 +297,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(afterDisapprovalsCount).to.be.a.bignumber.equal(new BN(0));
     });
 
-    it("Members can disapprove a proposal", async() => {
+    it("Members can disapprove a proposal and a event ProposalVoted is emited", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
@@ -300,7 +307,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
-        await campaign.disapproveProposal(i_proposal, { from: anotherMemberAccount });
+        
+        const tx = await campaign.disapproveProposal(i_proposal, { from: anotherMemberAccount });
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+
+        const log = logs[0];
+        expect(log.event).to.equal('proposalVoted');
 
         const afterResult = await campaign.getProposal(i_proposal);
         const afterDisapprovalsCount = afterResult['3'];

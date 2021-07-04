@@ -28,6 +28,14 @@ class ProposalDetail extends React.Component {
 
   }
 
+  componentDidUpdate(prevProps) {
+    if((this.props.status != prevProps.status) || (this.props.hasVoted != prevProps.hasVoted ))
+    {
+      this.setState({ loaded: false });
+      this.setProposalData();
+    }
+  }
+
   componentDidMount = async() => {
     try {
 
@@ -43,7 +51,9 @@ class ProposalDetail extends React.Component {
         );
         console.error(error);
     }
-};
+  }
+
+  setProposalData
 
   render() {
 

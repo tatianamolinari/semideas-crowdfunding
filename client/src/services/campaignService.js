@@ -193,6 +193,26 @@ async getProposals() {
         console.log("hubo un error");
         console.log(error);
       });
+  }
+
+   async suscribeToClosedProposal(actualizeFunction){
+
+    const currentBlock = await this.getCurrentBlock();
+
+    this.instance.events.proposalClosed({
+      fromBlock: currentBlock
+      }, function(error, event){ console.log(event); })
+      .on("connected", function(subscriptionId){
+          console.log(subscriptionId);
+      })
+      .on('data', function(event){
+          actualizeFunction();
+          console.log(event); 
+      })
+      .on('error', function(error, receipt) {
+        console.log("hubo un error");
+        console.log(error);
+      });
 
 
   }
@@ -341,6 +361,28 @@ async getProposals() {
 
     return promise;
   }
+
+  async closeProposal(index) {
+
+    const gasprice = await this.web3.eth.getGasPrice();
+    const gas = await this.instance.methods.closeProposal(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.closeProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    var service = this;
+
+    const promise = new Promise(function(resolve, reject) {
+
+      const statusResponse = {};
+      statusResponse.error = false;
+      statusResponse.errorMsg = "";
+
+      transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+
+    });
+
+    return promise;
+  }
+  
 
 }
 

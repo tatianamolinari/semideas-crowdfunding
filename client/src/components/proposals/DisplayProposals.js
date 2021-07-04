@@ -177,6 +177,45 @@ class DisplayProposals extends React.Component {
 
   }
 
+  async closeProposal() {
+
+    this.setState({ loadingClose: true});
+    const index = this.state.proposal_data["index_proposal"];
+
+    campaignService.closeProposal(index).then((statusResponse) => {
+      let title, message = "";
+
+      if (statusResponse.error) {
+        title = "Hubo un error al cerrar el pedido";
+        switch (statusResponse.errorMsg) {
+          case "Acción denegada":
+            message = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
+            break;
+          case "Nonce error":
+            message = "Error de nonce: El nonce de la cuenta elegida y de la transacción son diferentes.";
+            break;
+          case "Gas insuficiente":
+            message = "La operación llevó más gas que el que pusiste como límite.";
+            break;
+          default: 
+            message = "Error desconocido";
+            break;
+        }
+      }
+      else {
+        title = "Cierre exitoso";
+        message = "¡El cierre del pedido se envío de manera exitosa!"; 
+        this.setState({ canClose: false}); 
+      }
+
+      this.setState({ loadingClose: false, 
+                      message_m: message, 
+                      showMessage: true, 
+                      title_m: title});
+    });
+
+  }
+
   componentDidMount = async() => {
     try {
 
@@ -191,6 +230,7 @@ class DisplayProposals extends React.Component {
 
       const actualizeProposalInfo = async() => {this.setProposalData(this.state.proposal_data_i)};
       await campaignService.suscribeToVoteProposal(actualizeProposalInfo);
+      await campaignService.suscribeToClosedProposal(actualizeProposalInfo);
 
     } catch (error) {
         alert(
@@ -313,7 +353,8 @@ class DisplayProposals extends React.Component {
                           <Button
                           loading={this.state.loadingClose}
                           className="normal-button no-margin"                          
-                          data-testid="closeProposalButton">
+                          data-testid="closeProposalButton"
+                          onClick= {() => { this.closeProposal()  }}>
                             Cerrar Pedido
                           </Button>
                         </Col>

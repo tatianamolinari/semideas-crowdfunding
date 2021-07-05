@@ -97,11 +97,11 @@ class ContainerInfo extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.indexCampaign != prevProps.indexCampaign)
+    if(this.props.indexCampaign !== prevProps.indexCampaign)
     {
       this.setState({ loaded: false });
       this.loadCampaignData();
-      if (this.state.active != "general_data") {
+      if (this.state.active !== "general_data") {
         this.change_active("general_data");
       }
     }

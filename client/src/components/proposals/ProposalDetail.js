@@ -29,7 +29,7 @@ class ProposalDetail extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if((this.props.status != prevProps.status) || (this.props.hasVoted != prevProps.hasVoted ))
+    if((this.props.status !== prevProps.status) || (this.props.hasVoted !== prevProps.hasVoted ))
     {
       this.setState({ loaded: false });
       this.setProposalData();
@@ -74,9 +74,16 @@ class ProposalDetail extends React.Component {
                 <p className="description" data-testid="descripcion"> {this.props.description} </p>
                 <hr style={{marginLeft: "6em", marginRight: "6em",  marginTop: "1.5em",  marginBottom: "1.5em"}}/>
               
-                <h5> Datos de transferencia: </h5>
+                <h5> Datos de transferencia:</h5>
                 <div> Los fondos a retirar para de este pedido son <Label color="green"> <span data-testid="valor">{ this.state.proposal_data.value }</span></Label> wei. </div>
-                <div> Destinatario: <span data-testid="destinatario">{ this.state.proposal_data.recipient }</span>. 
+                <div> 
+                    Destinatario:&nbsp; 
+                    <a href={`https://etherscan.io/address/${this.state.proposal_data.recipient}`}
+                       target="_blank"
+                       rel="noopener noreferrer" 
+                       data-testid="destinatario">
+                        { this.state.proposal_data.recipient }
+                    </a>
                 </div> 
               </div>);
   }

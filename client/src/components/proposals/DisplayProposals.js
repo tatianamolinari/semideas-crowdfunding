@@ -270,6 +270,7 @@ class DisplayProposals extends React.Component {
       const actualizeProposalInfo = async() => {this.setProposalData(this.state.proposal_data_i)};
       await campaignService.suscribeToVoteProposal(actualizeProposalInfo);
       await campaignService.suscribeToClosedProposal(actualizeProposalInfo);
+      await campaignService.suscribeToProposalWithdraw(actualizeProposalInfo);
 
     } catch (error) {
         alert(
@@ -355,7 +356,7 @@ class DisplayProposals extends React.Component {
                           onClick= {() => { this.approve()  }}>
                             <Button icon>
                               <Icon name='thumbs up'/>
-                              { this.state.canVote ? 'Aprobar' : 'Aprobados'}
+                              &nbsp;{ this.state.canVote ? 'Aprobar' : 'Aprobados'}
                             </Button>
                             <Label as='a' basic pointing='left'>
                               {this.state.proposal_data.approvalsCount}
@@ -365,14 +366,13 @@ class DisplayProposals extends React.Component {
                         <Col lg={6} className="aling-right">
                           <Button as='div' labelPosition='left' 
                           disabled={ this.state.loadingVote ||  !this.state.canVote }
-                          onClick= {() => { this.disapprove()  }}
-                          >
+                          onClick= {() => { this.disapprove()  }}>
                             <Label as='a' basic pointing='right'>
-                            {this.state.proposal_data.disapprovalsCount}
+                              {this.state.proposal_data.disapprovalsCount}
                             </Label>
                             <Button icon>
                               <Icon name='thumbs down'/>
-                              { this.state.canVote ? 'Desaprobar' : 'Desaprobados'}
+                              &nbsp;{ this.state.canVote ? 'Desaprobar' : 'Desaprobados'}
                             </Button>
                           </Button>
                         </Col>
@@ -403,7 +403,8 @@ class DisplayProposals extends React.Component {
                           <Button
                           loading={this.state.loadingTansfer}
                           className="normal-button no-margin"                          
-                          data-testid="transfer">
+                          data-testid="transfer"
+                          onClick= {() => { this.withdraw()  }}>
                             Transferir fondos
                           </Button>
                         </Col>

@@ -35,6 +35,14 @@ class DisplayContent extends React.Component {
     title: ''
   };
 
+  actualizeBalanceInfo = async () => {
+    const balance = await campaignService.getBalance();
+    const progress = this.getProgress();
+      
+      this.setState({ balance: balance, 
+                      progress: progress });
+  }
+
   actualizeContributionInfo = async() =>  {
 
     try {
@@ -155,6 +163,8 @@ class DisplayContent extends React.Component {
     
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
     await campaignService.suscribeToNewContribution(actualizeInfo);
+    const actualizeBalanceInfo = async() => {this.actualizeBalanceInfo()};
+    await campaignService.suscribeToProposalWithdraw(actualizeBalanceInfo);
     const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
     await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
   }
@@ -198,7 +208,16 @@ class DisplayContent extends React.Component {
                 <ImagesDetail images={images}/>
                 <h5> Estado: <Badge variant={this.state.badge_status}> { this.state.status } </Badge> </h5>
                 <div className="main-info-campaign">
-                  <div>  <Icon fitted name='user circle' /> Owner: <span data-testid="owner">{ this.props.data.owner }</span>. </div>   
+                  <div>
+                    <Icon fitted name='user circle'/> 
+                    Owner:&nbsp; 
+                    <a href={`https://etherscan.io/address/${this.props.data.owner}`}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       data-testid="owner">
+                        { this.props.data.owner }
+                    </a>. 
+                  </div>   
                   <div>  <Icon fitted name='group' /> Cantidad de miembros: <span data-testid="membersCount">{ this.state.membersCount }</span>. </div>
                 </div>
                 
@@ -209,7 +228,10 @@ class DisplayContent extends React.Component {
                 <div> Para que esta campaña comience se deben recaudar <Label color="green"> <span data-testid="goal">{ this.props.data.goal }</span> wei </Label> o más. </div>
                 <div> La contribución mínima es de <Label color="teal"><span data-testid="minimunContribution">{ this.props.data.minimunContribution }</span> wei</Label></div> 
                 <div className="progress-container">
-                  <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei contribuidos`} />
+                  { this.state.status==="Creada" ?
+                    <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei contribuidos`} /> :
+                    <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei restantes`} />
+                  }
                 </div>
               
                 { (!this.state.isMember) && (!this.state.isOwner) && this.state.status==="Creada"

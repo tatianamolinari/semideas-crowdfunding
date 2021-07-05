@@ -235,8 +235,26 @@ async getProposals() {
         console.log("hubo un error");
         console.log(error);
       });
+  }
 
+  async suscribeToProposalWithdraw(actualizeFunction){
 
+    const currentBlock = await this.getCurrentBlock();
+
+    this.instance.events.proposalWithdraw({
+      fromBlock: currentBlock
+      }, function(error, event){ console.log(event); })
+      .on("connected", function(subscriptionId){
+          console.log(subscriptionId);
+      })
+      .on('data', function(event){
+          actualizeFunction(event);
+          console.log(event); 
+      })
+      .on('error', function(error, receipt) {
+        console.log("hubo un error");
+        console.log(error);
+      });
   }
 
 

@@ -24,6 +24,9 @@ function fromIntToStatus(string_number) {
         case '4':
             status = "Cerrada";
             break;
+        case '5':
+            status = "Exitosa";
+            break;
         default:
             console.log("Invalid Status");
             console.log(string_number);
@@ -40,6 +43,9 @@ function fromStatusToBadgeClass(status) {
             badge_class = "created";
             break;
         case 'Aprobada':
+            badge_class = "success";
+            break;
+        case 'Exitosa':
             badge_class = "success";
             break;
         case 'Desaprobada':

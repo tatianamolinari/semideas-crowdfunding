@@ -85,7 +85,7 @@ class DisplayProposals extends React.Component {
     console.log(proposalInfo)
 
     const canVote = (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
-    const canClose = this.props.isMember && !(proposalInfo.inTime) && proposalInfo.status==='3';
+    const canClose = (this.props.isMember || this.props.isOwner) && !(proposalInfo.inTime) && proposalInfo.status==='3';
     const cantWithdraw = this.props.isOwner && proposalInfo.status==='1';
 
     this.setState({ proposal_data_i: index, 

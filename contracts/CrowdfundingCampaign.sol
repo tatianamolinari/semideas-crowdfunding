@@ -117,7 +117,7 @@ contract CrowdfundingCampaign {
     /** @dev Emitted when the author creates the campaign.
      *  @param _ipfshash The url hash of the campaign data stored in IPFS.
      */
-    event CampaignCreated(bytes32 indexed _ipfshash);
+    event CampaignCreated(bytes32 _ipfshash);
 
     /** @dev Emitted when a new person contributes with the campaign.
      */
@@ -126,7 +126,7 @@ contract CrowdfundingCampaign {
     /** @dev Emitted when the author creates a proposal to free founds.
      *  @param _ipfshash The url hash of the proposal data stored in IPFS.
      */
-    event ProposalCreated(bytes32 indexed _ipfshash);
+    event ProposalCreated(bytes32 _ipfshash);
 
      /** @dev Emitted when a proposal is voted.
      *  @param _index The index of the proposal.
@@ -146,7 +146,7 @@ contract CrowdfundingCampaign {
      /** @dev Emitted when a member creates a proposal to destruct the campaign and get the founds back.
      *  @param _ipfshash The url hash of the destruct proposal data stored in IPFS.
      */
-    event DestructProposalCreated(bytes32 indexed _ipfshash);
+    event DestructProposalCreated(bytes32 _ipfshash);
 
     /** @dev Emitted when a  destruct proposal is Closed.
      *  @param _index The index of the destruct proposal.
@@ -156,7 +156,7 @@ contract CrowdfundingCampaign {
     /** @dev Emitted when the author creates a progress update to show how the proyect is going.
      *  @param _ipfshash The url hash of the progress update data stored in IPFS.
      */
-    event ProgressUpdate(bytes32 indexed _ipfshash);
+    event ProgressUpdate(bytes32 _ipfshash);
 
     /** @dev Emitted when the status of the campaign change.
      */

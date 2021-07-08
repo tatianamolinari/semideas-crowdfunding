@@ -9,6 +9,10 @@ const bs58 = require('bs58');
 const Web3 = require("web3");
 const ipfs_client = create('https://ipfs.infura.io:5001');
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function saveJsonIPFS(json_value){
     
     const result = await ipfs_client.add(JSON.stringify(json_value));
@@ -241,6 +245,8 @@ async function activateProposals(web3, addr, i_proposal, proposal, campaign){
     }
 
     if (proposal["closed"]) {
+        console.log(`Closing ${i_proposal}`)
+        await sleep(3000);
         const gasprice = await web3.eth.getGasPrice();
         const gas = await campaign.closeProposal.estimateGas(i_proposal, { from: addr[0] });      
         const transaction = await campaign.closeProposal.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 

@@ -118,7 +118,7 @@ async getProgressUpdates() {
   
   const block = await this.web3.eth.getBlockNumber();
   const opts = { fromBlock: block - 100, toBlock: block }
-  const events = await this.instance.getPastEvents('progressUpdate', opts);
+  const events = await this.instance.getPastEvents('ProgressUpdate', opts);
   return events;
 }
 
@@ -126,7 +126,7 @@ async getProposals() {
   
   const block = await this.web3.eth.getBlockNumber();
   const opts = { fromBlock: block - 100, toBlock: block }
-  const events = await this.instance.getPastEvents('proposalCreated', opts);
+  const events = await this.instance.getPastEvents('ProposalCreated', opts);
   return events;
 }
 
@@ -137,7 +137,7 @@ async getProposals() {
 
     const currentBlock = await this.getCurrentBlock();
 
-    this.instance.events.newContribution({
+    this.instance.events.NewContribution({
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
@@ -157,7 +157,7 @@ async getProposals() {
 
     const currentBlock = await this.getCurrentBlock();
 
-    this.instance.events.changeStatusCampaign({
+    this.instance.events.ChangeStatusCampaign({
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
@@ -179,7 +179,7 @@ async getProposals() {
 
     const currentBlock = await this.getCurrentBlock();
 
-    this.instance.events.proposalVoted({
+    this.instance.events.ProposalVoted({
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
@@ -199,7 +199,7 @@ async getProposals() {
 
     const currentBlock = await this.getCurrentBlock();
 
-    this.instance.events.proposalClosed({
+    this.instance.events.ProposalClosed({
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
@@ -221,7 +221,7 @@ async getProposals() {
 
     const currentBlock = await this.getCurrentBlock();
 
-    this.instance.events.progressUpdate({
+    this.instance.events.ProgressUpdate({
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
@@ -241,7 +241,7 @@ async getProposals() {
 
     const currentBlock = await this.getCurrentBlock();
 
-    this.instance.events.proposalWithdraw({
+    this.instance.events.ProposalWithdraw({
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){

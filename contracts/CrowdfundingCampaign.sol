@@ -4,7 +4,8 @@ contract CrowdfundingCampaign {
 
     /* Enums */
 
-    enum Status { CREATED, APPROVED, DISAPPROVED, ACTIVE, DESTROYED, SUCCESSFUL }
+    enum CampaignStatus { CREATED, ACTIVE, DESTROYED, SUCCESSFUL }
+    enum ProposalStatus { ACTIVE, APPROVED, DISAPPROVED, SUCCESSFUL }
 
     
     /* Structs */
@@ -18,7 +19,7 @@ contract CrowdfundingCampaign {
         uint approvalsCount;
         uint disapprovalsCount;
         mapping(address => bool) voters;
-        Status status;
+        ProposalStatus status;
         uint limitTime;
     }
 
@@ -29,18 +30,18 @@ contract CrowdfundingCampaign {
         uint approvalsCount;
         uint disapprovalsCount;
         mapping(address => bool) voters;
-        mapping(address => bool) withdraws;
-        Status status;
+        ProposalStatus status;
         uint limitTime;
     }
 
     /* Storage */
 
-    Status public status;
+    CampaignStatus public status;
     address public owner;
     uint public goal;
     uint public minimunContribution;
     mapping(address => uint) public contributions;
+    mapping(address => bool) withdraws;
     uint public membersCount;
     Proposal[] public proposals;
     DestructProposal[] public destructProposals;
@@ -55,10 +56,10 @@ contract CrowdfundingCampaign {
         owner = msg.sender;
         goal = _goal;
         minimunContribution = _minimunContribution;
-        status = Status.CREATED;
+        status = CampaignStatus.CREATED;
         membersCount = 0;
 
-        emit campaignCreated(_ipfshash);
+        emit CampaignCreated(_ipfshash);
     }
 
 
@@ -71,16 +72,16 @@ contract CrowdfundingCampaign {
     modifier notMembering() { require( (contributions[msg.sender]==0) && (msg.sender != owner) , "Sender is already a member."); _; }
 
     modifier statusCreated() 
-        { require(status == Status.CREATED, "The campaign status is not created."); _; }
+        { require(status == CampaignStatus.CREATED, "The campaign status is not created."); _; }
 
     modifier statusActive()
-        { require(status == Status.ACTIVE, "The campaign status is not active."); _; }
+        { require(status == CampaignStatus.ACTIVE, "The campaign status is not active."); _; }
 
     modifier proposalActive(uint _index) 
-        { require(proposals[_index].status == Status.ACTIVE, "The proposal is not longer active."); _; }
+        { require(proposals[_index].status == ProposalStatus.ACTIVE, "The proposal is not longer active."); _; }
 
     modifier proposalApproved(uint _index) 
-        { require(proposals[_index].status == Status.APPROVED, "The proposal is not approved." ); _; }
+        { require(proposals[_index].status == ProposalStatus.APPROVED, "The proposal is not approved." ); _; }
 
     modifier beInTimeProposal(uint _index)
         { require (now <= proposals[_index].limitTime, "The proposal is close for voting."); _; }
@@ -90,14 +91,14 @@ contract CrowdfundingCampaign {
 
     modifier destructProposalActive(uint _index) {
         require(
-            destructProposals[_index].status == Status.ACTIVE,
+            destructProposals[_index].status == ProposalStatus.ACTIVE,
             "The destruct proposal is not longer active.");
         _;
     }
 
     modifier destructProposalApproved(uint _index) {
         require(
-            destructProposals[_index].status == Status.APPROVED,
+            destructProposals[_index].status == ProposalStatus.APPROVED,
             "The destruct proposal is not approved.");
         _;
     }
@@ -116,46 +117,50 @@ contract CrowdfundingCampaign {
     /** @dev Emitted when the author creates the campaign.
      *  @param _ipfshash The url hash of the campaign data stored in IPFS.
      */
-    event campaignCreated(bytes32 indexed _ipfshash);
+    event CampaignCreated(bytes32 indexed _ipfshash);
 
     /** @dev Emitted when a new person contributes with the campaign.
      */
-    event newContribution();
+    event NewContribution();
 
     /** @dev Emitted when the author creates a proposal to free founds.
      *  @param _ipfshash The url hash of the proposal data stored in IPFS.
      */
-    event proposalCreated(bytes32 indexed _ipfshash);
+    event ProposalCreated(bytes32 indexed _ipfshash);
 
      /** @dev Emitted when a proposal is voted.
+     *  @param _index The index of the proposal.
      */
-    event proposalVoted();
+    event ProposalVoted(uint _index);
 
     /** @dev Emitted when a proposal is Closed.
+     *  @param _index The index of the proposal.
      */
-    event proposalClosed();
+    event ProposalClosed(uint _index);
 
     /** @dev Emitted when a proposal was withdraw.
+     *  @param _index The index of the proposal.
      */
-    event proposalWithdraw();
+    event ProposalWithdraw(uint _index);
 
      /** @dev Emitted when a member creates a proposal to destruct the campaign and get the founds back.
      *  @param _ipfshash The url hash of the destruct proposal data stored in IPFS.
      */
-    event destructProposalCreated(bytes32 indexed _ipfshash);
+    event DestructProposalCreated(bytes32 indexed _ipfshash);
 
     /** @dev Emitted when a  destruct proposal is Closed.
+     *  @param _index The index of the destruct proposal.
      */
-    event destructProposalClosed();
+    event DestructProposalClosed(uint _index);
 
     /** @dev Emitted when the author creates a progress update to show how the proyect is going.
      *  @param _ipfshash The url hash of the progress update data stored in IPFS.
      */
-    event progressUpdate(bytes32 indexed _ipfshash);
+    event ProgressUpdate(bytes32 indexed _ipfshash);
 
     /** @dev Emitted when the status of the campaign change.
      */
-    event changeStatusCampaign();
+    event ChangeStatusCampaign();
 
 
     /* Functions */
@@ -166,7 +171,7 @@ contract CrowdfundingCampaign {
         require(msg.value >= minimunContribution, "The contribution is insuficient");
         contributions[msg.sender] = msg.value;
         membersCount++;
-        emit newContribution();
+        emit NewContribution();
     }
 
     /** @dev Allow only owner to change the status of the cCampaign from CREATED to ACTIVE.
@@ -174,9 +179,9 @@ contract CrowdfundingCampaign {
     function setActive() public restricted statusCreated {
         
         require(address(this).balance >= goal,"The contributions are insufficient");
-        status = Status.ACTIVE;
+        status = CampaignStatus.ACTIVE;
 
-        emit changeStatusCampaign();
+        emit ChangeStatusCampaign();
          
     }
 
@@ -185,7 +190,7 @@ contract CrowdfundingCampaign {
      */
     function saveProgressUpdate(bytes32 _ipfshash) 
         public restricted statusActive {
-        emit progressUpdate(_ipfshash); 
+        emit ProgressUpdate(_ipfshash); 
     }
 
     /** @dev Allow only owner to create a new proposal to get more founds.
@@ -203,12 +208,12 @@ contract CrowdfundingCampaign {
             value : _value,
             approvalsCount : 0,
             disapprovalsCount: 0,
-            status: Status.ACTIVE,
+            status: ProposalStatus.ACTIVE,
             limitTime: now + 604800 // 7 days
         });
 
         proposals.push(newProposal);
-        emit proposalCreated(_ipfshash);
+        emit ProposalCreated(_ipfshash);
          
     }
 
@@ -223,7 +228,7 @@ contract CrowdfundingCampaign {
         proposal.voters[msg.sender] = true;
         proposal.approvalsCount++;
 
-        emit proposalVoted();        
+        emit ProposalVoted(_index);        
     }
 
     /** @dev Allow only members to disapprove an active proposal that they haven't voted before.
@@ -237,7 +242,7 @@ contract CrowdfundingCampaign {
         proposal.voters[msg.sender] = true;
         proposal.disapprovalsCount++;
         
-        emit proposalVoted();
+        emit ProposalVoted(_index);
     }
 
     /** @dev Allow only members to close an active proposal that already has its voting time over.
@@ -248,13 +253,13 @@ contract CrowdfundingCampaign {
         Proposal storage proposal = proposals[_index];
 
         if (proposal.approvalsCount > proposal.disapprovalsCount) {
-            proposal.status = Status.APPROVED; 
+            proposal.status = ProposalStatus.APPROVED; 
         }
         else {
-            proposal.status = Status.DISAPPROVED;
+            proposal.status = ProposalStatus.DISAPPROVED;
         }
 
-        emit proposalClosed();
+        emit ProposalClosed(_index);
     }
 
     /** @dev Allow only members to close an active proposal that already has its voting time over.
@@ -263,10 +268,10 @@ contract CrowdfundingCampaign {
     function withdraw(uint _index) public restricted statusActive proposalApproved(_index) {
 
         Proposal storage proposal = proposals[_index];
-        proposal.status = Status.SUCCESSFUL; 
+        proposal.status = ProposalStatus.SUCCESSFUL; 
         payable(proposal.recipient).transfer(proposal.value);
         
-        emit proposalWithdraw();
+        emit ProposalWithdraw(_index);
     }
 
     /** @dev Allow only members to create a new proposal to finish de proyect and get the founds back.
@@ -277,12 +282,12 @@ contract CrowdfundingCampaign {
         DestructProposal memory newDProposal = DestructProposal({
             approvalsCount : 0,
             disapprovalsCount: 0,
-            status: Status.ACTIVE,
+            status: ProposalStatus.ACTIVE,
             limitTime: now + 604800 // 7 days
         });
 
         destructProposals.push(newDProposal);
-        emit destructProposalCreated(_ipfshash);
+        emit DestructProposalCreated(_ipfshash);
          
     }
 
@@ -320,13 +325,13 @@ contract CrowdfundingCampaign {
         DestructProposal storage dProposal = destructProposals[_index];
 
         if (dProposal.approvalsCount > dProposal.disapprovalsCount) {
-            dProposal.status = Status.APPROVED; 
+            dProposal.status = ProposalStatus.APPROVED; 
         }
         else {
-            dProposal.status = Status.DISAPPROVED;
+            dProposal.status = ProposalStatus.DISAPPROVED;
         }
 
-        emit destructProposalClosed();
+        emit DestructProposalClosed(_index);
     }
 
      /* Aux functions */
@@ -339,20 +344,20 @@ contract CrowdfundingCampaign {
 
     /** @dev Function to get the actual status of the campaign.
      */
-    function getStatus() public view returns (Status) {
+    function getStatus() public view returns (CampaignStatus) {
         return status;
     }
 
     /** @dev Function to get the data of the campaign
      */
-    function getCampaignInfo() public view returns (address, Status, uint, uint, uint ) {
+    function getCampaignInfo() public view returns (address, CampaignStatus, uint, uint, uint ) {
         return (owner, status, goal, minimunContribution, membersCount);
     } 
 
     /** @dev Function to get the data of a proposal.
      *  @param _index index of the proposal to return
      */
-    function getProposal(uint _index) public view returns (address, uint, uint, uint, Status, uint, bool, bool) {
+    function getProposal(uint _index) public view returns (address, uint, uint, uint, ProposalStatus, uint, bool, bool) {
         Proposal storage proposal = proposals[_index];
         bool inTime = now <= proposal.limitTime;
         bool senderHasVote = proposal.voters[msg.sender];
@@ -376,7 +381,7 @@ contract CrowdfundingCampaign {
      /** @dev Function to get the data of destruct proposal.
      *  @param _index index of the destruct proposal to return
      */
-    function getDestructProposal(uint _index) public view returns (uint, uint, Status, uint, bool, bool) {
+    function getDestructProposal(uint _index) public view returns (uint, uint, ProposalStatus, uint, bool, bool) {
         DestructProposal storage dProposal = destructProposals[_index];
         bool inTime = now <= dProposal.limitTime;
         bool senderHasVote = dProposal.voters[msg.sender];

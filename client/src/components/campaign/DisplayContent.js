@@ -3,7 +3,7 @@ import { Badge } from "react-bootstrap";
 import { Label, Icon, Button } from 'semantic-ui-react'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 
-import { fromIntToStatus, fromStatusToBadgeClass } from "../../helpers/utils.js";
+import { fromIntToStatusCampaign, fromStatusToBadgeClass } from "../../helpers/utils.js";
 import { campaignService } from "../../services/campaignService.js"
 import { ipfsService } from "../../services/ipfsService.js"
 
@@ -71,7 +71,7 @@ class DisplayContent extends React.Component {
 
     try {
       const enum_status = await campaignService.getStatus();
-      const status = fromIntToStatus(enum_status);
+      const status = fromIntToStatusCampaign(enum_status);
       const badge_status = fromStatusToBadgeClass(status);
       
       this.setState({ status: status, badge_status: badge_status });

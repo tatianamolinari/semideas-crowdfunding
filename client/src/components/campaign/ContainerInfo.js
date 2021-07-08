@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import {Dimmer, Loader }  from 'semantic-ui-react';
 
-import { fromIntToStatus } from "../../helpers/utils.js"
+import { fromIntToStatusCampaign } from "../../helpers/utils.js"
 import { ipfsService } from "../../services/ipfsService.js"
 import { campaignService } from "../../services/campaignService.js"
 
@@ -76,7 +76,7 @@ class ContainerInfo extends React.Component {
           instance: instance,
           balance: balance,
           isMember: isMember,
-          status: fromIntToStatus(campaignInfo.status),
+          status: fromIntToStatusCampaign(campaignInfo.status),
           owner: campaignInfo.owner,
           goal: campaignInfo.goal,
           minimunContribution: campaignInfo.minimunContribution,

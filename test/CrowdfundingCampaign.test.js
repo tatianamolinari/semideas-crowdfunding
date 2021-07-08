@@ -75,7 +75,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('newContribution'); 
+        expect(log.event).to.equal('NewContribution'); 
 
         const nowIsMember = await campaign.isMember(memberAccount);
         expect(nowIsMember).to.be.equal(true);
@@ -147,9 +147,9 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('changeStatusCampaign');
+        expect(log.event).to.equal('ChangeStatusCampaign');
 
-        expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(3));
+        expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(1));
     });
 
     it("Only the owner should be able to create proposals", async() => {
@@ -162,7 +162,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
     });
 
-    it("Owner creates a new proposal and a proposalCreated event is emited", async() => {
+    it("Owner creates a new proposal and a ProposalCreated event is emited", async() => {
 
         const campaign = this.campaign;
         
@@ -179,7 +179,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('proposalCreated');
+        expect(log.event).to.equal('ProposalCreated');
         expect(log.args._ipfshash).to.equal(proposalCreatedHash);
 
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
@@ -201,7 +201,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(value).to.be.a.bignumber.equal(new BN(3));
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
         expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
-        expect(status).to.be.a.a.bignumber.equal(new BN(3));
+        expect(status).to.be.a.bignumber.equal(new BN(0));
         expect(diffMinutes).to.be.lessThan(1);
         expect(diffMinutes).to.be.greaterThan(0);
     });
@@ -249,7 +249,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('proposalVoted');
+        expect(log.event).to.equal('ProposalVoted');
 
         const afterResult = await campaign.getProposal(i_proposal);
         const afterApprovalsCount = afterResult['2'];
@@ -314,7 +314,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('proposalVoted');
+        expect(log.event).to.equal('ProposalVoted');
 
         const afterResult = await campaign.getProposal(i_proposal);
         const afterDisapprovalsCount = afterResult['3'];
@@ -362,7 +362,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         const result = await campaign.getProposal(i_proposal);
         const status = result['4'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(3));
+        expect(status).to.be.a.a.bignumber.equal(new BN(0));
 
         await time.increase(604800);
 
@@ -372,7 +372,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const afterResult = await campaign.getProposal(i_proposal);
 
         const afterStatus = afterResult['4'];
-        expect(afterStatus).to.be.a.a.bignumber.not.equal(new BN(3));
+        expect(afterStatus).to.be.a.a.bignumber.not.equal(new BN(0));
         
     });
 
@@ -480,7 +480,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('proposalWithdraw');
+        expect(log.event).to.equal('ProposalWithdraw');
 
         const aftercampaignBalance = await web3.eth.getBalance(campaign.address);
         const afterOwnerBalance = await web3.eth.getBalance(authorAddress);
@@ -521,7 +521,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('destructProposalCreated');
+        expect(log.event).to.equal('DestructProposalCreated');
         expect(log.args._ipfshash).to.equal(proposalCreatedHash);
 
         expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
@@ -538,7 +538,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
         expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
-        expect(status).to.be.a.a.bignumber.equal(new BN(3));
+        expect(status).to.be.a.a.bignumber.equal(new BN(0));
         expect(diffMinutes).to.be.lessThan(1);
         expect(diffMinutes).to.be.greaterThan(0);
     });
@@ -684,7 +684,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         const result = await campaign.getDestructProposal(i_proposal);
         const status = result['2'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(3));
+        expect(status).to.be.a.a.bignumber.equal(new BN(0));
 
         await time.increase(604800);
 
@@ -694,7 +694,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const afterResult = await campaign.getDestructProposal(i_proposal);
 
         const afterStatus = afterResult['2'];
-        expect(afterStatus).to.be.a.a.bignumber.not.equal(new BN(3));
+        expect(afterStatus).to.be.a.a.bignumber.not.equal(new BN(0));
         
     });
 
@@ -781,7 +781,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('progressUpdate');
+        expect(log.event).to.equal('ProgressUpdate');
         expect(log.args._ipfshash).to.equal(progressUpdateHash);
     });
 

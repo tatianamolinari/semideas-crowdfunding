@@ -5,12 +5,37 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function fromIntToStatus(string_number) {
-    //enum Status { CREATED, APPROVED, DISAPPROVED, ACTIVE, DESTROYED }
+// CampaignStatus { CREATED, ACTIVE, DESTROYED, SUCCESSFUL }
+function fromIntToStatusCampaign(string_number) {
     let status = "";
     switch (string_number) {
         case '0':
             status = "Creada";
+            break;
+        case '1':
+            status = "Activa";
+            break;
+        case '2':
+            status = "Cerrada";
+            break;
+        case '3':
+            status = "Exitosa";
+            break;
+        default:
+            console.log("Invalid Status");
+            console.log(string_number);
+            break;
+    }
+
+    return status;
+}
+
+// ProposalStatus { ACTIVE, APPROVED, DISAPPROVED, SUCCESSFUL }
+function fromIntToStatusProposal(string_number) {
+    let status = "";
+    switch (string_number) {
+        case '0':
+            status = "Activa";
             break;
         case '1':
             status = "Aprobada";
@@ -19,12 +44,6 @@ function fromIntToStatus(string_number) {
             status = "Desaprobada";
             break;
         case '3':
-            status = "Activa";
-            break;
-        case '4':
-            status = "Cerrada";
-            break;
-        case '5':
             status = "Exitosa";
             break;
         default:
@@ -94,4 +113,4 @@ function hexBytesToAddress(bytes){
     return out;
 }
 
-export { fromIntToStatus, fromStatusToBadgeClass, getValuesFromHash, sleep, addressToHexBytes, hexBytesToAddress };
+export { fromIntToStatusCampaign, fromIntToStatusProposal, fromStatusToBadgeClass, getValuesFromHash, sleep, addressToHexBytes, hexBytesToAddress };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "react-bootstrap";
 import { Label }  from 'semantic-ui-react';
-import { fromStatusToBadgeClass, fromIntToStatus } from "../../helpers/utils.js";
+import { fromStatusToBadgeClass, fromIntToStatusProposal } from "../../helpers/utils.js";
 
 class ProposalDetail extends React.Component {
 
@@ -18,9 +18,9 @@ class ProposalDetail extends React.Component {
       value: this.props.value,
       approvalsCount: this.props.approvalsCount,
       disapprovalsCount: this.props.disapprovalsCount,
-      status: fromIntToStatus(this.props.status),
+      status: fromIntToStatusProposal(this.props.status),
       limitTime: new Date(this.props.limitTime * 1000).toLocaleDateString('en-GB'),
-      badge_status: fromStatusToBadgeClass(fromIntToStatus(this.props.status))
+      badge_status: fromStatusToBadgeClass(fromIntToStatusProposal(this.props.status))
     }
 
     this.setState({

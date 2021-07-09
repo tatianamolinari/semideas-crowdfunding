@@ -69,9 +69,6 @@ class DisplayProgressUpdates extends React.Component {
   componentDidMount = async() => {
     try {
 
-      //const actualizeProgressUpdates = async() => {this.getProgressUpdates(0)};
-      //await campaignService.suscribeToProgressUpdate(actualizeProgressUpdates);
-
       const pastProgressUpdates = await campaignService.getProgressUpdates();
       this.setState({ 
                       pastProgressUpdates : pastProgressUpdates.map(pu =>  pu.returnValues[0]), 

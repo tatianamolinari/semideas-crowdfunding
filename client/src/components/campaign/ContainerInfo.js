@@ -191,6 +191,7 @@ class ContainerInfo extends React.Component {
                           isMember={this.state.isMember}
                           isOwner={this.state.isOwner}
                           active="dproposals_list"/>
+                          
                         </Col>
                                            
                         }

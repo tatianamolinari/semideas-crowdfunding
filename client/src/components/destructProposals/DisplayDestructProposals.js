@@ -46,7 +46,7 @@ class DisplayDestructProposals extends React.Component {
       
       dproposals.push(
         {
-          "index_proposal": i,
+          "index_dproposal": i,
           "title": ipfsData.title, 
           "description": ipfsData.description ,
           "proposal_date": ipfsData.created_date
@@ -70,8 +70,7 @@ class DisplayDestructProposals extends React.Component {
   async setDestructProposalData(index) {
 
     const dproposalData = this.state.dproposals[index];
-
-    const dproposalInfo = await campaignService.getProposalInfo(dproposalData["index_dproposal"]);
+    const dproposalInfo = await campaignService.getDestructProposalInfo(dproposalData["index_dproposal"]);
     
     dproposalData["approvalsCount"] = dproposalInfo.approvalsCount;
     dproposalData["disapprovalsCount"] = dproposalInfo.disapprovalsCount;
@@ -256,7 +255,7 @@ class DisplayDestructProposals extends React.Component {
 
 
     return (  <div className="proposal-info" id="destruct_proposals_container" style={{display: "none"}}> 
-
+              
                 { this.state.showMessage &&
                   <MessageModal
                   showMessage={this.state.showMessage}
@@ -265,7 +264,7 @@ class DisplayDestructProposals extends React.Component {
                   title={this.state.title_m} />
                 }           
                 
-                { this.state.active==="dproposals_list" && dproposal_nodes.length>0 &&
+                { this.state.active==="dproposals_list" && dproposal_nodes.length>0 && false &&
                 <div>
                   <Row  id="dproposals_list">
                   {dproposal_nodes}                
@@ -279,7 +278,7 @@ class DisplayDestructProposals extends React.Component {
                   </Row>
                 </div>}
 
-                { this.state.active==="dproposals_list" && dproposal_nodes.length===0 &&
+                { this.state.active==="dproposals_list" && //dproposal_nodes.length===0 &&
                 <div>  
                     <h1> Aún no hay pedidos de cierre para mostrar. </h1>
                     <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
@@ -288,7 +287,7 @@ class DisplayDestructProposals extends React.Component {
                 }
                 
                 
-                { this.state.active==="dproposals_detail" &&
+                { this.state.active==="dproposals_detail" && false &&
                   <div  id="dproposals_detail">
                     <DestructProposalDetail
                       index_dproposal={this.state.dproposal_data.index_dproposal}

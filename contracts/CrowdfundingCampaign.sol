@@ -414,14 +414,14 @@ contract CrowdfundingCampaign {
         return proposals.length;
     }
 
-     /** @dev Function to get the data of destruct proposal.
-     *  @param _index index of the destruct proposal to return
+    /** @dev Function to get the data of a destruct proposal.
+     *  @param _index index of the proposal to return
      */
-    function getDestructProposal(uint _index) public view returns (uint, uint, ProposalStatus, uint, bool, bool) {
-        DestructProposal storage dProposal = destructProposals[_index];
-        bool inTime = block.timestamp <= dProposal.limitTime;
-        bool senderHasVote = dProposal.voters[msg.sender];
-        return (dProposal.approvalsCount, dProposal.disapprovalsCount, dProposal.status, dProposal.limitTime, inTime, senderHasVote);
+    function getDestructProposal(uint _index) public view returns (uint, uint, ProposalStatus, uint, bool, bool, address) {
+        DestructProposal storage dPproposal = destructProposals[_index];
+        bool inTime = block.timestamp <= dPproposal.limitTime;
+        bool senderHasVote = dPproposal.voters[msg.sender];
+        return (dPproposal.approvalsCount, dPproposal.disapprovalsCount, dPproposal.status, dPproposal.limitTime, inTime, dPproposal.author);
     } 
 
     /** @dev Function to know if a member has already vot a destruct proposal.

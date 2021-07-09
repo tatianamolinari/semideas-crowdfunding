@@ -966,7 +966,8 @@
                 "status": true
             },
             "progressUpdates": [],
-             "proposals": []
+            "proposals": [],
+            "destructPproposals": []
         }
         
     ]

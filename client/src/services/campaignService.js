@@ -113,13 +113,33 @@ class CampaignService {
     return hasVoted;
   }
 
+  async getDestructProposalInfo(index) {
+    const dProposalValues = await this.instance.methods.getDestructProposal(index).call({ from: this.accounts[0]});
+    const dProposalInfo = getValuesFromHash(dProposalValues);
+             
+    const dProposalData = {};
+    dProposalData.approvalsCount = dProposalInfo[0]
+    dProposalData.disapprovalsCount = dProposalInfo[1];
+    dProposalData.status = dProposalInfo[2];
+    dProposalData.limitTime = dProposalInfo[3];
+    dProposalData.inTime = dProposalInfo[4];
+    dProposalData.senderHasVote = dProposalInfo[5];
+
+    return dProposalData;
+  }
+
+  async hasVotedDestructProposal(index) {
+    const hasVoted = await this.instance.methods.hasVotedDestructProposal(index).call();
+    return hasVoted;
+  }
+
 
 /** Get past events */
 
 async getProgressUpdates() {
   
   const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: block - 100, toBlock: block }
+  const opts = { fromBlock: block - 500, toBlock: block }
   const events = await this.instance.getPastEvents('ProgressUpdate', opts);
   console.log(events);
   console.log("--------------------------------------------")
@@ -129,7 +149,7 @@ async getProgressUpdates() {
 async getProposals() {
   
   const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: block - 100, toBlock: block }
+  const opts = { fromBlock: block - 500, toBlock: block }
   const events = await this.instance.getPastEvents('ProposalCreated', opts);
   return events;
 }
@@ -137,7 +157,7 @@ async getProposals() {
 async getDestructProposals() {
   
   const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: block - 100, toBlock: block }
+  const opts = { fromBlock: block - 500, toBlock: block }
   const events = await this.instance.getPastEvents('DestructProposalCreated', opts);
   return events;
 }

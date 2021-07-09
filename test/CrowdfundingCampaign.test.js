@@ -28,7 +28,6 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaign.membersCount()).to.eventually.be.a.bignumber.equal(new BN(0));
 
-        const campaingInfo = campaign.getCampaignInfo();
     });
 
     it("Checking CrowdFunding Campaign values from method get campaign info", async() => {
@@ -40,12 +39,16 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const goal = campaingInfo['2'];
         const minimunContribution = campaingInfo['3'];
         const membersCount = campaingInfo['4'];
+        const finalContributions = campaingInfo['5'];
+        const remainingContributions = campaingInfo['6'];
 
         expect(owner).to.be.equal(authorAddress);
         expect(status).to.be.a.bignumber.equal(new BN(0));
         expect(goal).to.be.a.bignumber.equal(new BN(300));
         expect(minimunContribution).to.be.a.bignumber.equal(new BN(5));
         expect(membersCount).to.be.a.bignumber.equal(new BN(0));
+        expect(finalContributions).to.be.a.bignumber.equal(new BN(0));
+        expect(remainingContributions).to.be.a.bignumber.equal(new BN(0));
     });
 
     it("The owner should not be able to be an inversor", async() => {
@@ -137,7 +140,8 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
     it("Owner set campaign active", async() => {
 
-        const campaign = this.campaign; 
+        const campaign = this.campaign;
+        const campaignBalance = await web3.eth.getBalance(campaign.address); 
 
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(0));
 
@@ -150,6 +154,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(log.event).to.equal('ChangeStatusCampaign');
 
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(1));
+        expect(campaign.getFinalContributions()).to.eventually.be.a.bignumber.equal(campaignBalance); 
     });
 
     it("Only the owner should be able to create proposals", async() => {
@@ -483,12 +488,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(log.event).to.equal('ProposalWithdraw');
 
         const aftercampaignBalance = await web3.eth.getBalance(campaign.address);
-        const afterOwnerBalance = await web3.eth.getBalance(authorAddress);
-
-        console.log(campaignBalance);
-        console.log(aftercampaignBalance);
-        console.log(ownerBalance);
-        console.log(afterOwnerBalance);
+        //const afterOwnerBalance = await web3.eth.getBalance(authorAddress);
 
         expect(parseInt(aftercampaignBalance)).to.be.equal(parseInt(campaignBalance) - 5);
         

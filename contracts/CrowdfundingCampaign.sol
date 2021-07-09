@@ -1,3 +1,4 @@
+//SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.0;
 
 contract CrowdfundingCampaign {
@@ -37,12 +38,18 @@ contract CrowdfundingCampaign {
     /* Storage */
 
     CampaignStatus public status;
+    
     address public owner;
+    
     uint public goal;
     uint public minimunContribution;
-    mapping(address => uint) public contributions;
-    mapping(address => bool) withdraws;
     uint public membersCount;
+    uint public finalContributions;
+    uint public remainingContributions;
+    
+    mapping(address => uint) public contributions;
+    mapping(address => bool) public withdraws;
+    
     Proposal[] public proposals;
     DestructProposal[] public destructProposals;
     
@@ -58,6 +65,7 @@ contract CrowdfundingCampaign {
         minimunContribution = _minimunContribution;
         status = CampaignStatus.CREATED;
         membersCount = 0;
+        //finalContributions = 0;
 
         emit CampaignCreated(_ipfshash);
     }
@@ -180,6 +188,7 @@ contract CrowdfundingCampaign {
         
         require(address(this).balance >= goal,"The contributions are insufficient");
         status = CampaignStatus.ACTIVE;
+        finalContributions = address(this).balance;
 
         emit ChangeStatusCampaign();
          
@@ -344,10 +353,22 @@ contract CrowdfundingCampaign {
         return status;
     }
 
+    /** @dev Function to get the finalContributions of the campaign.
+     */
+    function getFinalContributions() public view returns (uint) {
+        return finalContributions;
+    }
+
+    /** @dev Function to get the remainingContributions of the campaign.
+     */
+    function getRemainingContributions() public view returns (uint) {
+        return remainingContributions;
+    }
+
     /** @dev Function to get the data of the campaign
      */
-    function getCampaignInfo() public view returns (address, CampaignStatus, uint, uint, uint ) {
-        return (owner, status, goal, minimunContribution, membersCount);
+    function getCampaignInfo() public view returns (address, CampaignStatus, uint, uint, uint, uint, uint) {
+        return (owner, status, goal, minimunContribution, membersCount, finalContributions, remainingContributions);
     } 
 
     /** @dev Function to get the data of a proposal.

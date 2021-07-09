@@ -65,6 +65,8 @@ class CampaignService {
     campaignData.goal = campaignInfo[2]
     campaignData.minimunContribution = campaignInfo[3];
     campaignData.membersCount = campaignInfo[4];
+    campaignData.finalContributions = campaingInfo[5];
+    campaignData.remainingContributions = campaingInfo[6];
 
     return campaignData;
   }

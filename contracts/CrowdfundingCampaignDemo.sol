@@ -1,3 +1,4 @@
+//SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.0;
 
 import "./CrowdfundingCampaign.sol";
@@ -10,7 +11,7 @@ contract CrowdfundingCampaignDemo is CrowdfundingCampaign {
      *  @param _ipfshash The url hash of the campaign data previusly stored in IPFS.
     **/
     constructor(uint _minimunContribution, uint _goal, bytes32 _ipfshash)
-    CrowdfundingCampaign(_minimunContribution, _goal, _ipfshash) public {
+    CrowdfundingCampaign(_minimunContribution, _goal, _ipfshash) {
 
     }
 

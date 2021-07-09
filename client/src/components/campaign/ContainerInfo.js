@@ -9,6 +9,8 @@ import { campaignService } from "../../services/campaignService.js"
 import DisplayContent from "./DisplayContent"
 import DisplayProposals from "../proposals/DisplayProposals"
 import DisplayProgressUpdates from "../progressUpdates/DisplayProgressUpdates"
+import DisplayDestructProposals from "../destructProposals/DisplayDestructProposals"
+
 import ErrorMessage from "../errors/ErrorMessage"
 import MenuButton from "../buttons/MenuButton"
 
@@ -184,9 +186,11 @@ class ContainerInfo extends React.Component {
                           active="proposals_list"/>
 
 
-                          <div id="destruct_proposals_container" style={{display: "none"}}>
-                            DESTRUCT PROPOSALS
-                          </div>
+                          <DisplayDestructProposals
+                          instance={this.state.instance}
+                          isMember={this.state.isMember}
+                          isOwner={this.state.isOwner}
+                          active="dproposals_list"/>
                         </Col>
                                            
                         }

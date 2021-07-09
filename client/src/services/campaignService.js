@@ -65,8 +65,8 @@ class CampaignService {
     campaignData.goal = campaignInfo[2]
     campaignData.minimunContribution = campaignInfo[3];
     campaignData.membersCount = campaignInfo[4];
-    campaignData.finalContributions = campaingInfo[5];
-    campaignData.remainingContributions = campaingInfo[6];
+    campaignData.finalContributions = campaignInfo[5];
+    campaignData.remainingContributions = campaignInfo[6];
 
     return campaignData;
   }
@@ -129,6 +129,14 @@ async getProposals() {
   const block = await this.web3.eth.getBlockNumber();
   const opts = { fromBlock: block - 100, toBlock: block }
   const events = await this.instance.getPastEvents('ProposalCreated', opts);
+  return events;
+}
+
+async getDestructProposals() {
+  
+  const block = await this.web3.eth.getBlockNumber();
+  const opts = { fromBlock: block - 100, toBlock: block }
+  const events = await this.instance.getPastEvents('DestructProposalCreated', opts);
   return events;
 }
 
@@ -197,7 +205,7 @@ async getProposals() {
       });
   }
 
-   async suscribeToClosedProposal(actualizeFunction){
+  async suscribeToClosedProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -215,8 +223,46 @@ async getProposals() {
         console.log("hubo un error");
         console.log(error);
       });
+  }
 
+  async suscribeToVoteDestructProposal(actualizeFunction){
 
+    const currentBlock = await this.getCurrentBlock();
+
+    this.instance.events.DestructProposalVoted({
+      fromBlock: currentBlock
+      }, function(error, event){ console.log(event); })
+      .on("connected", function(subscriptionId){
+          console.log(subscriptionId);
+      })
+      .on('data', function(event){
+          actualizeFunction();
+          console.log(event); 
+      })
+      .on('error', function(error, receipt) {
+        console.log("hubo un error");
+        console.log(error);
+      });
+  }
+
+  async suscribeToClosedDestructProposal(actualizeFunction){
+
+    const currentBlock = await this.getCurrentBlock();
+
+    this.instance.events.DestructProposalClosed({
+      fromBlock: currentBlock
+      }, function(error, event){ console.log(event); })
+      .on("connected", function(subscriptionId){
+          console.log(subscriptionId);
+      })
+      .on('data', function(event){
+          actualizeFunction();
+          console.log(event); 
+      })
+      .on('error', function(error, receipt) {
+        console.log("hubo un error");
+        console.log(error);
+      });
   }
 
   async suscribeToProgressUpdate(actualizeFunction){
@@ -408,6 +454,69 @@ async getProposals() {
     const gasprice = await this.web3.eth.getGasPrice();
     const gas = await this.instance.methods.withdraw(index).estimateGas({ from: this.accounts[0] });      
     const transaction = this.instance.methods.withdraw(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    var service = this;
+
+    const promise = new Promise(function(resolve, reject) {
+
+      const statusResponse = {};
+      statusResponse.error = false;
+      statusResponse.errorMsg = "";
+
+      transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+
+    });
+
+    return promise;
+  }
+
+  async approveDestructProposal(index) {
+
+    const gasprice = await this.web3.eth.getGasPrice();
+    const gas = await this.instance.methods.approveDestructProposal(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.approveDestructProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    var service = this;
+
+    const promise = new Promise(function(resolve, reject) {
+
+      const statusResponse = {};
+      statusResponse.error = false;
+      statusResponse.errorMsg = "";
+
+      transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+
+    });
+
+    return promise;
+  }
+
+  async disapproveDestructProposal(index) {
+
+    const gasprice = await this.web3.eth.getGasPrice();
+    const gas = await this.instance.methods.disapproveDestructProposal(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.disapproveDestructProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    var service = this;
+
+    const promise = new Promise(function(resolve, reject) {
+
+      const statusResponse = {};
+      statusResponse.error = false;
+      statusResponse.errorMsg = "";
+
+      transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+
+    });
+
+    return promise;
+  }
+
+  async closeDestructProposal(index) {
+
+    const gasprice = await this.web3.eth.getGasPrice();
+    const gas = await this.instance.methods.closeDestructProposal(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.closeDestructProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
     var service = this;
 
     const promise = new Promise(function(resolve, reject) {

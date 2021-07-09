@@ -156,6 +156,11 @@ contract CrowdfundingCampaign {
      */
     event DestructProposalCreated(bytes32 _ipfshash);
 
+    /** @dev Emitted when a destruct proposal is voted.
+     *  @param _index The index of the destruct proposal.
+     */
+    event DestructProposalVoted(uint _index);
+
     /** @dev Emitted when a  destruct proposal is Closed.
      *  @param _index The index of the destruct proposal.
      */

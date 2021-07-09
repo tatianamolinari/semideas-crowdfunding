@@ -5,7 +5,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// CampaignStatus { CREATED, ACTIVE, DESTROYED, SUCCESSFUL }
+// CampaignStatus { CREATED, ACTIVE, FAIL, SUCCESSFUL }
 function fromIntToStatusCampaign(string_number) {
     let status = "";
     switch (string_number) {

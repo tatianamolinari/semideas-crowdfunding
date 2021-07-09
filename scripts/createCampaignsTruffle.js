@@ -260,6 +260,89 @@ async function activateProposals(web3, addr, i_proposal, proposal, campaign){
 
 }
 
+async function destructProposals(web3, addr, jsonInfo, campaigns){
+
+    let response = false;
+    let i = 0;
+    for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
+        if (campaignInfo["active"]["status"])
+        {
+            let i_dproposal = 0;
+            for (const dproposal of campaignInfo["destructPproposals"]) {
+                const path = await saveInfoIPFS([],
+                                                dproposal["title"],
+                                                dproposal["description"],
+                                                dproposal["created_date"]);
+
+                const ipfsHash = "0x" + addressToHexBytes(path);
+                const author = addr[dproposal["author_i"]]
+
+                const campaign = campaigns[i]
+                const gasprice = await web3.eth.getGasPrice();
+                const gas = await campaign.createDestructProposal.estimateGas(ipfsHash, { from: author });      
+                const transaction = await campaign.createDestructProposal.sendTransaction(ipfsHash, { from: author, gasPrice: gasprice, gas: gas }) ; 
+                response = response && (transaction.type == "mined");
+
+                await voteDestructProposals(web3, addr, i_dproposal, dproposal, campaign);
+                await activateDestructProposals(web3, addr, i_dproposal, dproposal, campaign);
+
+                i_dproposal = i_dproposal + 1;
+            }
+        }
+        i=i+1;
+
+    };
+    return response;  
+
+}
+
+async function voteDestructProposals(web3, addr, i_dproposal, jsonInfoProposal, campaign){
+
+    let response = false;
+    for (const vote of jsonInfoProposal["votes"]) {
+        const member = addr[vote["accountIndex"]]
+
+        if (vote["value"]) {
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.aproveDestructProposal.estimateGas(i_dproposal, { from: member });      
+            const transaction = await campaign.aproveDestructProposal.sendTransaction(i_dproposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
+            response = response && (transaction.type == "mined");
+        }
+        else {
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.disapproveDestructProposal.estimateGas(i_dproposal, { from: member });      
+            const transaction = await campaign.disapproveDestructProposal.sendTransaction(i_dproposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
+            response = response && (transaction.type == "mined");
+        }
+    };
+    return response;  
+
+}
+
+async function activateDestructProposals(web3, addr, i_dproposal, dproposal, campaign){
+
+    let response = false;
+    
+    if (dproposal["timeReached"]) {
+        const gasprice = await web3.eth.getGasPrice();
+        const gas = await campaign.changeLimitProposal.estimateGas(i_dproposal, { from: addr[0] });      
+        const transaction = await campaign.changeLimitProposal.sendTransaction(i_dproposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+        response = response && (transaction.type == "mined");
+    }
+
+    if (dproposal["closed"]) {
+        console.log(`Closing ${i_dproposal}`)
+        await sleep(3000);
+        const gasprice = await web3.eth.getGasPrice();
+        const gas = await campaign.closeDestructProposal.estimateGas(i_dproposal, { from: addr[0] });      
+        const transaction = await campaign.closeDestructProposal.sendTransaction(i_dproposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+        response = response && (transaction.type == "mined");
+    }
+
+    return response;
+
+}
+
 
 async function main() {
 

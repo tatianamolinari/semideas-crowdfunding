@@ -5,7 +5,7 @@ contract CrowdfundingCampaign {
 
     /* Enums */
 
-    enum CampaignStatus { CREATED, ACTIVE, DESTROYED, SUCCESSFUL }
+    enum CampaignStatus { CREATED, ACTIVE, FAIL, SUCCESSFUL }
     enum ProposalStatus { ACTIVE, APPROVED, DISAPPROVED, SUCCESSFUL }
 
     
@@ -33,6 +33,7 @@ contract CrowdfundingCampaign {
         mapping(address => bool) voters;
         ProposalStatus status;
         uint limitTime;
+        address author;
     }
 
     /* Storage */
@@ -65,7 +66,6 @@ contract CrowdfundingCampaign {
         minimunContribution = _minimunContribution;
         status = CampaignStatus.CREATED;
         membersCount = 0;
-        //finalContributions = 0;
 
         emit CampaignCreated(_ipfshash);
     }
@@ -296,6 +296,10 @@ contract CrowdfundingCampaign {
         newDProposal.disapprovalsCount = 0;
         newDProposal.status = ProposalStatus.ACTIVE;
         newDProposal.limitTime= block.timestamp + 7 days;
+        newDProposal.author = msg.sender;
+
+        newDProposal.voters[msg.sender] = true;
+        newDProposal.approvalsCount++;
 
         emit DestructProposalCreated(_ipfshash);
          
@@ -311,6 +315,8 @@ contract CrowdfundingCampaign {
 
         dProposal.voters[msg.sender] = true;
         dProposal.approvalsCount++;
+
+        emit DestructProposalVoted(_index);
         
     }
 
@@ -324,6 +330,8 @@ contract CrowdfundingCampaign {
 
         dProposal.voters[msg.sender] = true;
         dProposal.disapprovalsCount++;
+
+        emit DestructProposalVoted(_index);
         
     }
 
@@ -335,7 +343,13 @@ contract CrowdfundingCampaign {
         DestructProposal storage dProposal = destructProposals[_index];
 
         if (dProposal.approvalsCount > dProposal.disapprovalsCount) {
+            if (dPropsal.author == owner) {
+                status = CampaignStatus.SUCCESSFUL;
+            } else {
+                status = CampaignStatus.FAIL;
+            }
             dProposal.status = ProposalStatus.APPROVED; 
+            remainingContributions = address(this).balance;
         }
         else {
             dProposal.status = ProposalStatus.DISAPPROVED;

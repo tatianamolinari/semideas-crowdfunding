@@ -338,6 +338,591 @@
                     "timeReached": false,
                     "closed": false
                 }
+            ],
+            "destructPproposals": [
+                {
+                    "title": "El ether subio mucho",
+                    "description": "Dada la suba increíble que ha tenido ether y por lo tanto todas las medidas de este sugiero que cerremos la campaña en este momento ya que el valor del monto que hemos donado originalmente ha sido superado con creces por valor actual que tiene. Podemos luego hacer otra campaña a favor del campito para conseguir más fondos y donar parte de lo que hemos recuperado.",
+                    "created_date": "05/05/2021",
+                    "author_i": 2,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": false
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": true
+                },
+                {
+                    "title": "No esta saliendo bien",
+                    "description": "Creo que por la cantidad que se está gastando y la cantidad de personas que son parte del refugio las cosas son muy lentas y aún así se están ayudando a pocos animales. Me parece lo mejor sacar nuestro dinero de esta campaña y poder ayudar a otra con los mismos fines.",
+                    "created_date": "15/05/2021",
+                    "author_i": 2,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": false
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": true
+                },
+                {
+                    "title": "Información importante",
+                    "description": "Tengo un conocido que está metido en el refugio y me ha comentado que esto es todo un engaño y que en realidad sacan fotos de gatitos y perritos que dicen rescatar pero luego son tirados a la basura como si fueran descartables por eso sugiero que terminemos con su negocio y recuperemos nuestro dinero.",
+                    "created_date": "20/05/2021",
+                    "author_i": 2,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 7,
+                            "value": false
+                        }
+                    ],
+                    "timeReached": false,
+                    "closed": false
+                },
+                {
+                    "title": "Finalización de la campaña",
+                    "description": "En nombre de la fundación queremos agradecederles por sus colaboraciones y el compromiso que han sostenido a tráves del tiempo para participar de las votaciones de los pedidos de presupuesto y leer los avances que hemos subido. Por este momento damos terminada esta campaña ya que sabemos que el precio del ether ha subido mucho y les queremos dar la oportunidad de que retiren sus fondos y los re inviertan en otros proyectos solidarios que también necestian ayuda. Estaremos subiendo una nueva campaña en los proximos días con diferente valor minimo de contribución y fondos a recaudar. Esperamos que también sean parte de ella. Saludos y gracias a todso nuevamente.",
+                    "created_date": "05/06/2021",
+                    "author_i": 0,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 2,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 7,
+                            "value": true
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": false
+                }
+            ]
+        },
+        {
+            "title": "Una mano por una pata",
+            "description": "Hoy en día estamos ante una situación nunca antes vista para la mayoría de nosotros: Nos enfrentamos a una pandemia que nos ha golpeado en muchos aspectos: economico, afectivo y salud (entre otros). Sin embargo, al igual que en las peores crisis que hemos atravesado como país algo siempre resurge entre nosotros: la solidaridad. Eso, que también nos caracteriza, nos hay llevado a ayudarnos los unos a los otros de muchisimas maneras: volutarios en comedores, personas que recorren las calles ayudando a otras y alcanzandoles un plato de comida y compañía, jóvenes que se ofrecen a hacerles las compras a sus vecinos de avanzada edad, voluntarios para probar el desarrollo de vacunas. Lamentablemente si bien podemos hacer mucho, la ayuda no alcanza para todos y, cuando la situación es tan díficil, sin quererlo surgen los grandes olvidados: los callejeritos. Al principio de la pandemía hubo un boom de adopciones por el cual se adoptaron tanto perros como gatos. Sin embargo, de la misma manera se generó un boom de abandonos. Esto, sumado a la crisis economica que hizo que menos gente se involucrara con el rescate de callejeritos, generó una expansión en las colonias de gatos y perros por centros urbanos. Desde la organización Patitas Felices propones llevar a cabo un rescate masivo dentro del conurbano sur de gatos y perros callejeros, brindando atención veterinaria, aplicando las vacunas y castrando a la mayor cantidad posible de ellos para evitar que la situación empeore, dandoles refugio en una casona recientemete comprada que debemos reacondicionar y buscandoles un hogar ¿Nos ayudas dando una mano por una pata?",
+            "created_date": "11/02/2021",
+            "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
+            "minimunContribution": 20,
+            "goal": 5000,
+            "contributions": [
+                { 
+                    "accountIndex": 1,
+                    "value": 20
+                },
+                { 
+                    "accountIndex": 2,
+                    "value": 500
+                },
+                { 
+                    "accountIndex": 3,
+                    "value": 320
+                },
+                { 
+                    "accountIndex": 4,
+                    "value": 800
+                },
+                { 
+                    "accountIndex": 5,
+                    "value": 600
+                },
+                { 
+                    "accountIndex": 6,
+                    "value": 1500
+                },
+                { 
+                    "accountIndex": 7,
+                    "value": 1500
+                }
+            ],
+            "active": { 
+                "status": true
+            },
+            "progressUpdates": [
+                {
+                    "title": "Primeros rescatados",
+                    "description": "El día de hoy nos han avisado de una camada de cinco gatitos abandonados en un terreno baldío ubicado en la localidad de Lanús, más precisamente en montechingolo (calle Centenario Uruguayo, altura 1445). Hemos ido y nos encontramos con los gatitos que ven en la foto y llevandolos a la veterinaria de confianza de manera gratuita hemos checkeado que se encuentran bien de salud. Todavía tenemos leche maternizada de una camada anterior y creemos que por ahora alcanzara para la proxima semana. Los siguientes pasos son desparacitarlos, cuidarlos hasta que tengan 45 días y luego darlos en adopción responsable.",
+                    "created_date": "20/02/2021",
+                    "imagesPath": ["./scripts/images/progress/p1_gatitos1.jpg", "./scripts/images/progress/p1_gatitos2.jpg", "./scripts/images/progress/p1_gatitos3.jpg", "./scripts/images/progress/p1_gatitos4.jpg"]
+                },
+                {
+                    "title": "Compramos piedritas",
+                    "description": "Gracias por liberar fondos. Con lo liberado de la última petición subimos fotos de las piedritas sanitarinas y las bandejas que compramos para poder poner en las diferentes habitaciones y mantener a los gatos adultos separados por sexo (y evitar que procreen antes de que sean castrados) y distribuirlos de manera practica para evitar peleas y problemas que pueda causar el hacinamiento de gatos.",
+                    "created_date": "22/02/2021",
+                    "imagesPath": ["./scripts/images/progress/p2_piedritas1.jpg", "./scripts/images/progress/p2_piedritas2.jpg", "./scripts/images/progress/p2_piedritas3.jpg"]
+                },
+                {
+                    "title": "Tickets de pago en veterinaria",
+                    "description": "Con lo liberado por el último pedido de fondos hemos comprado gasas para curaciones de los perritos y gatitos lastimados, antibioticos, jeringas, algodón y gasas.",
+                    "created_date": "24/02/2021",
+                    "imagesPath": ["./scripts/images/progress/p3_tickets1.jpg", "./scripts/images/progress/p3_tickets2.jpg"]
+                },
+                {
+                    "title": "Nuevos perritos encontrados",
+                    "description": "Hemos encontrado estos 7 cachorros abandonados en una plaza de Lomas. Ya han sido revisados gratuitamente por nuestra veterinaria de confianza y hemos constado que a pesar de ser muy pequeños gozan de buena salud. Aún tenemos leche maternizada para poder alimentarlos pero seguramente dentro de unos días debamos pedir liberación de fondos para comprar más ya que son muchos los cachorros que tenemos en este momento y debemos alimentar cada 2hs con leche maternizada para asegurarnos que crezacan fuertes y sanos y no se descompongan ¡Gracias por colaborar con nosotros, sin ustedes esto no sería posible!",
+                    "created_date": "24/02/2021",
+                    "imagesPath": ["./scripts/images/progress/p4_perritos1.jpg", "./scripts/images/progress/p4_perritos2.jpg", "./scripts/images/progress/p4_perritos3.jpg"]
+                },
+                {
+                    "title": "Material para las cuchas",
+                    "description": "Les mostramos el material que hemos comprado con las últimas dos liberaciones de fondos que nos han autorizado. Hemos comprado madera, chapa y hemos mandado a hacer las tapas de las cuchas para finalmente comenzar con el proceso de cortado de madera y armado de las mismas para luego poder lijarlas, impermiabilizarlas y barnizarlas con el objetivo de ponerlas en los puntos estrategicos del conurbano antes de que comience el invierno y así poder ayudar a los perritos y gatitos callejeros a resguardarse del frío, dejarles comida y bebida y entrar más rápido en confianza con nosotros para poder ayudarlos a salir definitivamente de las calles y sus peligros.",
+                    "created_date": "26/03/2021",
+                    "imagesPath": ["./scripts/images/progress/p5_cuchas1.jpg", "./scripts/images/progress/p5_cuchas2.jpg", "./scripts/images/progress/p5_cuchas3.jpg"]
+                },
+                {
+                    "title": "Cuchas terminadas",
+                    "description": "He aquí las fotos de las cuchas terminadas. Hemos realizado en total unas 115 cuchas que serán distribuidas los próximos días por diferentes municipios del conurbano sur donde hay una red de vecinos dispuestos a cuidarlas de robos y vandalismo y avisarnos cuando algún callejerito se refugie y podamos comenzar con el proceso de captación y ayuda. Como pueden ver en las fotos son sencillas y de tamaño para un perro mediano que es el tamaño más común de los perros de la calle y también sirve para gatos o los perritos más pequeños.",
+                    "created_date": "30/04/2021",
+                    "imagesPath": ["./scripts/images/progress/p6_cuchas1.jpg", "./scripts/images/progress/p6_cuchas2.jpg", "./scripts/images/progress/p6_cuchas3.jpg"]
+                }
+
+            ],
+            "proposals": [
+                {
+                    "title": "Necesitamos priedritas",
+                    "description": "Para mantener la salud y la higiene de los gatos rescatado es necesario cambiar las piedritas de las bandejas sanitarias de los gatos (sobre todo de los gatos adultos) regularmente. En este momento tenemos ocho gatos adultos machos y diez hembras de las cuales siete tienen crías. Necesitamos reponer piedritas comprando alrededor de 20 kilos para que duren dos semanas que serán compradas en la tienda oficial de Puppis donde pudimos encontrar la mejor relación costo-calidad.",
+                    "created_date": "20/02/2021",
+                    "value": 10,
+                    "add_i": 0,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 2,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": true
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": true
+                },
+                {
+                    "title": "Pago en veterinaria",
+                    "description": "En los últimos tres días hemos atendido varios perritos y gatitos rescatados en la veterinaria y necesitamos poder saldar las cuentas pendientes, comprar gasas y elementos de limpieza, asepxia y desinfección de heridas, además de dejar un saldo positivo para futuras emergencias que seguramente tendremos como suele suceder.",
+                    "created_date": "23/02/2021",
+                    "value": 15,
+                    "add_i": 0,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 2,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": true
+                },
+                {
+                    "title": "Saldar deuda con proveedor de alimento",
+                    "description": "Como hace muchos años estamos comprometidos con la tarea de ayudar a los callejeritos muchos negocios ya nos conocen y en los momentos necesarios nos entregan mercadería a cuenta para que podamos pagarla en cuotas. A principio de marzo se venceran diferentes cuotas que tenemos con diferentes proveedores y queríamos saber si pueden liberar fondos para ayudarnos con esta tarea. Los respectivos comprobantes de pagos serán subidos a lo largo de los días siguientes para que puedan corroborar ustedes mismos quienes son los proveedores que nos ayudan y que de verdad les hemos pagado.",
+                    "created_date": "24/02/2021",
+                    "value": 20,
+                    "add_i": 0,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 2,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": true
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": true
+                },
+                {
+                    "title": "Pago a remisería por traslados Febrero",
+                    "description": "La mayoría de nuestros traslados de callejeritos rescatados son hechos por voluntarios pero en algunos momentos cuando no hay nadie que pueda darnos una mano no nos queda más opción que pagar un remis. Tenemos una cuenta abierta con la remisería NOW de Lanús por la cual pagamos un abono mensual de 30.000 (muy debajo en realidad de lo que consumimos) y nos dan 45 viajes sin límite para recorrer todo el conurbano. Necesitamos pagar el abono de Febrero que lo tenemos atrasado.",
+                    "created_date": "27/02/2021",
+                    "value": 50,
+                    "add_i": 0,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 2,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": true
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": true
+                },
+                {
+                    "title": "Pago a remisería por traslados Marzo",
+                    "description": "El mes pasado pagamos la cuenta a fin de mes por gentileza de la remiseria NOW, este mes queremos saldar la cuenta en el momento correspondiente que es hasta el 10 de marzo por lo cual pedimos liberar nuevamente fondos para realizar este pago.",
+                    "created_date": "01/03/2021",
+                    "value": 502,
+                    "add_i": 0,
+                    "votes": [
+                        { 
+                            "accountIndex": 3,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 7,
+                            "value": true
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": false
+                },
+                {
+                    "title": "Preparse para el invierno",
+                    "description": "Sabemos que falta para el invierno pero ya tenemos el otoño pisandonos los talones y también es una epoca cruda y de mucho frío para los callejeritos. Hemos conseguido junto a trabajo en equipo ad honorem de arquitectos pensar la manera más rápida, funcional y barata de crear cuchas para distribuir por los barrios del conurbano donde podran refugiarse del frío y de la lluvia los callejeritos y también así nos aseguraremos de encontrarlos más rápido. Necesitamos la liberación de fondo para la compra de los materiales básicos: madera, aluminio, barniz, impermiabilizante de membrana y telas para la confección de almohadones.",
+                    "created_date": "15/03/2021",
+                    "value": 700,
+                    "add_i": 0,
+                    "votes": [
+                        { 
+                            "accountIndex": 3,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": false
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": false
+                },
+                {
+                    "title": "Confección de Cuchas",
+                    "description": "No hemos conseguido voluntarios para la confección de las cuchas pero ahora que tenemos los materiales si hemos conseguido buenos descuentos en la confección. Los encargados serán los carpinteros de la maderera Don Pepe situada en Temperley que muy gentilmente nos ofrecieron un 30% de descuento en la mano de obra y eso sumado que es uno de los prepuestos más bajos y de mejor calidad que hemos conseguido hace que los elijamos para la confección de las cuchas que luego repartiremos.",
+                    "created_date": "27/03/2021",
+                    "value": 500,
+                    "add_i": 0,
+                    "votes": [
+                        { 
+                            "accountIndex": 4,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": false
+                        }
+                    ],
+                    "timeReached": false,
+                    "closed": false
+                }
+            ],
+            "destructPproposals": [
+                {
+                    "title": "El ether subio mucho",
+                    "description": "Dada la suba increíble que ha tenido ether y por lo tanto todas las medidas de este sugiero que cerremos la campaña en este momento ya que el valor del monto que hemos donado originalmente ha sido superado con creces por valor actual que tiene. Podemos luego hacer otra campaña a favor del campito para conseguir más fondos y donar parte de lo que hemos recuperado.",
+                    "created_date": "05/05/2021",
+                    "author_i": 2,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": false
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": true
+                },
+                {
+                    "title": "No esta saliendo bien",
+                    "description": "Creo que por la cantidad que se está gastando y la cantidad de personas que son parte del refugio las cosas son muy lentas y aún así se están ayudando a pocos animales. Me parece lo mejor sacar nuestro dinero de esta campaña y poder ayudar a otra con los mismos fines.",
+                    "created_date": "15/05/2021",
+                    "author_i": 2,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": false
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": true
+                },
+                {
+                    "title": "Información importante",
+                    "description": "Tengo un conocido que está metido en el refugio y me ha comentado que esto es todo un engaño y que en realidad sacan fotos de gatitos y perritos que dicen rescatar pero luego son tirados a la basura como si fueran descartables por eso sugiero que terminemos con su negocio y recuperemos nuestro dinero.",
+                    "created_date": "20/05/2021",
+                    "author_i": 2,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 7,
+                            "value": false
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": false
+                },
+                {
+                    "title": "Finalización de la campaña",
+                    "description": "En nombre de la fundación queremos agradecederles por sus colaboraciones y el compromiso que han sostenido a tráves del tiempo para participar de las votaciones de los pedidos de presupuesto y leer los avances que hemos subido. Por este momento damos terminada esta campaña ya que sabemos que el precio del ether ha subido mucho y les queremos dar la oportunidad de que retiren sus fondos y los re inviertan en otros proyectos solidarios que también necestian ayuda. Estaremos subiendo una nueva campaña en los proximos días con diferente valor minimo de contribución y fondos a recaudar. Esperamos que también sean parte de ella. Saludos y gracias a todso nuevamente.",
+                    "created_date": "05/06/2021",
+                    "author_i": 0,
+                    "votes": [
+                        { 
+                            "accountIndex": 1,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 2,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 3,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 7,
+                            "value": false
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": true
+                },
+                {
+                    "title": "Encontre fraude y te lo explico",
+                    "description": "He revisado exaustivamente los avances de la campaña y en numerosas ocaciones las fotos de cachorritos y gatitos rescatados son sacadas de google (pueden hacer la busqueda ustedes mismos arrastrando la foto al buscador). Por otro lado las cuchas de las fotos no son fabricadas acá, en realidad las mismas fotos fueron publicadas por un refugio de canada (para corroborar esto pueden utilizar el mismo método de busqueda en google). Teniendo en cuenta que esto se repite para las fotos de todos los avances y que los precios de los presupuestos están inflados creo que esta campaña se trata de un fraude y sugiero que procedamos a cerrarla y contribuir con nuestro dinero en causas que realmente se necesita.",
+                    "created_date": "06/06/2021",
+                    "author_i": 3,
+                    "votes": [
+                        { 
+                            "accountIndex": 2,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 4,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": true
+                        },
+                        { 
+                            "accountIndex": 7,
+                            "value": true
+                        }
+                    ],
+                    "timeReached": true,
+                    "closed": true
+                }
             ]
         },
         {

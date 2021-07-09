@@ -1,4 +1,4 @@
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
 contract CrowdfundingCampaign {
 
@@ -52,7 +52,7 @@ contract CrowdfundingCampaign {
      *  @param _goal goal in wei that the proyect has to reach to be succesfull.
      *  @param _ipfshash The url hash of the campaign data previusly stored in IPFS.
     **/
-    constructor(uint _minimunContribution, uint _goal, bytes32 _ipfshash) public {
+    constructor(uint _minimunContribution, uint _goal, bytes32 _ipfshash) {
         owner = msg.sender;
         goal = _goal;
         minimunContribution = _minimunContribution;
@@ -84,10 +84,10 @@ contract CrowdfundingCampaign {
         { require(proposals[_index].status == ProposalStatus.APPROVED, "The proposal is not approved." ); _; }
 
     modifier beInTimeProposal(uint _index)
-        { require (now <= proposals[_index].limitTime, "The proposal is close for voting."); _; }
+        { require (block.timestamp <= proposals[_index].limitTime, "The proposal is close for voting."); _; }
 
     modifier passedTimeProposal(uint _index)
-        { require (now > proposals[_index].limitTime, "The proposal is still open for voting."); _; }
+        { require (block.timestamp > proposals[_index].limitTime, "The proposal is still open for voting."); _; }
 
     modifier destructProposalActive(uint _index) {
         require(
@@ -104,11 +104,11 @@ contract CrowdfundingCampaign {
     }
 
     modifier beInTimeDestructProposal(uint _index) { 
-        require (now <= destructProposals[_index].limitTime, "The destruct proposal is close for voting."); _; 
+        require (block.timestamp <= destructProposals[_index].limitTime, "The destruct proposal is close for voting."); _; 
     }
 
     modifier passedTimeDestructProposal(uint _index) { 
-        require (now > destructProposals[_index].limitTime, "The destruct proposal is still open for voting."); _; 
+        require (block.timestamp > destructProposals[_index].limitTime, "The destruct proposal is still open for voting."); _; 
     }
 
 
@@ -202,19 +202,17 @@ contract CrowdfundingCampaign {
         public restricted statusActive {
 
         require(address(this).balance >= _value, "The founds are insufficient");
-        
-        Proposal memory newProposal = Proposal({
-            recipient : _recipient,
-            value : _value,
-            approvalsCount : 0,
-            disapprovalsCount: 0,
-            status: ProposalStatus.ACTIVE,
-            limitTime: now + 604800 // 7 days
-        });
 
-        proposals.push(newProposal);
+        Proposal storage newProposal = proposals.push();
+        newProposal.recipient = _recipient;
+        newProposal.value = _value;
+        newProposal.approvalsCount = 0;
+        newProposal.disapprovalsCount = 0;
+        newProposal.status = ProposalStatus.ACTIVE;
+        newProposal.limitTime= block.timestamp + 7 days;
+
         emit ProposalCreated(_ipfshash);
-         
+        
     }
 
     /** @dev Allow only members to approve an active proposal that they haven't voted before.
@@ -278,15 +276,13 @@ contract CrowdfundingCampaign {
      *  @param _ipfshash url hash of the destruct proposal data (description) previusly stored in IPFS.
      */
     function createDestructProposal(bytes32 _ipfshash) public membering statusActive {
-        
-        DestructProposal memory newDProposal = DestructProposal({
-            approvalsCount : 0,
-            disapprovalsCount: 0,
-            status: ProposalStatus.ACTIVE,
-            limitTime: now + 604800 // 7 days
-        });
 
-        destructProposals.push(newDProposal);
+        DestructProposal storage newDProposal = destructProposals.push();
+        newDProposal.approvalsCount = 0;
+        newDProposal.disapprovalsCount = 0;
+        newDProposal.status = ProposalStatus.ACTIVE;
+        newDProposal.limitTime= block.timestamp + 7 days;
+
         emit DestructProposalCreated(_ipfshash);
          
     }
@@ -359,7 +355,7 @@ contract CrowdfundingCampaign {
      */
     function getProposal(uint _index) public view returns (address, uint, uint, uint, ProposalStatus, uint, bool, bool) {
         Proposal storage proposal = proposals[_index];
-        bool inTime = now <= proposal.limitTime;
+        bool inTime = block.timestamp <= proposal.limitTime;
         bool senderHasVote = proposal.voters[msg.sender];
         return (proposal.recipient, proposal.value, proposal.approvalsCount, proposal.disapprovalsCount, proposal.status, proposal.limitTime, inTime, senderHasVote);
     } 
@@ -383,7 +379,7 @@ contract CrowdfundingCampaign {
      */
     function getDestructProposal(uint _index) public view returns (uint, uint, ProposalStatus, uint, bool, bool) {
         DestructProposal storage dProposal = destructProposals[_index];
-        bool inTime = now <= dProposal.limitTime;
+        bool inTime = block.timestamp <= dProposal.limitTime;
         bool senderHasVote = dProposal.voters[msg.sender];
         return (dProposal.approvalsCount, dProposal.disapprovalsCount, dProposal.status, dProposal.limitTime, inTime, senderHasVote);
     } 

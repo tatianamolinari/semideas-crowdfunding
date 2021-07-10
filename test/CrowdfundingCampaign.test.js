@@ -512,10 +512,10 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const limitDateExpected = new Date(lastTimeBlock.toNumber() * 1000);
         limitDateExpected.setDate(limitDateExpected.getDate() + 7);
 
-        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
+        expect(campaign.isMember(authorAddress)).to.eventually.be.true;
         expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
 
-        const tx = await campaign.createDestructProposal(proposalCreatedHash, { from: memberAccount });
+        const tx = await campaign.createDestructProposal(proposalCreatedHash, { from: authorAddress });
         const { logs } = tx;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)
@@ -536,7 +536,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const diffTime = Math.abs(limitDate - limitDateExpected);
         const diffMinutes = diffTime / (1000*60);
 
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
         expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
         expect(status).to.be.a.a.bignumber.equal(new BN(0));
         expect(diffMinutes).to.be.lessThan(1);
@@ -550,14 +550,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         const result = await campaign.getDestructProposal(i_proposal);
         const approvalsCount = result['0'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
         expect(campaign.aproveDestructProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
 
         const afterResult = await campaign.getDestructProposal(i_proposal);
         const afterApprovalsCount = afterResult['0'];
-        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
     it("Before vote a destruct hasVotedDestructProposal should be false", async() => {
@@ -575,14 +575,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         const result = await campaign.getDestructProposal(i_proposal);
         const approvalsCount = result['0'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
         await campaign.aproveDestructProposal(i_proposal, { from: memberAccount });
 
         const afterResult = await campaign.getDestructProposal(i_proposal);
         const afterApprovalsCount = afterResult['0'];
-        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(2));
     });
 
     it("After vote a destruct hasVotedDestructProposal should be true", async() => {
@@ -600,13 +600,13 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         const result = await campaign.getDestructProposal(i_proposal);
         const approvalsCount = result['0'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(approvalsCount).to.be.a.bignumber.equal(new BN(2));
 
         expect(campaign.aproveDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The destruct proposal has been already voted by the sender");;
 
         const afterResult = await campaign.getDestructProposal(i_proposal);
         const afterApprovalsCount = afterResult['0'];
-        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(2));
     });
 
     it("Only members can disapprove a destruct proposal", async() => {
@@ -698,14 +698,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
         
     });
 
-    it("When a destruct proposal has equal approvals and disapprovals votes the result at close should be status DISAPPROVED", async() => {
+    it("When a destruct proposal has more approvals than disapprovals votes the result at close should be status APPROVED", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
         const afterResult = await campaign.getDestructProposal(i_proposal);
         const afterStatus = afterResult['2'];
-        expect(afterStatus).to.be.a.a.bignumber.equal(new BN(2));
+        expect(afterStatus).to.be.a.a.bignumber.equal(new BN(1));
     });
 
     it("When a destruct proposal has more disapprovals than approvals votes the result at close should be status DISAPPROVED", async() => {
@@ -727,15 +727,13 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(afterStatus).to.be.a.a.bignumber.equal(new BN(2));
     });
 
-    it("When a destruct proposal has more approvals than disapprovals votes the result at close should be status APPROVED", async() => {
+    it("When a destruct proposal has equal approvals and disapprovals votes the result at close should be status DISAPPROVED", async() => {
 
         const campaign = this.campaign;
         await campaign.createDestructProposal(proposalCreatedHash, { from: memberAccount })
         
         const i_proposal = 2
-        await campaign.aproveDestructProposal(i_proposal, { from: anotherMemberAccount });
-        await campaign.aproveDestructProposal(i_proposal, { from: otherMemberAccount });
-        await campaign.disapproveDestructProposal(i_proposal, { from: memberAccount });
+        await campaign.disapproveDestructProposal(i_proposal, { from: anotherMemberAccount });
 
         await time.increase(604800);
         
@@ -743,7 +741,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const afterResult = await campaign.getDestructProposal(i_proposal);
 
         const afterStatus = afterResult['2'];
-        expect(afterStatus).to.be.a.a.bignumber.equal(new BN(1));
+        expect(afterStatus).to.be.a.a.bignumber.equal(new BN(2));
     });
 
     it("Member can not approve a proposal if it is not longer active", async() => {

@@ -343,7 +343,7 @@ contract CrowdfundingCampaign {
         DestructProposal storage dProposal = destructProposals[_index];
 
         if (dProposal.approvalsCount > dProposal.disapprovalsCount) {
-            if (dPropsal.author == owner) {
+            if (dProposal.author == owner) {
                 status = CampaignStatus.SUCCESSFUL;
             } else {
                 status = CampaignStatus.FAIL;
@@ -418,10 +418,10 @@ contract CrowdfundingCampaign {
      *  @param _index index of the proposal to return
      */
     function getDestructProposal(uint _index) public view returns (uint, uint, ProposalStatus, uint, bool, bool, address) {
-        DestructProposal storage dPproposal = destructProposals[_index];
-        bool inTime = block.timestamp <= dPproposal.limitTime;
-        bool senderHasVote = dPproposal.voters[msg.sender];
-        return (dPproposal.approvalsCount, dPproposal.disapprovalsCount, dPproposal.status, dPproposal.limitTime, inTime, dPproposal.author);
+        DestructProposal storage dProposal = destructProposals[_index];
+        bool inTime = block.timestamp <= dProposal.limitTime;
+        bool senderHasVote = dProposal.voters[msg.sender];
+        return (dProposal.approvalsCount, dProposal.disapprovalsCount, dProposal.status, dProposal.limitTime, inTime, senderHasVote, dProposal.author);
     } 
 
     /** @dev Function to know if a member has already vot a destruct proposal.

@@ -8,11 +8,17 @@ const expect = chai.expect;
 contract("CrowdfundingCampaign Test", async accounts => {
 
     const [authorAddress, memberAccount, otherMemberAccount, anotherMemberAccount, recipientProposalAccount, noMemberAccount] = accounts;
+    const ipfs_hash = "0x7405837400000000000000000000000000000000000000000000000000000000";
     const proposalCreatedHash = "0x7465737400000000000000000000000000000000000000000000000000000000";
     const progressUpdateHash =  "0x2465737400000000000000000000000000000000000000000000000000000000";
 
     beforeEach(async() => {
         this.campaign = await CrowdfundingCampaign.deployed();
+        this.campaignToClose = await CrowdfundingCampaign.new(5, 300, ipfs_hash);
+        await this.campaignToClose.contribute({ from: memberAccount, value: web3.utils.toWei("130", "wei") });
+        await this.campaignToClose.contribute({ from: anotherMemberAccount, value: web3.utils.toWei("130", "wei") });
+        await this.campaignToClose.contribute({ from: otherMemberAccount, value: web3.utils.toWei("170", "wei") });
+        await this.campaignToClose.setActive({ from: authorAddress });
     })
 
     it("Checking CrowdFunding Campaign values from scratch", async() => {
@@ -155,6 +161,28 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(1));
         expect(campaign.getFinalContributions()).to.eventually.be.a.bignumber.equal(campaignBalance); 
+    });
+
+    it("Owner creates a Progress Update", async() => {
+
+        const campaign = this.campaign;
+
+        const tx = await campaign.saveProgressUpdate(progressUpdateHash); //, { from: memberAccount });
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+
+        const log = logs[0];
+        expect(log.event).to.equal('ProgressUpdate');
+        expect(log.args._ipfshash).to.equal(progressUpdateHash);
+    });
+
+    it("Only owner creates a Progress Update, not members", async() => {
+
+        const campaign = this.campaign;
+
+        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
+        expect(campaign.saveProgressUpdate(progressUpdateHash, { from: memberAccount })).to.eventually.be.rejectedWith("Sender is not the owner.");
     });
 
     it("Only the owner should be able to create proposals", async() => {
@@ -505,14 +533,12 @@ contract("CrowdfundingCampaign Test", async accounts => {
     });
 
     it("Member creates a destruct proposal", async() => {
-
         const campaign = this.campaign;
         
         const lastTimeBlock = await time.latest();
         const limitDateExpected = new Date(lastTimeBlock.toNumber() * 1000);
         limitDateExpected.setDate(limitDateExpected.getDate() + 7);
 
-        expect(campaign.isMember(authorAddress)).to.eventually.be.true;
         expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
 
         const tx = await campaign.createDestructProposal(proposalCreatedHash, { from: authorAddress });
@@ -710,13 +736,12 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
     it("When a destruct proposal has more disapprovals than approvals votes the result at close should be status DISAPPROVED", async() => {
 
-        const campaign = this.campaign;
+        const campaign = this.campaignToClose;
         await campaign.createDestructProposal(proposalCreatedHash, { from: memberAccount })
         
-        const i_proposal = 1
+        const i_proposal = 0
         await campaign.disapproveDestructProposal(i_proposal, { from: anotherMemberAccount });
         await campaign.disapproveDestructProposal(i_proposal, { from: otherMemberAccount });
-        await campaign.aproveDestructProposal(i_proposal, { from: memberAccount });
 
         await time.increase(604800);
         
@@ -729,10 +754,10 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
     it("When a destruct proposal has equal approvals and disapprovals votes the result at close should be status DISAPPROVED", async() => {
 
-        const campaign = this.campaign;
+        const campaign = this.campaignToClose;
         await campaign.createDestructProposal(proposalCreatedHash, { from: memberAccount })
         
-        const i_proposal = 2
+        const i_proposal = 0
         await campaign.disapproveDestructProposal(i_proposal, { from: anotherMemberAccount });
 
         await time.increase(604800);
@@ -751,9 +776,9 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         const result = await campaign.getDestructProposal(i_proposal);
         const status = result['2'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(2));
+        expect(status).to.be.a.a.bignumber.equal(new BN(1));
 
-        expect(campaign.aproveDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The destruct proposal is not longer active.");
+        expect(campaign.aproveDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejected;
     });
 
     it("Members can not close a proposal after it is closed", async() => {
@@ -763,32 +788,10 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         const result = await campaign.getDestructProposal(i_proposal);
         const status = result['2'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(2));
+        expect(status).to.be.a.a.bignumber.equal(new BN(1));
 
-        expect(campaign.closeDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The destruct proposal is not longer active.");
+        expect(campaign.closeDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejected;
         
-    });
-
-    it("Owner creates a Progress Update", async() => {
-
-        const campaign = this.campaign;
-
-        const tx = await campaign.saveProgressUpdate(progressUpdateHash); //, { from: memberAccount });
-        const { logs } = tx;
-        expect(logs).to.be.an.instanceof(Array);
-        expect(logs).to.have.property('length', 1)
-
-        const log = logs[0];
-        expect(log.event).to.equal('ProgressUpdate');
-        expect(log.args._ipfshash).to.equal(progressUpdateHash);
-    });
-
-    it("Only owner creates a Progress Update, not members", async() => {
-
-        const campaign = this.campaign;
-
-        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
-        expect(campaign.saveProgressUpdate(progressUpdateHash, { from: memberAccount })).to.eventually.be.rejectedWith("Sender is not the owner.");
     });
 
 

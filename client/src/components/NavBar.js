@@ -22,7 +22,7 @@ class NavBar extends React.Component {
                     }
                   </Col>
                   <Col lg={6} className="aling-right">
-                    { this.props.indexCampaign < 2 && // sacar esto de aca
+                    { this.props.indexCampaign < 3 &&
                        <button 
                         className="invisible_button"
                         style={{color: "black"}}

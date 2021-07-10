@@ -264,7 +264,7 @@ class DisplayDestructProposals extends React.Component {
                   title={this.state.title_m} />
                 }           
                 
-                { this.state.active==="dproposals_list" && dproposal_nodes.length>0 && false &&
+                { this.state.active==="dproposals_list" && dproposal_nodes.length>0 && 
                 <div>
                   <Row  id="dproposals_list">
                   {dproposal_nodes}                
@@ -278,7 +278,7 @@ class DisplayDestructProposals extends React.Component {
                   </Row>
                 </div>}
 
-                { this.state.active==="dproposals_list" && //dproposal_nodes.length===0 &&
+                { this.state.active==="dproposals_list" && dproposal_nodes.length===0 &&
                 <div>  
                     <h1> Aún no hay pedidos de cierre para mostrar. </h1>
                     <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
@@ -287,7 +287,7 @@ class DisplayDestructProposals extends React.Component {
                 }
                 
                 
-                { this.state.active==="dproposals_detail" && false &&
+                { this.state.active==="dproposals_detail" && 
                   <div  id="dproposals_detail">
                     <DestructProposalDetail
                       index_dproposal={this.state.dproposal_data.index_dproposal}

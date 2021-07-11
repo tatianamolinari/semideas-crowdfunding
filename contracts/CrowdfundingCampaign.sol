@@ -214,7 +214,7 @@ contract CrowdfundingCampaign {
 
     /** @dev Emitted when a member withdraw his founds.
      */
-    event withdrawFounds(address _member, uint256 payment);
+    event withdrawFounds(address _member, uint contribution, uint goal, uint256 payment, uint founds);
 
 
     /* Functions */
@@ -414,7 +414,7 @@ contract CrowdfundingCampaign {
         payable(msg.sender).transfer(payment);
         withdraws[msg.sender] = true;
 
-        emit withdrawFounds(msg.sender, payment);
+        emit withdrawFounds(msg.sender, contributions[msg.sender], finalContributions, payment, remainingContributions );
     }
 
 

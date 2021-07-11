@@ -821,54 +821,58 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(2));
     });
 
-    it("All Members can withdraw its founds when a campaing is Closed", async() => {
+    it("All Members can withdraw its founds when a campaing is Closed (Member 1)", async() => {
 
         const campaign = this.campaign;
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
-        expect(campaign.isMember(otherMemberAccount)).to.eventually.be.true;
-        expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
+        const contributorBalance = await web3.eth.getBalance(memberAccount);
+        const campaignBalance = await web3.eth.getBalance(campaign.address);
 
         const tx = await campaign.withdraw({ from: memberAccount });
         const { logs } = tx;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)
         expect(logs[0].event).to.equal('withdrawFounds');
-        console.log(logs[0].args['1'].toNumber());
+
+        const afterContributorBalance = await web3.eth.getBalance(memberAccount);
+        const afterCampaignBalance = await web3.eth.getBalance(campaign.address);
+
+        expect(parseInt(afterContributorBalance)).to.be.greaterThanOrEqual(parseInt(contributorBalance) + 4);
+        expect(parseInt(afterCampaignBalance)).to.be.equal(parseInt(campaignBalance) - 4);
       
         
     });
 
-    it("All Members can withdraw its founds when a campaing is Closed", async() => {
+    it("All Members can withdraw its founds when a campaing is Closed (Member 2)", async() => {
 
         const campaign = this.campaign;
 
-        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
         expect(campaign.isMember(otherMemberAccount)).to.eventually.be.true;
-        expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
-
-
+        const contributorBalance = await web3.eth.getBalance(otherMemberAccount);
+        const campaignBalance = await web3.eth.getBalance(campaign.address);
 
         const tx1 = await campaign.withdraw({ from: otherMemberAccount });
         const { logs } = tx1;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)
         expect(logs[0].event).to.equal('withdrawFounds');
-        console.log(logs[0].event);
-        console.log(logs[0].args['1'].toNumber());
 
+        const afterContributorBalance = await web3.eth.getBalance(otherMemberAccount);
+        const afterCampaignBalance = await web3.eth.getBalance(campaign.address);
 
-       
+        expect(parseInt(afterContributorBalance)).to.be.greaterThanOrEqual(parseInt(contributorBalance) + 167);
+        expect(parseInt(afterCampaignBalance)).to.be.equal(parseInt(campaignBalance) - 167);       
         
     });
 
-    it("All Members can withdraw its founds when a campaing is Closed", async() => {
+    it("All Members can withdraw its founds when a campaing is Closed (Member 3)", async() => {
 
         const campaign = this.campaign;
 
-        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
-        expect(campaign.isMember(otherMemberAccount)).to.eventually.be.true;
         expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
+        const contributorBalance = await web3.eth.getBalance(anotherMemberAccount);
+        const campaignBalance = await web3.eth.getBalance(campaign.address);
 
 
         const tx2 = await campaign.withdraw({ from: anotherMemberAccount });
@@ -876,11 +880,40 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)
         expect(logs[0].event).to.equal('withdrawFounds');
-        console.log(logs[0].event);
-        console.log(logs[0].args['1'].toNumber());
 
-       
+        const afterContributorBalance = await web3.eth.getBalance(anotherMemberAccount);
+        const afterCampaignBalance = await web3.eth.getBalance(campaign.address);
+
+        expect(parseInt(afterContributorBalance)).to.be.greaterThanOrEqual(parseInt(contributorBalance) + 127);
+        expect(parseInt(afterCampaignBalance)).to.be.equal(parseInt(campaignBalance) - 127);  
         
+    });
+
+    it("Member should not be able to withdraw founds twice", async() => {
+
+        const campaign = this.campaign;
+
+        expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
+        expect(campaign.withdraw({ from: anotherMemberAccount })).to.eventually.be.rejectedWith("Sender already withdraw his founds.");
+
+    });
+
+    it("Owner should not be able to withdraw founds", async() => {
+
+        const campaign = this.campaign;
+
+        expect(campaign.owner()).to.eventually.be.equal(authorAddress);
+        expect(campaign.withdraw({ from: authorAddress })).to.eventually.be.rejectedWith("Sender is the owner.");
+
+    });
+
+    it("Not member should not be able to withdraw founds", async() => {
+
+        const campaign = this.campaign;
+
+        expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
+        expect(campaign.withdraw({ from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
+
     });
 
 

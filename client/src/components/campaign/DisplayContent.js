@@ -164,7 +164,7 @@ class DisplayContent extends React.Component {
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
     await campaignService.suscribeToNewContribution(actualizeInfo);
     const actualizeBalanceInfo = async() => {this.actualizeBalanceInfo()};
-    await campaignService.suscribeToProposalWithdraw(actualizeBalanceInfo);
+    await campaignService.suscribeToProposalRelease(actualizeBalanceInfo);
     const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
     await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
   }

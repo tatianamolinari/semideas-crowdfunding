@@ -86,13 +86,13 @@ class DisplayProposals extends React.Component {
 
     const canVote = (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
     const canClose = (this.props.isMember || this.props.isOwner) && !(proposalInfo.inTime) && proposalInfo.status==='0';
-    const cantWithdraw = this.props.isOwner && proposalInfo.status==='1';
+    const cantRelease = this.props.isOwner && proposalInfo.status==='1';
 
     this.setState({ proposal_data_i: index, 
                     proposal_data : proposalData, 
                     canVote: canVote, 
                     canClose: canClose,
-                    cantWithdraw: cantWithdraw });
+                    cantRelease: cantRelease });
   }
 
   async showProposal(index) {
@@ -216,12 +216,12 @@ class DisplayProposals extends React.Component {
 
   }
 
-  async withdraw() {
+  async release() {
 
     this.setState({ loadingTansfer: true});
     const index = this.state.proposal_data["index_proposal"];
 
-    campaignService.withdraw(index).then((statusResponse) => {
+    campaignService.release(index).then((statusResponse) => {
       let title, message = "";
 
       if (statusResponse.error) {
@@ -244,7 +244,7 @@ class DisplayProposals extends React.Component {
       else {
         title = "Retiro exitoso";
         message = "¡El retiro de fondos se envío de manera exitosa!\nRevisa tu wallet para ver los fondos agregados."; 
-        this.setState({ cantWithdraw: false}); 
+        this.setState({ cantRelease: false}); 
       }
 
       this.setState({ loadingTansfer: false, 
@@ -270,7 +270,7 @@ class DisplayProposals extends React.Component {
       const actualizeProposalInfo = async() => {this.setProposalData(this.state.proposal_data_i)};
       await campaignService.suscribeToVoteProposal(actualizeProposalInfo);
       await campaignService.suscribeToClosedProposal(actualizeProposalInfo);
-      await campaignService.suscribeToProposalWithdraw(actualizeProposalInfo);
+      await campaignService.suscribeToProposalRelease(actualizeProposalInfo);
 
     } catch (error) {
         alert(
@@ -398,13 +398,13 @@ class DisplayProposals extends React.Component {
                           </Button>
                         </Col>
                         }
-                        { this.state.cantWithdraw &&
+                        { this.state.cantRelease &&
                         <Col lg={6} className="aling-right">
                           <Button
                           loading={this.state.loadingTansfer}
                           className="normal-button no-margin"                          
                           data-testid="transfer"
-                          onClick= {() => { this.withdraw()  }}>
+                          onClick= {() => { this.release()  }}>
                             Transferir fondos
                           </Button>
                         </Col>

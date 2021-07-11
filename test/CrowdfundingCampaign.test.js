@@ -482,7 +482,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         
     });
 
-    it("Can not withdraw a proposal it is not with status APPROVED", async() => {
+    it("Can not release a proposal it is not with status APPROVED", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
@@ -491,11 +491,11 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const status = result['4'];
         expect(status).to.be.a.a.bignumber.equal(new BN(2));
 
-        expect(campaign.withdraw(i_proposal, { from: authorAddress })).to.eventually.be.rejectedWith("The proposal is not approved.");
+        expect(campaign.release(i_proposal, { from: authorAddress })).to.eventually.be.rejectedWith("The proposal is not approved.");
         
     });
 
-    it("Owner withdraw a proposal and the status and banlance change", async() => {
+    it("Owner release a proposal and the status and banlance change", async() => {
 
         const campaign = this.campaign;
         const campaignBalance = await web3.eth.getBalance(campaign.address);
@@ -507,13 +507,13 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const status = result['4'];
         expect(status).to.be.a.a.bignumber.equal(new BN(1));
 
-        const tx = await campaign.withdraw(i_proposal, { from: authorAddress });
+        const tx = await campaign.release(i_proposal, { from: authorAddress });
         const { logs } = tx;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('ProposalWithdraw');
+        expect(log.event).to.equal('ProposalRelease');
 
         const aftercampaignBalance = await web3.eth.getBalance(campaign.address);
         //const afterOwnerBalance = await web3.eth.getBalance(authorAddress);
@@ -715,7 +715,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
         await time.increase(604800);
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
-        await campaign.closeDestructProposal(i_proposal, { from: memberAccount });
+
+        const tx = await campaign.closeDestructProposal(i_proposal, { from: memberAccount });
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 2)
+
+        expect(logs[0].event).to.equal('DestructProposalClosed');
+        expect(logs[1].event).to.equal('ChangeStatusCampaign');
 
         const afterResult = await campaign.getDestructProposal(i_proposal);
 
@@ -791,6 +798,88 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(status).to.be.a.a.bignumber.equal(new BN(1));
 
         expect(campaign.closeDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejected;
+        
+    });
+
+    it("When a destruct proposal close as APPROVED and the author is the owner the campaign should have status SUCESSFULL", async() => {
+
+        const campaign = this.campaign;
+        expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(3));
+    });
+
+    it("When a destruct proposal close as APPROVED and the author is a member the campign should have status FAIL", async() => {
+
+        const campaign = this.campaignToClose;
+        await campaign.createDestructProposal(proposalCreatedHash, { from: memberAccount })
+        
+        const i_proposal = 0
+
+        await time.increase(604800);
+        
+        await campaign.closeDestructProposal(i_proposal, { from: memberAccount });
+
+        expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(2));
+    });
+
+    it("All Members can withdraw its founds when a campaing is Closed", async() => {
+
+        const campaign = this.campaign;
+
+        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
+        expect(campaign.isMember(otherMemberAccount)).to.eventually.be.true;
+        expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
+
+        const tx = await campaign.withdraw({ from: memberAccount });
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+        expect(logs[0].event).to.equal('withdrawFounds');
+        console.log(logs[0].args['1'].toNumber());
+      
+        
+    });
+
+    it("All Members can withdraw its founds when a campaing is Closed", async() => {
+
+        const campaign = this.campaign;
+
+        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
+        expect(campaign.isMember(otherMemberAccount)).to.eventually.be.true;
+        expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
+
+
+
+        const tx1 = await campaign.withdraw({ from: otherMemberAccount });
+        const { logs } = tx1;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+        expect(logs[0].event).to.equal('withdrawFounds');
+        console.log(logs[0].event);
+        console.log(logs[0].args['1'].toNumber());
+
+
+       
+        
+    });
+
+    it("All Members can withdraw its founds when a campaing is Closed", async() => {
+
+        const campaign = this.campaign;
+
+        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
+        expect(campaign.isMember(otherMemberAccount)).to.eventually.be.true;
+        expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
+
+
+        const tx2 = await campaign.withdraw({ from: anotherMemberAccount });
+        const { logs } = tx2;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1)
+        expect(logs[0].event).to.equal('withdrawFounds');
+        console.log(logs[0].event);
+        console.log(logs[0].args['1'].toNumber());
+
+       
         
     });
 

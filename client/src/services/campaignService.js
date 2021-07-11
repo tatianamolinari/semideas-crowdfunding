@@ -293,11 +293,11 @@ async getDestructProposals() {
       });
   }
 
-  async suscribeToProposalWithdraw(actualizeFunction){
+  async suscribeToProposalRelease(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
-    this.instance.events.ProposalWithdraw({
+    this.instance.events.ProposalRelease({
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
@@ -455,11 +455,11 @@ async getDestructProposals() {
     return promise;
   }
 
-  async withdraw(index) {
+  async release(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
-    const gas = await this.instance.methods.withdraw(index).estimateGas({ from: this.accounts[0] });      
-    const transaction = this.instance.methods.withdraw(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    const gas = await this.instance.methods.release(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.release(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
     var service = this;
 
     const promise = new Promise(function(resolve, reject) {

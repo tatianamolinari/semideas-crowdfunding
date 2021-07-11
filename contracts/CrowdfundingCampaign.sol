@@ -73,50 +73,87 @@ contract CrowdfundingCampaign {
 
     /* Modifiers */
 
-    modifier restricted() { require(msg.sender==owner, "Sender is not the owner."); _; }
+    modifier restricted() { 
+        require( msg.sender==owner, "Sender is not the owner." ); 
+        _; 
+    }
 
-    modifier membering() { require( (contributions[msg.sender]>0) || (msg.sender == owner), "Sender is not a member."); _; }
+    modifier membering() { 
+        require( (contributions[msg.sender]>0) || (msg.sender == owner), 
+            "Sender is not a member." ); 
+        _; 
+    }
 
-    modifier notMembering() { require( (contributions[msg.sender]==0) && (msg.sender != owner) , "Sender is already a member."); _; }
+    modifier notMembering() { 
+        require( (contributions[msg.sender]==0) && (msg.sender != owner),
+            "Sender is already a member." );
+         _; 
+    }
 
-    modifier statusCreated() 
-        { require(status == CampaignStatus.CREATED, "The campaign status is not created."); _; }
+    modifier statusCreated() { 
+        require( status == CampaignStatus.CREATED, 
+            "The campaign status is not created." ); 
+        _; 
+    }
 
-    modifier statusActive()
-        { require(status == CampaignStatus.ACTIVE, "The campaign status is not active."); _; }
+    modifier statusActive() { 
+        require( status == CampaignStatus.ACTIVE, 
+            "The campaign status is not active." ); 
+        _; 
+    }
 
-    modifier proposalActive(uint _index) 
-        { require(proposals[_index].status == ProposalStatus.ACTIVE, "The proposal is not longer active."); _; }
+    modifier statusClosed() { 
+        require( status == CampaignStatus.SUCCESSFUL || status == CampaignStatus.FAIL, 
+            "The campaign status is not close yet." ); 
+        _; 
+    }
 
-    modifier proposalApproved(uint _index) 
-        { require(proposals[_index].status == ProposalStatus.APPROVED, "The proposal is not approved." ); _; }
+    modifier proposalActive(uint _index) { 
+        require( proposals[_index].status == ProposalStatus.ACTIVE, 
+            "The proposal is not longer active." ); 
+        _; 
+    }
 
-    modifier beInTimeProposal(uint _index)
-        { require (block.timestamp <= proposals[_index].limitTime, "The proposal is close for voting."); _; }
+    modifier proposalApproved(uint _index) { 
+        require( proposals[_index].status == ProposalStatus.APPROVED,
+            "The proposal is not approved." ); 
+        _; 
+    }
 
-    modifier passedTimeProposal(uint _index)
-        { require (block.timestamp > proposals[_index].limitTime, "The proposal is still open for voting."); _; }
+    modifier beInTimeProposal(uint _index) { 
+        require ( block.timestamp <= proposals[_index].limitTime, 
+            "The proposal is close for voting." ); 
+        _; 
+    }
+
+    modifier passedTimeProposal(uint _index) { 
+        require ( block.timestamp > proposals[_index].limitTime, 
+            "The proposal is still open for voting." ); 
+        _; 
+    }
 
     modifier destructProposalActive(uint _index) {
-        require(
-            destructProposals[_index].status == ProposalStatus.ACTIVE,
-            "The destruct proposal is not longer active.");
+        require( destructProposals[_index].status == ProposalStatus.ACTIVE,
+            "The destruct proposal is not longer active." );
         _;
     }
 
     modifier destructProposalApproved(uint _index) {
-        require(
-            destructProposals[_index].status == ProposalStatus.APPROVED,
-            "The destruct proposal is not approved.");
+        require( destructProposals[_index].status == ProposalStatus.APPROVED,
+            "The destruct proposal is not approved." );
         _;
     }
 
     modifier beInTimeDestructProposal(uint _index) { 
-        require (block.timestamp <= destructProposals[_index].limitTime, "The destruct proposal is close for voting."); _; 
+        require ( block.timestamp <= destructProposals[_index].limitTime, 
+            "The destruct proposal is close for voting." ); 
+        _; 
     }
 
     modifier passedTimeDestructProposal(uint _index) { 
-        require (block.timestamp > destructProposals[_index].limitTime, "The destruct proposal is still open for voting."); _; 
+        require ( block.timestamp > destructProposals[_index].limitTime, 
+            "The destruct proposal is still open for voting." ); 
+        _; 
     }
 
 
@@ -146,10 +183,10 @@ contract CrowdfundingCampaign {
      */
     event ProposalClosed(uint _index);
 
-    /** @dev Emitted when a proposal was withdraw.
+    /** @dev Emitted when a proposal was release.
      *  @param _index The index of the proposal.
      */
-    event ProposalWithdraw(uint _index);
+    event ProposalRelease(uint _index);
 
      /** @dev Emitted when a member creates a proposal to destruct the campaign and get the founds back.
      *  @param _ipfshash The url hash of the destruct proposal data stored in IPFS.
@@ -174,6 +211,10 @@ contract CrowdfundingCampaign {
     /** @dev Emitted when the status of the campaign change.
      */
     event ChangeStatusCampaign();
+
+    /** @dev Emitted when a member withdraw his founds.
+     */
+    event withdrawFounds(address _member, uint256 payment);
 
 
     /* Functions */
@@ -208,8 +249,8 @@ contract CrowdfundingCampaign {
     }
 
     /** @dev Allow only owner to create a new proposal to get more founds.
-     *  @param _value founds in wei that the owner want to withdraw.
-     *  @param _recipient address where the founds are going to be after withdraw them.
+     *  @param _value founds in wei that the owner want to release.
+     *  @param _recipient address where the founds are going to be after release them.
      *  @param _ipfshash url hash of the proposal data (description and pictures) previusly stored in IPFS.
      */
     function createProposal(uint _value, address _recipient, bytes32 _ipfshash) 
@@ -277,13 +318,13 @@ contract CrowdfundingCampaign {
     /** @dev Allow only members to close an active proposal that already has its voting time over.
      *  @param _index index of the proposal the member wants to approve.
      */
-    function withdraw(uint _index) public restricted statusActive proposalApproved(_index) {
+    function release(uint _index) public restricted statusActive proposalApproved(_index) {
 
         Proposal storage proposal = proposals[_index];
         proposal.status = ProposalStatus.SUCCESSFUL; 
         payable(proposal.recipient).transfer(proposal.value);
         
-        emit ProposalWithdraw(_index);
+        emit ProposalRelease(_index);
     }
 
     /** @dev Allow only members to create a new proposal to finish de proyect and get the founds back.
@@ -356,7 +397,26 @@ contract CrowdfundingCampaign {
         }
 
         emit DestructProposalClosed(_index);
+        emit ChangeStatusCampaign();
     }
+
+    /** @dev Allow only members to withdraw the remaining founds once the campaign is closed.
+     */
+    function withdraw() public membering statusClosed {
+
+        require( msg.sender != owner, "Sender is the owner." );
+        require( !withdraws[msg.sender], "Sender already withdraw his founds." );
+
+        uint256 payment = ((contributions[msg.sender]*remainingContributions) / finalContributions);
+        
+        require( payment < address(this).balance, "Payment can't be more than balance.");
+
+        payable(msg.sender).transfer(payment);
+        withdraws[msg.sender] = true;
+
+        emit withdrawFounds(msg.sender, payment);
+    }
+
 
      /* Aux functions */
 

@@ -113,8 +113,8 @@ class CampaignService {
     return hasVoted;
   }
 
-  async getDestructProposalInfo(index) {
-    const dProposalValues = await this.instance.methods.getDestructProposal(index).call({ from: this.accounts[0]});
+  async getCloseProposalInfo(index) {
+    const dProposalValues = await this.instance.methods.getCloseProposal(index).call({ from: this.accounts[0]});
     const dProposalInfo = getValuesFromHash(dProposalValues);
              
     const dProposalData = {};
@@ -128,8 +128,8 @@ class CampaignService {
     return dProposalData;
   }
 
-  async hasVotedDestructProposal(index) {
-    const hasVoted = await this.instance.methods.hasVotedDestructProposal(index).call();
+  async hasVotedCloseProposal(index) {
+    const hasVoted = await this.instance.methods.hasVotedCloseProposal(index).call();
     return hasVoted;
   }
 
@@ -154,11 +154,11 @@ async getProposals() {
   return events;
 }
 
-async getDestructProposals() {
+async getCloseProposals() {
   
   const block = await this.web3.eth.getBlockNumber();
   const opts = { fromBlock: block - 500, toBlock: block }
-  const events = await this.instance.getPastEvents('DestructProposalCreated', opts);
+  const events = await this.instance.getPastEvents('CloseProposalCreated', opts);
   return events;
 }
 
@@ -239,11 +239,11 @@ async getDestructProposals() {
       });
   }
 
-  async suscribeToVoteDestructProposal(actualizeFunction){
+  async suscribeToVoteCloseProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
-    this.instance.events.DestructProposalVoted({
+    this.instance.events.CloseProposalVoted({
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
@@ -257,11 +257,11 @@ async getDestructProposals() {
       });
   }
 
-  async suscribeToClosedDestructProposal(actualizeFunction){
+  async suscribeToClosedCloseProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
-    this.instance.events.DestructProposalClosed({
+    this.instance.events.CloseProposalClosed({
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){
@@ -476,11 +476,11 @@ async getDestructProposals() {
     return promise;
   }
 
-  async approveDestructProposal(index) {
+  async approveCloseProposal(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
-    const gas = await this.instance.methods.approveDestructProposal(index).estimateGas({ from: this.accounts[0] });      
-    const transaction = this.instance.methods.approveDestructProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    const gas = await this.instance.methods.approveCloseProposal(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.approveCloseProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
     var service = this;
 
     const promise = new Promise(function(resolve, reject) {
@@ -497,11 +497,11 @@ async getDestructProposals() {
     return promise;
   }
 
-  async disapproveDestructProposal(index) {
+  async disapproveCloseProposal(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
-    const gas = await this.instance.methods.disapproveDestructProposal(index).estimateGas({ from: this.accounts[0] });      
-    const transaction = this.instance.methods.disapproveDestructProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    const gas = await this.instance.methods.disapproveCloseProposal(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.disapproveCloseProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
     var service = this;
 
     const promise = new Promise(function(resolve, reject) {
@@ -518,11 +518,11 @@ async getDestructProposals() {
     return promise;
   }
 
-  async closeDestructProposal(index) {
+  async closeCloseProposal(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
-    const gas = await this.instance.methods.closeDestructProposal(index).estimateGas({ from: this.accounts[0] });      
-    const transaction = this.instance.methods.closeDestructProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    const gas = await this.instance.methods.closeCloseProposal(index).estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.closeCloseProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
     var service = this;
 
     const promise = new Promise(function(resolve, reject) {

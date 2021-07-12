@@ -3,25 +3,25 @@ import { Row, Col } from "react-bootstrap";
 import { Icon, Pagination, Button, Label }  from 'semantic-ui-react'
 
 
-import CardDestructProposal from "./CardDestructProposal.js";
-import DestructProposalDetail from "./DestructProposalDetail.js";
+import CardCloseProposal from "./CardCloseProposal.js";
+import CloseProposalDetail from "./CloseProposalDetail.js";
 import MessageModal from "../modals/MessageModal"
 
 import { campaignService } from "../../services/campaignService.js"
 import { ipfsService } from "../../services/ipfsService.js"
 import { hexBytesToAddress } from "../../helpers/utils.js"
 
-class DisplayDestructProposals extends React.Component {
+class DisplayCloseProposals extends React.Component {
 
   state = {
     active: this.props.active,
     dproposal_data: {},
     dproposal_data_i: 0,
-    pastDProposals: [],
-    dproposals: [],
+    pastCProposals: [],
+    cproposals: [],
     loaded: false,
     activePage:1,
-    totalDProposals: 0,
+    totalCProposals: 0,
     totalPages: 0,
     per_page: 3,
     loadingClose: false,
@@ -29,24 +29,24 @@ class DisplayDestructProposals extends React.Component {
     showMessage: false    
   };
 
-  async getDProposals(activePage) {
+  async getCProposals(activePage) {
 
-    const allDProposals = this.state.pastDProposals;
-    const dproposals = []
-    const i_dproposal = this.state.totalDProposals - 1 - ((activePage-1)*(this.state.per_page));
-    const last_i = Math.max(-1, i_dproposal - (this.state.per_page));
+    const allCProposals = this.state.pastCProposals;
+    const cproposals = []
+    const i_cproposal = this.state.totalCProposals - 1 - ((activePage-1)*(this.state.per_page));
+    const last_i = Math.max(-1, i_cproposal - (this.state.per_page));
     
-    //console.log(`${i_dproposal} ${last_i} ${activePage}`)
+    //console.log(`${i_cproposal} ${last_i} ${activePage}`)
 
-    for(let i=i_dproposal; (i >= 0 && i > last_i) ; i--){
-      const pHash = allDProposals[i];
+    for(let i=i_cproposal; (i >= 0 && i > last_i) ; i--){
+      const pHash = allCProposals[i];
       const ipfsPath = hexBytesToAddress(pHash.substring(2));
 
       const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath);
       
-      dproposals.push(
+      cproposals.push(
         {
-          "index_dproposal": i,
+          "index_cproposal": i,
           "title": ipfsData.title, 
           "description": ipfsData.description ,
           "proposal_date": ipfsData.created_date
@@ -55,52 +55,52 @@ class DisplayDestructProposals extends React.Component {
 
     this.setState({
       loaded: true,
-      dproposals: dproposals
+      cproposals: cproposals
     });
 
   }
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage: activePage, loaded: false });
-    this.getDProposals(activePage);
+    this.getCProposals(activePage);
   }
 
   handleMessageClose = () => this.setState({ showMessage: false});
 
-  async setDestructProposalData(index) {
+  async setCloseProposalData(index) {
 
-    const dproposalData = this.state.dproposals[index];
-    const dproposalInfo = await campaignService.getDestructProposalInfo(dproposalData["index_dproposal"]);
+    const cproposalData = this.state.cproposals[index];
+    const cproposalInfo = await campaignService.getCloseProposalInfo(cproposalData["index_cproposal"]);
     
-    dproposalData["approvalsCount"] = dproposalInfo.approvalsCount;
-    dproposalData["disapprovalsCount"] = dproposalInfo.disapprovalsCount;
-    dproposalData["status"] = dproposalInfo.status;
-    dproposalData["limitTime"] = dproposalInfo.limitTime;
-    dproposalData["hasVoted"] = dproposalInfo.senderHasVote;
+    cproposalData["approvalsCount"] = cproposalInfo.approvalsCount;
+    cproposalData["disapprovalsCount"] = cproposalInfo.disapprovalsCount;
+    cproposalData["status"] = cproposalInfo.status;
+    cproposalData["limitTime"] = cproposalInfo.limitTime;
+    cproposalData["hasVoted"] = cproposalInfo.senderHasVote;
 
-    console.log(dproposalInfo)
+    console.log(cproposalInfo)
 
-    const canVote = (!this.props.isOwner) && this.props.isMember && dproposalInfo.inTime && (!dproposalInfo.senderHasVote);
-    const canClose = (this.props.isMember || this.props.isOwner) && !(dproposalInfo.inTime) && dproposalInfo.status==='0';
+    const canVote = (!this.props.isOwner) && this.props.isMember && cproposalInfo.inTime && (!cproposalInfo.senderHasVote);
+    const canClose = (this.props.isMember || this.props.isOwner) && !(cproposalInfo.inTime) && cproposalInfo.status==='0';
 
     this.setState({ dproposal_data_i: index, 
-                    dproposal_data : dproposalData, 
+                    dproposal_data : cproposalData, 
                     canVote: canVote, 
                     canClose: canClose });
   }
 
   async showDProposal(index) {
 
-    await this.setDestructProposalData(index);
-    this.setState({ active: "dproposals_detail"});
+    await this.setCloseProposalData(index);
+    this.setState({ active: "cproposals_detail"});
   }
   
   async disapprove() {
 
     this.setState({ loadingVote: true});
-    const index = this.state.dproposal_data["index_dproposal"];
+    const index = this.state.dproposal_data["index_cproposal"];
 
-    campaignService.disapproveDestructProposal(index).then((statusResponse) => {
+    campaignService.disapproveCloseProposal(index).then((statusResponse) => {
       let title, message = "";
 
       if (statusResponse.error) {
@@ -135,9 +135,9 @@ class DisplayDestructProposals extends React.Component {
 
   async approve() {
     this.setState({ loadingVote: true});
-    const index = this.state.dproposal_data["index_dproposal"];
+    const index = this.state.dproposal_data["index_cproposal"];
 
-    campaignService.approveDestructProposal(index).then((statusResponse) => {
+    campaignService.approveCloseProposal(index).then((statusResponse) => {
       let title, message = "";
 
       if (statusResponse.error) {
@@ -171,12 +171,12 @@ class DisplayDestructProposals extends React.Component {
 
   }
 
-  async closeDProposal() {
+  async closeCProposal() {
 
     this.setState({ loadingClose: true});
-    const index = this.state.dproposal_data["index_dproposal"];
+    const index = this.state.dproposal_data["index_cproposal"];
 
-    campaignService.closeDestructProposal(index).then((statusResponse) => {
+    campaignService.closeCloseProposal(index).then((statusResponse) => {
       let title, message = "";
 
       if (statusResponse.error) {
@@ -215,18 +215,18 @@ class DisplayDestructProposals extends React.Component {
   componentDidMount = async() => {
     try {
 
-      const pastDProposals = await campaignService.getDestructProposals();
+      const pastCProposals = await campaignService.getCloseProposals();
       this.setState({ 
-                      pastDProposals : pastDProposals.map(pu =>  pu.returnValues[0]), 
-                      totalDProposals: pastDProposals.length,
-                      totalPages: Math.ceil(pastDProposals.length/this.state.per_page)
+                      pastCProposals : pastCProposals.map(pu =>  pu.returnValues[0]), 
+                      totalCProposals: pastCProposals.length,
+                      totalPages: Math.ceil(pastCProposals.length/this.state.per_page)
                     });
 
-      await this.getDProposals(1);
+      await this.getCProposals(1);
 
-      const actualizeDProposalInfo = async() => {this.setDestructProposalData(this.state.dproposal_data_i)};
-      await campaignService.suscribeToVoteDestructProposal(actualizeDProposalInfo);
-      await campaignService.suscribeToClosedDestructProposal(actualizeDProposalInfo);
+      const actualizeCProposalInfo = async() => {this.setCloseProposalData(this.state.dproposal_data_i)};
+      await campaignService.suscribeToVoteCloseProposal(actualizeCProposalInfo);
+      await campaignService.suscribeToClosedCloseProposal(actualizeCProposalInfo);
 
     } catch (error) {
         alert(
@@ -239,12 +239,12 @@ class DisplayDestructProposals extends React.Component {
   render() {
 
     let dproposal_nodes = []
-      for (const [index, dproposal] of this.state.dproposals.entries()) {
+      for (const [index, dproposal] of this.state.cproposals.entries()) {
         dproposal_nodes.push(
           <Col lg={4} className="invisible_button"
           key={index}
           onClick={() => { this.showDProposal(index) }}>
-            <CardDestructProposal  
+            <CardCloseProposal  
               title={dproposal.title}
               description={dproposal.description}
               dproposal_date={dproposal.proposal_date}
@@ -254,7 +254,7 @@ class DisplayDestructProposals extends React.Component {
     }
 
 
-    return (  <div className="proposal-info" id="destruct_proposals_container" style={{display: "none"}}> 
+    return (  <div className="proposal-info" id="close_proposals_container" style={{display: "none"}}> 
               
                 { this.state.showMessage &&
                   <MessageModal
@@ -264,9 +264,9 @@ class DisplayDestructProposals extends React.Component {
                   title={this.state.title_m} />
                 }           
                 
-                { this.state.active==="dproposals_list" && dproposal_nodes.length>0 && 
+                { this.state.active==="cproposals_list" && dproposal_nodes.length>0 && 
                 <div>
-                  <Row  id="dproposals_list">
+                  <Row  id="cproposals_list">
                   {dproposal_nodes}                
                   </Row> 
                   <Row className="justify-content-md-center">
@@ -278,7 +278,7 @@ class DisplayDestructProposals extends React.Component {
                   </Row>
                 </div>}
 
-                { this.state.active==="dproposals_list" && dproposal_nodes.length===0 &&
+                { this.state.active==="cproposals_list" && dproposal_nodes.length===0 &&
                 <div>  
                     <h1> Aún no hay pedidos de cierre para mostrar. </h1>
                     <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
@@ -287,10 +287,10 @@ class DisplayDestructProposals extends React.Component {
                 }
                 
                 
-                { this.state.active==="dproposals_detail" && 
-                  <div  id="dproposals_detail">
-                    <DestructProposalDetail
-                      index_dproposal={this.state.dproposal_data.index_dproposal}
+                { this.state.active==="cproposals_detail" && 
+                  <div  id="cproposals_detail">
+                    <CloseProposalDetail
+                      index_cproposal={this.state.dproposal_data.index_cproposal}
                       title={this.state.dproposal_data.title}
                       description={this.state.dproposal_data.description}
                       dproposal_date={this.state.dproposal_data.proposal_date}
@@ -337,7 +337,7 @@ class DisplayDestructProposals extends React.Component {
                       <Row className="proposal-footer">
                         <Col lg={6} className="aling-left">
                           <Button className="normal-button no-margin"
-                          onClick={() => { this.setState({ active: "dproposals_list"})  }}>
+                          onClick={() => { this.setState({ active: "cproposals_list"})  }}>
                             <Icon name='angle left' /> Volver
                           </Button>
                         </Col>
@@ -347,7 +347,7 @@ class DisplayDestructProposals extends React.Component {
                           loading={this.state.loadingClose}
                           className="normal-button no-margin"                          
                           data-testid="closeProposalButton"
-                          onClick= {() => { this.closeDProposal()  }}>
+                          onClick= {() => { this.closeCProposal()  }}>
                             Cerrar Pedido
                           </Button>
                         </Col>
@@ -360,4 +360,4 @@ class DisplayDestructProposals extends React.Component {
   }
 }
 
-export default DisplayDestructProposals;
+export default DisplayCloseProposals;

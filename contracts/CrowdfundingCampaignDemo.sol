@@ -24,13 +24,13 @@ contract CrowdfundingCampaignDemo is CrowdfundingCampaign {
         proposal.limitTime = proposal.limitTime - 604800;        
     }
 
-     /** @dev Allow to change the proposal limit date to seven days earlier to allow have close proposals in the demo.
-     *  @param _index index of the proposal we want to change the limit date.
+     /** @dev Allow to change the close proposal limit date to seven days earlier to allow have close proposals in the demo.
+     *  @param _index index of the close proposal we want to change the limit date.
      */
-    function changeLimitDestructProposal(uint _index) public {
+    function changeLimitCloseProposal(uint _index) public {
 
-        DestructProposal storage dProposal = destructProposals[_index];
-        dProposal.limitTime = dProposal.limitTime - 604800;        
+        CloseProposal storage cProposal = closeProposals[_index];
+        cProposal.limitTime = cProposal.limitTime - 604800;        
     }
 
 

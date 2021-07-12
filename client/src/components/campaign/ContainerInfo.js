@@ -9,7 +9,7 @@ import { campaignService } from "../../services/campaignService.js"
 import DisplayContent from "./DisplayContent"
 import DisplayProposals from "../proposals/DisplayProposals"
 import DisplayProgressUpdates from "../progressUpdates/DisplayProgressUpdates"
-import DisplayDestructProposals from "../destructProposals/DisplayDestructProposals"
+import DisplayCloseProposals from "../closeProposals/DisplayCloseProposals"
 
 import ErrorMessage from "../errors/ErrorMessage"
 import MenuButton from "../buttons/MenuButton"
@@ -149,9 +149,9 @@ class ContainerInfo extends React.Component {
                             <MenuButton 
                               disabledValue={this.state.error}
                               changeActive={() => {
-                                this.change_active("destruct_proposals");
+                                this.change_active("close_proposals");
                               }}
-                              idName="destruct_proposals"
+                              idName="close_proposals"
                               classLi="menu_user_li"
                               textButton="Pedidos de baja"
                             />
@@ -186,11 +186,11 @@ class ContainerInfo extends React.Component {
                           active="proposals_list"/>
 
 
-                          <DisplayDestructProposals
+                          <DisplayCloseProposals
                           instance={this.state.instance}
                           isMember={this.state.isMember}
                           isOwner={this.state.isOwner}
-                          active="dproposals_list"/>
+                          active="cproposals_list"/>
                           
                         </Col>
                                            

@@ -24,10 +24,10 @@ contract CrowdfundingCampaign {
         uint limitTime;
     }
 
-    /** @dev Struct destruct proposal
+    /** @dev Struct close proposal
         This struct represents the proposal that members can make to get their founds back.
     **/
-    struct DestructProposal {
+    struct CloseProposal {
         uint approvalsCount;
         uint disapprovalsCount;
         mapping(address => bool) voters;
@@ -52,7 +52,7 @@ contract CrowdfundingCampaign {
     mapping(address => bool) public withdraws;
     
     Proposal[] public proposals;
-    DestructProposal[] public destructProposals;
+    CloseProposal[] public closeProposals;
     
 
     /** @dev Constructor.
@@ -132,27 +132,27 @@ contract CrowdfundingCampaign {
         _; 
     }
 
-    modifier destructProposalActive(uint _index) {
-        require( destructProposals[_index].status == ProposalStatus.ACTIVE,
-            "The destruct proposal is not longer active." );
+    modifier closeProposalActive(uint _index) {
+        require( closeProposals[_index].status == ProposalStatus.ACTIVE,
+            "The close proposal is not longer active." );
         _;
     }
 
-    modifier destructProposalApproved(uint _index) {
-        require( destructProposals[_index].status == ProposalStatus.APPROVED,
-            "The destruct proposal is not approved." );
+    modifier closeProposalApproved(uint _index) {
+        require( closeProposals[_index].status == ProposalStatus.APPROVED,
+            "The close proposal is not approved." );
         _;
     }
 
-    modifier beInTimeDestructProposal(uint _index) { 
-        require ( block.timestamp <= destructProposals[_index].limitTime, 
-            "The destruct proposal is close for voting." ); 
+    modifier beInTimeCloseProposal(uint _index) { 
+        require ( block.timestamp <= closeProposals[_index].limitTime, 
+            "The close proposal is close for voting." ); 
         _; 
     }
 
-    modifier passedTimeDestructProposal(uint _index) { 
-        require ( block.timestamp > destructProposals[_index].limitTime, 
-            "The destruct proposal is still open for voting." ); 
+    modifier passedTimeCloseProposal(uint _index) { 
+        require ( block.timestamp > closeProposals[_index].limitTime, 
+            "The close proposal is still open for voting." ); 
         _; 
     }
 
@@ -188,20 +188,20 @@ contract CrowdfundingCampaign {
      */
     event ProposalRelease(uint _index);
 
-     /** @dev Emitted when a member creates a proposal to destruct the campaign and get the founds back.
-     *  @param _ipfshash The url hash of the destruct proposal data stored in IPFS.
+     /** @dev Emitted when a member creates a proposal to close the campaign and get the founds back.
+     *  @param _ipfshash The url hash of the close proposal data stored in IPFS.
      */
-    event DestructProposalCreated(bytes32 _ipfshash);
+    event CloseProposalCreated(bytes32 _ipfshash);
 
-    /** @dev Emitted when a destruct proposal is voted.
-     *  @param _index The index of the destruct proposal.
+    /** @dev Emitted when a close proposal is voted.
+     *  @param _index The index of the close proposal.
      */
-    event DestructProposalVoted(uint _index);
+    event CloseProposalVoted(uint _index);
 
-    /** @dev Emitted when a  destruct proposal is Closed.
-     *  @param _index The index of the destruct proposal.
+    /** @dev Emitted when a  close proposal is Closed.
+     *  @param _index The index of the close proposal.
      */
-    event DestructProposalClosed(uint _index);
+    event CloseProposalClosed(uint _index);
 
     /** @dev Emitted when the author creates a progress update to show how the proyect is going.
      *  @param _ipfshash The url hash of the progress update data stored in IPFS.
@@ -328,75 +328,75 @@ contract CrowdfundingCampaign {
     }
 
     /** @dev Allow only members to create a new proposal to finish de proyect and get the founds back.
-     *  @param _ipfshash url hash of the destruct proposal data (description) previusly stored in IPFS.
+     *  @param _ipfshash url hash of the close proposal data (description) previusly stored in IPFS.
      */
-    function createDestructProposal(bytes32 _ipfshash) public membering statusActive {
+    function createCloseProposal(bytes32 _ipfshash) public membering statusActive {
 
-        DestructProposal storage newDProposal = destructProposals.push();
-        newDProposal.approvalsCount = 0;
-        newDProposal.disapprovalsCount = 0;
-        newDProposal.status = ProposalStatus.ACTIVE;
-        newDProposal.limitTime= block.timestamp + 7 days;
-        newDProposal.author = msg.sender;
+        CloseProposal storage newCProposal = closeProposals.push();
+        newCProposal.approvalsCount = 0;
+        newCProposal.disapprovalsCount = 0;
+        newCProposal.status = ProposalStatus.ACTIVE;
+        newCProposal.limitTime= block.timestamp + 7 days;
+        newCProposal.author = msg.sender;
 
-        newDProposal.voters[msg.sender] = true;
-        newDProposal.approvalsCount++;
+        newCProposal.voters[msg.sender] = true;
+        newCProposal.approvalsCount++;
 
-        emit DestructProposalCreated(_ipfshash);
+        emit CloseProposalCreated(_ipfshash);
          
     }
 
-    /** @dev Allow only members to approve an active destruct proposal that they haven't voted before.
-     *  @param _index index of the destruct proposal the member wants to approve.
+    /** @dev Allow only members to approve an active close proposal that they haven't voted before.
+     *  @param _index index of the close proposal the member wants to approve.
      */
-    function aproveDestructProposal(uint _index) public membering statusActive destructProposalActive(_index) beInTimeDestructProposal(_index) {
+    function approveCloseProposal(uint _index) public membering statusActive closeProposalActive(_index) beInTimeCloseProposal(_index) {
 
-        DestructProposal storage dProposal = destructProposals[_index];
-        require(!dProposal.voters[msg.sender], "The destruct proposal has been already voted by the sender");
+        CloseProposal storage cProposal = closeProposals[_index];
+        require(!cProposal.voters[msg.sender], "The close proposal has been already voted by the sender");
 
-        dProposal.voters[msg.sender] = true;
-        dProposal.approvalsCount++;
+        cProposal.voters[msg.sender] = true;
+        cProposal.approvalsCount++;
 
-        emit DestructProposalVoted(_index);
+        emit CloseProposalVoted(_index);
         
     }
 
-    /** @dev Allow only members to disapprove an active destruct proposal that they haven't voted before.
-     *  @param _index index of the destruct proposal the member wants to disapprove.
+    /** @dev Allow only members to disapprove an active close proposal that they haven't voted before.
+     *  @param _index index of the close proposal the member wants to disapprove.
      */
-    function disapproveDestructProposal(uint _index) public membering statusActive destructProposalActive(_index) beInTimeDestructProposal(_index) {
+    function disapproveCloseProposal(uint _index) public membering statusActive closeProposalActive(_index) beInTimeCloseProposal(_index) {
 
-        DestructProposal storage dProposal = destructProposals[_index];
-        require(!dProposal.voters[msg.sender], "The destruct proposal has been already voted by the sender");
+        CloseProposal storage cProposal = closeProposals[_index];
+        require(!cProposal.voters[msg.sender], "The close proposal has been already voted by the sender");
 
-        dProposal.voters[msg.sender] = true;
-        dProposal.disapprovalsCount++;
+        cProposal.voters[msg.sender] = true;
+        cProposal.disapprovalsCount++;
 
-        emit DestructProposalVoted(_index);
+        emit CloseProposalVoted(_index);
         
     }
 
     /** @dev Allow only members to close an active proposal that already has its voting time over.
      *  @param _index index of the proposal the member wants to approve.
      */
-    function closeDestructProposal(uint _index) public membering statusActive destructProposalActive(_index) passedTimeDestructProposal(_index) {
+    function closeCloseProposal(uint _index) public membering statusActive closeProposalActive(_index) passedTimeCloseProposal(_index) {
 
-        DestructProposal storage dProposal = destructProposals[_index];
+        CloseProposal storage cProposal = closeProposals[_index];
 
-        if (dProposal.approvalsCount > dProposal.disapprovalsCount) {
-            if (dProposal.author == owner) {
+        if (cProposal.approvalsCount > cProposal.disapprovalsCount) {
+            if (cProposal.author == owner) {
                 status = CampaignStatus.SUCCESSFUL;
             } else {
                 status = CampaignStatus.FAIL;
             }
-            dProposal.status = ProposalStatus.APPROVED; 
+            cProposal.status = ProposalStatus.APPROVED; 
             remainingContributions = address(this).balance;
         }
         else {
-            dProposal.status = ProposalStatus.DISAPPROVED;
+            cProposal.status = ProposalStatus.DISAPPROVED;
         }
 
-        emit DestructProposalClosed(_index);
+        emit CloseProposalClosed(_index);
         emit ChangeStatusCampaign();
     }
 
@@ -474,28 +474,28 @@ contract CrowdfundingCampaign {
         return proposals.length;
     }
 
-    /** @dev Function to get the data of a destruct proposal.
+    /** @dev Function to get the data of a close proposal.
      *  @param _index index of the proposal to return
      */
-    function getDestructProposal(uint _index) public view returns (uint, uint, ProposalStatus, uint, bool, bool, address) {
-        DestructProposal storage dProposal = destructProposals[_index];
-        bool inTime = block.timestamp <= dProposal.limitTime;
-        bool senderHasVote = dProposal.voters[msg.sender];
-        return (dProposal.approvalsCount, dProposal.disapprovalsCount, dProposal.status, dProposal.limitTime, inTime, senderHasVote, dProposal.author);
+    function getCloseProposal(uint _index) public view returns (uint, uint, ProposalStatus, uint, bool, bool, address) {
+        CloseProposal storage cProposal = closeProposals[_index];
+        bool inTime = block.timestamp <= cProposal.limitTime;
+        bool senderHasVote = cProposal.voters[msg.sender];
+        return (cProposal.approvalsCount, cProposal.disapprovalsCount, cProposal.status, cProposal.limitTime, inTime, senderHasVote, cProposal.author);
     } 
 
-    /** @dev Function to know if a member has already vot a destruct proposal.
+    /** @dev Function to know if a member has already vot a close proposal.
      *  @param _index index of the proposal
      */
-    function hasVotedDestructProposal(uint _index) public view returns (bool) {
-        DestructProposal storage dProposal = destructProposals[_index];
-        return dProposal.voters[msg.sender];
+    function hasVotedCloseProposal(uint _index) public view returns (bool) {
+        CloseProposal storage cProposal = closeProposals[_index];
+        return cProposal.voters[msg.sender];
     } 
 
-    /** @dev Function to get the total number of destruct proposals.
+    /** @dev Function to get the total number of close proposals.
      */
-    function getDestructProposalsCount() public view returns (uint) {
-        return destructProposals.length;
+    function getCloseProposalsCount() public view returns (uint) {
+        return closeProposals.length;
     }
    
 }

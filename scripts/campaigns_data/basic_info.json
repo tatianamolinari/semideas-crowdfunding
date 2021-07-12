@@ -339,7 +339,7 @@
                     "closed": false
                 }
             ],
-            "destructPproposals": [
+            "closeProposals": [
                 {
                     "title": "El ether subio mucho",
                     "description": "Dada la suba increíble que ha tenido ether y por lo tanto todas las medidas de este sugiero que cerremos la campaña en este momento ya que el valor del monto que hemos donado originalmente ha sido superado con creces por valor actual que tiene. Podemos luego hacer otra campaña a favor del campito para conseguir más fondos y donar parte de lo que hemos recuperado.",
@@ -760,7 +760,7 @@
                     "closed": false
                 }
             ],
-            "destructPproposals": [
+            "closeProposals": [
                 {
                     "title": "El ether subio mucho",
                     "description": "Dada la suba increíble que ha tenido ether y por lo tanto todas las medidas de este sugiero que cerremos la campaña en este momento ya que el valor del monto que hemos donado originalmente ha sido superado con creces por valor actual que tiene. Podemos luego hacer otra campaña a favor del campito para conseguir más fondos y donar parte de lo que hemos recuperado.",
@@ -967,7 +967,7 @@
             },
             "progressUpdates": [],
             "proposals": [],
-            "destructPproposals": []
+            "closeProposals": []
         }
         
     ]

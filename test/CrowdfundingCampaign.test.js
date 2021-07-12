@@ -31,7 +31,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
-        expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaign.getCloseProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaign.membersCount()).to.eventually.be.a.bignumber.equal(new BN(0));
 
     });
@@ -257,7 +257,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(0));
     });
 
-    it("Before vote a destruct hasVotedProposal should be false", async() => {
+    it("Before vote a close hasVotedProposal should be false", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
@@ -289,7 +289,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
-    it("Before vote a destruct hasVotedProposal should be true", async() => {
+    it("Before vote a close hasVotedProposal should be true", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
@@ -522,36 +522,36 @@ contract("CrowdfundingCampaign Test", async accounts => {
         
     });
 
-    it("Only members should be able to create destruct proposals", async() => {
+    it("Only members should be able to create close proposals", async() => {
 
         const campaign = this.campaign;
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
-        expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
-        expect(campaign.createDestructProposal(proposalCreatedHash, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
-        expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaign.getCloseProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaign.createCloseProposal(proposalCreatedHash, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
+        expect(campaign.getCloseProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
     });
 
-    it("Member creates a destruct proposal", async() => {
+    it("Member creates a close proposal", async() => {
         const campaign = this.campaign;
         
         const lastTimeBlock = await time.latest();
         const limitDateExpected = new Date(lastTimeBlock.toNumber() * 1000);
         limitDateExpected.setDate(limitDateExpected.getDate() + 7);
 
-        expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaign.getCloseProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
 
-        const tx = await campaign.createDestructProposal(proposalCreatedHash, { from: authorAddress });
+        const tx = await campaign.createCloseProposal(proposalCreatedHash, { from: authorAddress });
         const { logs } = tx;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)
 
         const log = logs[0];
-        expect(log.event).to.equal('DestructProposalCreated');
+        expect(log.event).to.equal('CloseProposalCreated');
         expect(log.args._ipfshash).to.equal(proposalCreatedHash);
 
-        expect(campaign.getDestructProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
-        const result = await campaign.getDestructProposal(0);
+        expect(campaign.getCloseProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
+        const result = await campaign.getCloseProposal(0);
 
         const approvalsCount = result['0'];
         const disapprovalsCount = result['1'];
@@ -569,146 +569,146 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(diffMinutes).to.be.greaterThan(0);
     });
 
-    it("Only members can vote a destruct proposal", async() => {
+    it("Only members can vote a close proposal", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
-        const result = await campaign.getDestructProposal(i_proposal);
+        const result = await campaign.getCloseProposal(i_proposal);
         const approvalsCount = result['0'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
-        expect(campaign.aproveDestructProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
+        expect(campaign.approveCloseProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
 
-        const afterResult = await campaign.getDestructProposal(i_proposal);
+        const afterResult = await campaign.getCloseProposal(i_proposal);
         const afterApprovalsCount = afterResult['0'];
         expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
-    it("Before vote a destruct hasVotedDestructProposal should be false", async() => {
+    it("Before vote a close hasVotedCloseProposal should be false", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
-        expect(campaign.hasVotedDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.false;
+        expect(campaign.hasVotedCloseProposal(i_proposal, { from: memberAccount })).to.eventually.be.false;
     });
 
-    it("Members vote a destruct proposal", async() => {
+    it("Members vote a close proposal", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
-        const result = await campaign.getDestructProposal(i_proposal);
+        const result = await campaign.getCloseProposal(i_proposal);
         const approvalsCount = result['0'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
-        await campaign.aproveDestructProposal(i_proposal, { from: memberAccount });
+        await campaign.approveCloseProposal(i_proposal, { from: memberAccount });
 
-        const afterResult = await campaign.getDestructProposal(i_proposal);
+        const afterResult = await campaign.getCloseProposal(i_proposal);
         const afterApprovalsCount = afterResult['0'];
         expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(2));
     });
 
-    it("After vote a destruct hasVotedDestructProposal should be true", async() => {
+    it("After vote a close hasVotedCloseProposal should be true", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
-        expect(campaign.hasVotedDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.true;
+        expect(campaign.hasVotedCloseProposal(i_proposal, { from: memberAccount })).to.eventually.be.true;
     });
 
-    it("Member can not approve a destruct proposal twice", async() => {
+    it("Member can not approve a close proposal twice", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
-        const result = await campaign.getDestructProposal(i_proposal);
+        const result = await campaign.getCloseProposal(i_proposal);
         const approvalsCount = result['0'];
         expect(approvalsCount).to.be.a.bignumber.equal(new BN(2));
 
-        expect(campaign.aproveDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The destruct proposal has been already voted by the sender");;
+        expect(campaign.approveCloseProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The close proposal has been already voted by the sender");;
 
-        const afterResult = await campaign.getDestructProposal(i_proposal);
+        const afterResult = await campaign.getCloseProposal(i_proposal);
         const afterApprovalsCount = afterResult['0'];
         expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(2));
     });
 
-    it("Only members can disapprove a destruct proposal", async() => {
+    it("Only members can disapprove a close proposal", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
-        const result = await campaign.getDestructProposal(i_proposal);
+        const result = await campaign.getCloseProposal(i_proposal);
         const disapprovalsCount = result['1'];
         expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
-        expect(campaign.disapproveDestructProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
+        expect(campaign.disapproveCloseProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
 
-        const afterResult = await campaign.getDestructProposal(i_proposal);
+        const afterResult = await campaign.getCloseProposal(i_proposal);
         const afterDisapprovalsCount = afterResult['1'];
         expect(afterDisapprovalsCount).to.be.a.bignumber.equal(new BN(0));
     });
 
-    it("Members can disapprove a destruct proposal", async() => {
+    it("Members can disapprove a close proposal", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
-        const result = await campaign.getDestructProposal(i_proposal);
+        const result = await campaign.getCloseProposal(i_proposal);
         const disapprovalsCount = result['1'];
         expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
-        await campaign.disapproveDestructProposal(i_proposal, { from: anotherMemberAccount });
+        await campaign.disapproveCloseProposal(i_proposal, { from: anotherMemberAccount });
 
-        const afterResult = await campaign.getDestructProposal(i_proposal);
+        const afterResult = await campaign.getCloseProposal(i_proposal);
         const afterDisapprovalsCount = afterResult['1'];
         expect(afterDisapprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
-    it("Member can not disapprove a destruct proposal twice", async() => {
+    it("Member can not disapprove a close proposal twice", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
-        const result = await campaign.getDestructProposal(i_proposal);
+        const result = await campaign.getCloseProposal(i_proposal);
         const disapprovalsCount = result['1'];
         expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(1));
 
-        expect(campaign.disapproveDestructProposal(i_proposal, { from: anotherMemberAccount })).to.eventually.be.rejectedWith("The destruct proposal has been already voted by the sender");
+        expect(campaign.disapproveCloseProposal(i_proposal, { from: anotherMemberAccount })).to.eventually.be.rejectedWith("The close proposal has been already voted by the sender");
 
-        const afterResult = await campaign.getDestructProposal(i_proposal);
+        const afterResult = await campaign.getCloseProposal(i_proposal);
         const afterDisapprovalsCount = afterResult['1'];
         expect(afterDisapprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
-    it("Only members can close a destruct proposal", async() => {
+    it("Only members can close a close proposal", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
-        expect(campaign.closeDestructProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
+        expect(campaign.closeCloseProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
     });
 
-    it("Members can not close a destruct proposal until vote time is finish", async() => {
+    it("Members can not close a close proposal until vote time is finish", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
-        expect(campaign.closeDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The destruct proposal is still open for voting");
+        expect(campaign.closeCloseProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The close proposal is still open for voting");
     });
 
-    it("Members can close a destruct proposal after vote time is finish", async() => {
+    it("Members can close a close proposal after vote time is finish", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
-        const result = await campaign.getDestructProposal(i_proposal);
+        const result = await campaign.getCloseProposal(i_proposal);
         const status = result['2'];
         expect(status).to.be.a.a.bignumber.equal(new BN(0));
 
@@ -716,61 +716,61 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
 
-        const tx = await campaign.closeDestructProposal(i_proposal, { from: memberAccount });
+        const tx = await campaign.closeCloseProposal(i_proposal, { from: memberAccount });
         const { logs } = tx;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 2)
 
-        expect(logs[0].event).to.equal('DestructProposalClosed');
+        expect(logs[0].event).to.equal('CloseProposalClosed');
         expect(logs[1].event).to.equal('ChangeStatusCampaign');
 
-        const afterResult = await campaign.getDestructProposal(i_proposal);
+        const afterResult = await campaign.getCloseProposal(i_proposal);
 
         const afterStatus = afterResult['2'];
         expect(afterStatus).to.be.a.a.bignumber.not.equal(new BN(0));
         
     });
 
-    it("When a destruct proposal has more approvals than disapprovals votes the result at close should be status APPROVED", async() => {
+    it("When a close proposal has more approvals than disapprovals votes the result at close should be status APPROVED", async() => {
 
         const campaign = this.campaign;
         const i_proposal = 0
 
-        const afterResult = await campaign.getDestructProposal(i_proposal);
+        const afterResult = await campaign.getCloseProposal(i_proposal);
         const afterStatus = afterResult['2'];
         expect(afterStatus).to.be.a.a.bignumber.equal(new BN(1));
     });
 
-    it("When a destruct proposal has more disapprovals than approvals votes the result at close should be status DISAPPROVED", async() => {
+    it("When a close proposal has more disapprovals than approvals votes the result at close should be status DISAPPROVED", async() => {
 
         const campaign = this.campaignToClose;
-        await campaign.createDestructProposal(proposalCreatedHash, { from: memberAccount })
+        await campaign.createCloseProposal(proposalCreatedHash, { from: memberAccount })
         
         const i_proposal = 0
-        await campaign.disapproveDestructProposal(i_proposal, { from: anotherMemberAccount });
-        await campaign.disapproveDestructProposal(i_proposal, { from: otherMemberAccount });
+        await campaign.disapproveCloseProposal(i_proposal, { from: anotherMemberAccount });
+        await campaign.disapproveCloseProposal(i_proposal, { from: otherMemberAccount });
 
         await time.increase(604800);
         
-        await campaign.closeDestructProposal(i_proposal, { from: memberAccount });
-        const afterResult = await campaign.getDestructProposal(i_proposal);
+        await campaign.closeCloseProposal(i_proposal, { from: memberAccount });
+        const afterResult = await campaign.getCloseProposal(i_proposal);
 
         const afterStatus = afterResult['2'];
         expect(afterStatus).to.be.a.a.bignumber.equal(new BN(2));
     });
 
-    it("When a destruct proposal has equal approvals and disapprovals votes the result at close should be status DISAPPROVED", async() => {
+    it("When a close proposal has equal approvals and disapprovals votes the result at close should be status DISAPPROVED", async() => {
 
         const campaign = this.campaignToClose;
-        await campaign.createDestructProposal(proposalCreatedHash, { from: memberAccount })
+        await campaign.createCloseProposal(proposalCreatedHash, { from: memberAccount })
         
         const i_proposal = 0
-        await campaign.disapproveDestructProposal(i_proposal, { from: anotherMemberAccount });
+        await campaign.disapproveCloseProposal(i_proposal, { from: anotherMemberAccount });
 
         await time.increase(604800);
         
-        await campaign.closeDestructProposal(i_proposal, { from: memberAccount });
-        const afterResult = await campaign.getDestructProposal(i_proposal);
+        await campaign.closeCloseProposal(i_proposal, { from: memberAccount });
+        const afterResult = await campaign.getCloseProposal(i_proposal);
 
         const afterStatus = afterResult['2'];
         expect(afterStatus).to.be.a.a.bignumber.equal(new BN(2));
@@ -781,11 +781,11 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const campaign = this.campaign;
         const i_proposal = 0
 
-        const result = await campaign.getDestructProposal(i_proposal);
+        const result = await campaign.getCloseProposal(i_proposal);
         const status = result['2'];
         expect(status).to.be.a.a.bignumber.equal(new BN(1));
 
-        expect(campaign.aproveDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejected;
+        expect(campaign.approveCloseProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejected;
     });
 
     it("Members can not close a proposal after it is closed", async() => {
@@ -793,30 +793,30 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const campaign = this.campaign;
         const i_proposal = 0
 
-        const result = await campaign.getDestructProposal(i_proposal);
+        const result = await campaign.getCloseProposal(i_proposal);
         const status = result['2'];
         expect(status).to.be.a.a.bignumber.equal(new BN(1));
 
-        expect(campaign.closeDestructProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejected;
+        expect(campaign.closeCloseProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejected;
         
     });
 
-    it("When a destruct proposal close as APPROVED and the author is the owner the campaign should have status SUCESSFULL", async() => {
+    it("When a close proposal close as APPROVED and the author is the owner the campaign should have status SUCESSFULL", async() => {
 
         const campaign = this.campaign;
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(3));
     });
 
-    it("When a destruct proposal close as APPROVED and the author is a member the campign should have status FAIL", async() => {
+    it("When a close proposal close as APPROVED and the author is a member the campign should have status FAIL", async() => {
 
         const campaign = this.campaignToClose;
-        await campaign.createDestructProposal(proposalCreatedHash, { from: memberAccount })
+        await campaign.createCloseProposal(proposalCreatedHash, { from: memberAccount })
         
         const i_proposal = 0
 
         await time.increase(604800);
         
-        await campaign.closeDestructProposal(i_proposal, { from: memberAccount });
+        await campaign.closeCloseProposal(i_proposal, { from: memberAccount });
 
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(2));
     });

@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, Icon } from 'semantic-ui-react'
 
-class CardDestructProposal extends React.Component {
+class CardCloseProposal extends React.Component {
 
     render() {
    
@@ -19,5 +19,5 @@ class CardDestructProposal extends React.Component {
     }
   }
   
-  export default CardDestructProposal;
+  export default CardCloseProposal;
 

@@ -3,7 +3,7 @@ import { Badge } from "react-bootstrap";
 import { Label }  from 'semantic-ui-react';
 import { fromStatusToBadgeClass, fromIntToStatusProposal } from "../../helpers/utils.js";
 
-class DestructProposalDetail extends React.Component {
+class CloseProposalDetail extends React.Component {
 
   state = {
     dproposal_data: {},
@@ -72,4 +72,4 @@ class DestructProposalDetail extends React.Component {
   }
 }
 
-export default DestructProposalDetail;
+export default CloseProposalDetail;

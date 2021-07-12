@@ -57,7 +57,7 @@ contract("CrowdfundingCampaignDemo Test", async accounts => {
         
     });
 
-    it("When change limit time destruct roposal the limit time should be 7 days earlier", async() => {
+    it("When change limit time close roposal the limit time should be 7 days earlier", async() => {
 
         const campaign = this.campaign;
 
@@ -68,20 +68,20 @@ contract("CrowdfundingCampaignDemo Test", async accounts => {
         
         const limitDateExpectedAfter = new Date(lastTimeBlock.toNumber() * 1000);
 
-        await campaign.createDestructProposal(proposalCreatedHash, { from: memberAccount });
+        await campaign.createCloseProposal(proposalCreatedHash, { from: memberAccount });
         
         const i_proposal = 0
 
-        const result = await campaign.getDestructProposal(i_proposal);
+        const result = await campaign.getCloseProposal(i_proposal);
         const limitTimestamp = result['3'];
         
         const limitDate = new Date(limitTimestamp.toNumber() * 1000);
         const diffTime = Math.abs(limitDate - limitDateExpected);
         const diffMinutes = diffTime / (1000*60); 
 
-        await campaign.changeLimitDestructProposal(i_proposal);
+        await campaign.changeLimitCloseProposal(i_proposal);
 
-        const resultAfter = await campaign.getDestructProposal(i_proposal);
+        const resultAfter = await campaign.getCloseProposal(i_proposal);
         const limitTimestampAfter = resultAfter['3'];
         
         const limitDateAfter = new Date(limitTimestampAfter.toNumber() * 1000);

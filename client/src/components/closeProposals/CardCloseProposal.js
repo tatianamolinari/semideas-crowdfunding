@@ -9,7 +9,7 @@ class CardCloseProposal extends React.Component {
       return (  <div className="proposal-item-list">
                     <Card>
                         <Card.Content header={this.props.title} data-testid="title"/>
-                        <Card.Content description={this.props.description.substring(0,250)+"..."} data-testid="description"/>
+                        <Card.Content description={this.props.description.substring(0,150)+"..."} data-testid="description"/>
                         <Card.Content extra>
                           <Icon name='calendar alternate outline' />
                           <span data-testid="dproposal_date">{this.props.dproposal_date}></span>

@@ -99,7 +99,7 @@ class ClosePorposalModal extends React.Component {
       
         <Button
         loading={this.state.createCPLoading}
-        className="normal-button"
+        className="normal-button no-margin"
         onClick={this.handleShow}
         data-testid="closeProposalButton">
               Crear pedido

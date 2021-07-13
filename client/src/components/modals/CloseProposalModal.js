@@ -4,6 +4,9 @@ import { Button } from "semantic-ui-react";
 import MessageModal from "../modals/MessageModal"
 
 import { campaignService } from "../../services/campaignService.js"
+import { ipfsService } from "../../services/ipfsService.js"
+
+import { addressToHexBytes } from "../../helpers/utils.js"
 
 
 class ClosePorposalModal extends React.Component {
@@ -17,7 +20,7 @@ class ClosePorposalModal extends React.Component {
     createCPLoading: this.props.createCPLoading
   };
 
-  contribuir = async() =>  {
+  create = async() =>  {
     if (true){
       try {
         const accounts = await campaignService.getAccounts();
@@ -33,7 +36,17 @@ class ClosePorposalModal extends React.Component {
           this.setState({ createCPLoading: true});
           this.handleClose();
 
-          campaignService.contribute(this.state.value).then((statusResponse) => {
+          const json_value =  {
+            "title": this.state.cpTitle, 
+            "description": this.state.cpDescription ,
+            "created_date": "20/01/01"
+          }
+
+          const ipfsHash = await ipfsService.addJson(json_value)
+          console.log(ipfsService.getIPFSUrlFromPath(ipfsHash));
+          const bytes32Hash = "0x" + addressToHexBytes(ipfsHash);
+
+          campaignService.createCloseProposal(bytes32Hash).then((statusResponse) => {
             let title, message = "";
 
             if (statusResponse.error) {
@@ -54,8 +67,8 @@ class ClosePorposalModal extends React.Component {
               }
             }
             else {
-              title = "Bienvenido al proyecto";
-              message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
+              title = "Creación exitosa";
+              message = "¡Tu pedido de cierre fue creado correctamente!\n ¡Gracias por involucrarte con la campaña!"; 
             }
 
             this.setState({ createCPLoading: false, 
@@ -99,7 +112,7 @@ class ClosePorposalModal extends React.Component {
       
         <Button
         loading={this.state.createCPLoading}
-        className="normal-button no-margin"
+        className="normal-button no-margin-top"
         onClick={this.handleShow}
         data-testid="closeProposalButton">
               Crear pedido
@@ -123,7 +136,7 @@ class ClosePorposalModal extends React.Component {
                   </Form.Group>
                   <Form.Group controlId="contributeBasicForm">
                       <Form.Label>Descripción</Form.Label>
-                      <Form.Control placeholder="Razón para cerrar la campaña" onChange={event => this.setState({ cpDescription: event.target.value})}/>
+                      <Form.Control as="textarea" rows={5} placeholder="Razón para cerrar la campaña" onChange={event => this.setState({ cpDescription: event.target.value})}/>
                       <Form.Text className="text-muted">
                       *.
                       </Form.Text>
@@ -143,7 +156,7 @@ class ClosePorposalModal extends React.Component {
               <Col lg={6} className="aling-right">
                   <button
                       className="normal-button" 
-                      onClick={this.contribuir}
+                      onClick={this.create}
                       data-testid="createCloseProposalButton">
                       Crear
                   </button>

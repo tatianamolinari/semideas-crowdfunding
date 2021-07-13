@@ -17,7 +17,7 @@ class IPFSService {
 
     async addJson(json_value){
         const res = await this.ipfs_client.add(JSON.stringify(json_value));
-        return res;
+        return res.path;
     }
 
     getIPFSUrlFromPath(path){

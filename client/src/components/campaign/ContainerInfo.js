@@ -153,7 +153,7 @@ class ContainerInfo extends React.Component {
                               }}
                               idName="close_proposals"
                               classLi="menu_user_li"
-                              textButton="Pedidos de baja"
+                              textButton="Pedidos de cierre"
                             />
 
                           </ul>

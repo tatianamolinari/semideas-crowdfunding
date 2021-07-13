@@ -262,6 +262,10 @@ hr {
     margin-bottom :2em !important;
 }
 
+.show-list-close-proposals .normal-button.no-margin-top {
+    margin-top :0 !important;
+}
+
 .normal-button:hover {
     background: #1a95ac !important;
     text-decoration: none !important;

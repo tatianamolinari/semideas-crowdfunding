@@ -6,6 +6,7 @@ import { Icon, Pagination, Button, Label }  from 'semantic-ui-react'
 import CardCloseProposal from "./CardCloseProposal.js";
 import CloseProposalDetail from "./CloseProposalDetail.js";
 import MessageModal from "../modals/MessageModal"
+import CloseProposalModal from "../modals/CloseProposalModal"
 
 import { campaignService } from "../../services/campaignService.js"
 import { ipfsService } from "../../services/ipfsService.js"
@@ -266,6 +267,9 @@ class DisplayCloseProposals extends React.Component {
                 
                 { this.state.active==="cproposals_list" && dproposal_nodes.length>0 && 
                 <div>
+                  <CloseProposalModal 
+                    createCPLoading={false}/>
+
                   <Row  id="cproposals_list">
                   {dproposal_nodes}                
                   </Row> 

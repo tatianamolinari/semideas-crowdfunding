@@ -37,7 +37,7 @@ class DisplayContent extends React.Component {
 
   actualizeBalanceInfo = async () => {
     const balance = await campaignService.getBalance();
-    const progress = this.getProgress();
+    const progress = this.getProgress(this.props.data.goal,balance);
       
       this.setState({ balance: balance, 
                       progress: progress });
@@ -52,7 +52,7 @@ class DisplayContent extends React.Component {
 
       this.actualizeRol(this.state.isOwner, isMember);
 
-      const progress = this.getProgress();
+      const progress = this.getProgress(this.props.data.goal,balance);
       
       this.setState({ isMember: isMember, 
                       balance: balance, 
@@ -153,7 +153,14 @@ class DisplayContent extends React.Component {
 
   componentDidMount = async() => {
 
-    const progress = this.getProgress();
+    let progress;
+    const balance = await campaignService.getBalance();
+    if (this.state.status != 'Creada') { 
+      progress = this.getProgress(this.props.data.finalContributions,balance); 
+
+    } else {
+      progress = this.getProgress(this.props.data.goal, balance);
+    }
     const badge_status = fromStatusToBadgeClass(this.state.status);
     
     this.setState({ badge_status: badge_status });
@@ -169,9 +176,9 @@ class DisplayContent extends React.Component {
     await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
   }
 
-  getProgress() {
+  getProgress(total,portion) {
 
-    const progress = (((parseInt(this.state.balance)/parseInt(this.props.data.goal)))* 100).toFixed(2);
+    const progress = (((parseInt(portion)/parseInt(total)))* 100).toFixed(2);
     return Math.min(progress,100);
   }
 
@@ -225,8 +232,11 @@ class DisplayContent extends React.Component {
                 <hr/>
                 
                 <h5> Contribuciones </h5>
-                <div> Para que esta campaña comience se deben recaudar <Label color="green"> <span data-testid="goal">{ this.props.data.goal }</span> wei </Label> o más. </div>
-                <div> La contribución mínima es de <Label color="teal"><span data-testid="minimunContribution">{ this.props.data.minimunContribution }</span> wei</Label></div> 
+                { this.state.status==="Creada" ?
+                  <div> Para que esta campaña comience se deben recaudar <Label color="green"> <span data-testid="goal">{ this.props.data.goal }</span> wei </Label> o más. </div> :
+                  <div> Para poder comenzar esta campaña debía recaudar al menos <Label color="green"> <span data-testid="goal">{ this.props.data.goal }</span> wei </Label> y recaudó <Label color="green"> <span data-testid="finalContributions">{ this.props.data.finalContributions }</span> wei </Label> . </div>
+                }
+                <div> La contribución mínima { this.state.status==="Creada" ? "es" : "fue" } de <Label color="teal"><span data-testid="minimunContribution">{ this.props.data.minimunContribution }</span> wei</Label></div> 
                 <div className="progress-container">
                   { this.state.status==="Creada" ?
                     <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei contribuidos`} /> :

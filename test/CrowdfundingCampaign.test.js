@@ -13,12 +13,11 @@ contract("CrowdfundingCampaign Test", async accounts => {
     const progressUpdateHash =  "0x2465737400000000000000000000000000000000000000000000000000000000";
 
     beforeEach(async() => {
-        this.campaign = await CrowdfundingCampaign.deployed();
         this.campaignToClose = await CrowdfundingCampaign.new(5, 300, ipfs_hash);
         await this.campaignToClose.contribute({ from: memberAccount, value: web3.utils.toWei("130", "wei") });
         await this.campaignToClose.contribute({ from: anotherMemberAccount, value: web3.utils.toWei("130", "wei") });
         await this.campaignToClose.contribute({ from: otherMemberAccount, value: web3.utils.toWei("170", "wei") });
-        await this.campaignToClose.setActive({ from: authorAddress });
+        this.campaign = await CrowdfundingCampaign.deployed();
     })
 
     it("Checking CrowdFunding Campaign values from scratch", async() => {
@@ -47,6 +46,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const membersCount = campaingInfo['4'];
         const finalContributions = campaingInfo['5'];
         const remainingContributions = campaingInfo['6'];
+        const out_grace_period = campaingInfo['7'];
 
         expect(owner).to.be.equal(authorAddress);
         expect(status).to.be.a.bignumber.equal(new BN(0));
@@ -55,6 +55,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(membersCount).to.be.a.bignumber.equal(new BN(0));
         expect(finalContributions).to.be.a.bignumber.equal(new BN(0));
         expect(remainingContributions).to.be.a.bignumber.equal(new BN(0));
+        expect(out_grace_period).to.be.a.false;
     });
 
     it("The owner should not be able to be an inversor", async() => {
@@ -135,6 +136,15 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(campaign.createProposal(3, memberAccount, proposalCreatedHash)).to.eventually.be.rejectedWith("The campaign status is not active.");;
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
     });
+
+    it("Cant create a closeProposal before the grace period of 14 days", async() => {
+
+        const campaign = this.campaign;
+
+        expect(campaign.isMember(memberAccount)).to.eventually.be.true;
+        expect(campaign.createCloseProposal(proposalCreatedHash, { from: memberAccount })).to.eventually.be.rejectedWith("The campaing created must have 14 days old.");
+   
+    });  
 
     it("Only owner set campaign active", async() => {
 
@@ -740,9 +750,11 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const afterStatus = afterResult['2'];
         expect(afterStatus).to.be.a.a.bignumber.equal(new BN(1));
     });
+    
 
     it("When a close proposal has more disapprovals than approvals votes the result at close should be status DISAPPROVED", async() => {
 
+        await time.increase(1209600);
         const campaign = this.campaignToClose;
         await campaign.createCloseProposal(proposalCreatedHash, { from: memberAccount })
         
@@ -761,6 +773,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
     it("When a close proposal has equal approvals and disapprovals votes the result at close should be status DISAPPROVED", async() => {
 
+        await time.increase(1209600);
         const campaign = this.campaignToClose;
         await campaign.createCloseProposal(proposalCreatedHash, { from: memberAccount })
         
@@ -809,6 +822,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
     it("When a close proposal close as APPROVED and the author is a member the campign should have status FAIL", async() => {
 
+        await time.increase(1209600);
         const campaign = this.campaignToClose;
         await campaign.createCloseProposal(proposalCreatedHash, { from: memberAccount })
         

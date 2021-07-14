@@ -85,6 +85,13 @@ async function createCampaigns(jsonInfo){
 
         campaignsData["campaigns"].push(campaingInfo);
         campaigns.push(campaign);
+
+        if (campaignInfo["out_grace_period"])
+        {
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.changeCreatedAt.estimateGas();      
+            await campaign.changeCreatedAt.sendTransaction({ gasPrice: gasprice, gas: gas }) ; 
+        }
     }
 
 

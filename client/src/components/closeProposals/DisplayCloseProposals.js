@@ -273,7 +273,7 @@ class DisplayCloseProposals extends React.Component {
                 
                 { this.state.active==="cproposals_list" && dproposal_nodes.length>0 && 
                 <div className="show-list-close-proposals">
-                  { (this.props.isMember || this.props.isOwner) &&
+                  { (this.props.isMember || this.props.isOwner) && this.props.out_grace_period &&
                     <CloseProposalModal 
                     createCPLoading={false}/>
                   }
@@ -294,7 +294,7 @@ class DisplayCloseProposals extends React.Component {
                     <h1> Aún no hay pedidos de cierre para mostrar. </h1>
                     <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
                 
-                    { (this.props.isMember || this.props.isOwner) &&
+                    { (this.props.isMember || this.props.isOwner) && this.props.out_grace_period &&
                       <CloseProposalModal 
                       createCPLoading={false}/>
                     }

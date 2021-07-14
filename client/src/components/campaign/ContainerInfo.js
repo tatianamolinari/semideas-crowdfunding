@@ -73,6 +73,9 @@ class ContainerInfo extends React.Component {
         const actualAccount = await campaignService.getFirstAccount();
         const isOwner = actualAccount===campaignInfo.owner;
 
+        console.log(campaignInfo)
+
+
         this.setState({
           loaded: true,
           instance: instance,
@@ -83,7 +86,10 @@ class ContainerInfo extends React.Component {
           goal: campaignInfo.goal,
           minimunContribution: campaignInfo.minimunContribution,
           membersCount: campaignInfo.membersCount,
+          finalContributions: campaignInfo.finalContributions,
+          remainingContributions: campaignInfo.remainingContributions,
           isOwner: isOwner,
+          out_grace_period: ((campaignInfo.out_grace_period && campaignInfo.status=='0') || campaignInfo.status=='1'),
           ipfsData: ipfsData
         });
       }
@@ -172,6 +178,8 @@ class ContainerInfo extends React.Component {
                             membersCount: this.state.membersCount,
                             isMember: this.state.isMember,
                             balance: this.state.balance,
+                            remainingContributions: this.state.remainingContributions,
+                            finalContributions: this.state.finalContributions,
                             isOwner: this.state.isOwner
                           }}/>
 
@@ -190,6 +198,7 @@ class ContainerInfo extends React.Component {
                           instance={this.state.instance}
                           isMember={this.state.isMember}
                           isOwner={this.state.isOwner}
+                          out_grace_period={this.state.out_grace_period}
                           active="cproposals_list"/>
                           
                         </Col>

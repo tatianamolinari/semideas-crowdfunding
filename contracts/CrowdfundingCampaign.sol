@@ -47,6 +47,7 @@ contract CrowdfundingCampaign {
     uint public membersCount;
     uint public finalContributions;
     uint public remainingContributions;
+    uint public created_at;
     
     mapping(address => uint) public contributions;
     mapping(address => bool) public withdraws;
@@ -66,6 +67,7 @@ contract CrowdfundingCampaign {
         minimunContribution = _minimunContribution;
         status = CampaignStatus.CREATED;
         membersCount = 0;
+        created_at = block.timestamp;
 
         emit CampaignCreated(_ipfshash);
     }
@@ -130,6 +132,11 @@ contract CrowdfundingCampaign {
         require ( block.timestamp > proposals[_index].limitTime, 
             "The proposal is still open for voting." ); 
         _; 
+    }
+    modifier statusNotClosed() {
+        require( status == CampaignStatus.ACTIVE || status == CampaignStatus.CREATED,
+            "The campaign status is CLOSED." );
+        _;
     }
 
     modifier closeProposalActive(uint _index) {
@@ -330,7 +337,11 @@ contract CrowdfundingCampaign {
     /** @dev Allow only members to create a new proposal to finish de proyect and get the founds back.
      *  @param _ipfshash url hash of the close proposal data (description) previusly stored in IPFS.
      */
-    function createCloseProposal(bytes32 _ipfshash) public membering statusActive {
+    function createCloseProposal(bytes32 _ipfshash) public membering statusNotClosed {
+
+        bool out_grace_period = ((created_at + 14 days) <= block.timestamp) && status == CampaignStatus.CREATED;
+        require( out_grace_period || status == CampaignStatus.ACTIVE,
+            "The campaing created must have 14 days old." );
 
         CloseProposal storage newCProposal = closeProposals.push();
         newCProposal.approvalsCount = 0;
@@ -349,7 +360,7 @@ contract CrowdfundingCampaign {
     /** @dev Allow only members to approve an active close proposal that they haven't voted before.
      *  @param _index index of the close proposal the member wants to approve.
      */
-    function approveCloseProposal(uint _index) public membering statusActive closeProposalActive(_index) beInTimeCloseProposal(_index) {
+    function approveCloseProposal(uint _index) public membering statusNotClosed closeProposalActive(_index) beInTimeCloseProposal(_index) {
 
         CloseProposal storage cProposal = closeProposals[_index];
         require(!cProposal.voters[msg.sender], "The close proposal has been already voted by the sender");
@@ -364,7 +375,7 @@ contract CrowdfundingCampaign {
     /** @dev Allow only members to disapprove an active close proposal that they haven't voted before.
      *  @param _index index of the close proposal the member wants to disapprove.
      */
-    function disapproveCloseProposal(uint _index) public membering statusActive closeProposalActive(_index) beInTimeCloseProposal(_index) {
+    function disapproveCloseProposal(uint _index) public membering statusNotClosed closeProposalActive(_index) beInTimeCloseProposal(_index) {
 
         CloseProposal storage cProposal = closeProposals[_index];
         require(!cProposal.voters[msg.sender], "The close proposal has been already voted by the sender");
@@ -379,7 +390,7 @@ contract CrowdfundingCampaign {
     /** @dev Allow only members to close an active proposal that already has its voting time over.
      *  @param _index index of the proposal the member wants to approve.
      */
-    function closeCloseProposal(uint _index) public membering statusActive closeProposalActive(_index) passedTimeCloseProposal(_index) {
+    function closeCloseProposal(uint _index) public membering statusNotClosed closeProposalActive(_index) passedTimeCloseProposal(_index) {
 
         CloseProposal storage cProposal = closeProposals[_index];
 
@@ -446,8 +457,9 @@ contract CrowdfundingCampaign {
 
     /** @dev Function to get the data of the campaign
      */
-    function getCampaignInfo() public view returns (address, CampaignStatus, uint, uint, uint, uint, uint) {
-        return (owner, status, goal, minimunContribution, membersCount, finalContributions, remainingContributions);
+    function getCampaignInfo() public view returns (address, CampaignStatus, uint, uint, uint, uint, uint, bool) {
+        bool out_grace_period = (created_at + 14 days) <= block.timestamp;
+        return (owner, status, goal, minimunContribution, membersCount, finalContributions, remainingContributions, out_grace_period);
     } 
 
     /** @dev Function to get the data of a proposal.

@@ -67,6 +67,7 @@ class CampaignService {
     campaignData.membersCount = campaignInfo[4];
     campaignData.finalContributions = campaignInfo[5];
     campaignData.remainingContributions = campaignInfo[6];
+    campaignData.out_grace_period = campaignInfo[7];
 
     return campaignData;
   }
@@ -141,8 +142,6 @@ async getProgressUpdates() {
   const block = await this.web3.eth.getBlockNumber();
   const opts = { fromBlock: block - 500, toBlock: block }
   const events = await this.instance.getPastEvents('ProgressUpdate', opts);
-  console.log(events);
-  console.log("--------------------------------------------")
   return events;
 }
 
@@ -344,8 +343,8 @@ async getCloseProposals() {
     }
     else if (receipt && (receipt.cumulativeGasUsed === receipt.gasUsed)) {
       statusResponse.errorMsg = "Gas insuficiente";
-      console.log(receipt.cumulativeGasUsed);
-      console.log(receipt.gasUsed);
+      //console.log(receipt.cumulativeGasUsed);
+      //console.log(receipt.gasUsed);
     }
     else {
       statusResponse.errorMsg = "Error desconocido"

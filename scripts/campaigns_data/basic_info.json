@@ -8,6 +8,7 @@
             "minimunContribution": 20,
             "goal": 5000,
             "contributions": [],
+            "out_grace_period": false,
             "active": { 
                 "status": false
             }
@@ -19,6 +20,7 @@
             "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
             "minimunContribution": 20,
             "goal": 5000,
+            "out_grace_period": true,
             "contributions": [
                 { 
                     "accountIndex": 1,
@@ -60,6 +62,7 @@
             "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
             "minimunContribution": 20,
             "goal": 5000,
+            "out_grace_period": false,
             "contributions": [
                 { 
                     "accountIndex": 1,
@@ -481,6 +484,7 @@
             "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
             "minimunContribution": 20,
             "goal": 5000,
+            "out_grace_period": false,
             "contributions": [
                 { 
                     "accountIndex": 1,
@@ -932,6 +936,7 @@
             "imagesPath": ["./scripts/images/choose1.jpg", "./scripts/images/choose2.jpg", "./scripts/images/choose3.jpg"],
             "minimunContribution": 100,
             "goal": 10300,
+            "out_grace_period": false,
             "contributions": [
                 { 
                     "accountIndex": 1,

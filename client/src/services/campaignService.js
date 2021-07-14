@@ -239,6 +239,24 @@ async getCloseProposals() {
       });
   }
 
+  async suscribeToCreateCloseProposal(actualizeFunction){
+
+    const currentBlock = await this.getCurrentBlock();
+
+    this.instance.events.CloseProposalCreated({
+      fromBlock: currentBlock
+      }, function(error, event){ console.log(event); })
+      .on("connected", function(subscriptionId){
+      })
+      .on('data', function(event){
+          actualizeFunction();
+      })
+      .on('error', function(error, receipt) {
+        console.log("hubo un error");
+        console.log(error);
+      });
+  }
+
   async suscribeToVoteCloseProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();

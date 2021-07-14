@@ -211,23 +211,29 @@ class DisplayCloseProposals extends React.Component {
 
   }
 
+  async getListCProposals(page) {
+
+    const pastCProposals = await campaignService.getCloseProposals();
+    this.setState({ 
+                    pastCProposals : pastCProposals.map(pu =>  pu.returnValues[0]), 
+                    totalCProposals: pastCProposals.length,
+                    totalPages: Math.ceil(pastCProposals.length/this.state.per_page)
+                  });
+
+    await this.getCProposals(page);
+
+  }
 
 
   componentDidMount = async() => {
     try {
 
-      const pastCProposals = await campaignService.getCloseProposals();
-      this.setState({ 
-                      pastCProposals : pastCProposals.map(pu =>  pu.returnValues[0]), 
-                      totalCProposals: pastCProposals.length,
-                      totalPages: Math.ceil(pastCProposals.length/this.state.per_page)
-                    });
-
-      await this.getCProposals(1);
-
+      await this.getListCProposals(1);
       const actualizeCProposalInfo = async() => {this.setCloseProposalData(this.state.dproposal_data_i)};
+      const actualizeCProposalsListInfo = async() => {this.getListCProposals(this.state.activePage)};
       await campaignService.suscribeToVoteCloseProposal(actualizeCProposalInfo);
       await campaignService.suscribeToClosedCloseProposal(actualizeCProposalInfo);
+      await campaignService.suscribeToCreateCloseProposal(actualizeCProposalsListInfo);
 
     } catch (error) {
         alert(
@@ -266,7 +272,7 @@ class DisplayCloseProposals extends React.Component {
                 }           
                 
                 { this.state.active==="cproposals_list" && dproposal_nodes.length>0 && 
-                <div class="show-list-close-proposals">
+                <div className="show-list-close-proposals">
                   { (this.props.isMember || this.props.isOwner) &&
                     <CloseProposalModal 
                     createCPLoading={false}/>

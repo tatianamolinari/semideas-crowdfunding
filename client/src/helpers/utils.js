@@ -35,16 +35,16 @@ function fromIntToStatusProposal(string_number) {
     let status = "";
     switch (string_number) {
         case '0':
-            status = "Activa";
+            status = "Activo";
             break;
         case '1':
-            status = "Aprobada";
+            status = "Aprobado";
             break;
         case '2':
-            status = "Desaprobada";
+            status = "Desaprobado";
             break;
         case '3':
-            status = "Exitosa";
+            status = "Exitoso";
             break;
         default:
             console.log("Invalid Status");
@@ -62,15 +62,19 @@ function fromStatusToBadgeClass(status) {
             badge_class = "created";
             break;
         case 'Aprobada':
+        case 'Aprobado':
             badge_class = "success";
             break;
         case 'Exitosa':
+        case 'Exitoso':
             badge_class = "success";
             break;
         case 'Desaprobada':
+        case 'Desaprobado':
             badge_class = "danger";
             break;
         case 'Activa':
+        case 'Activo':
             badge_class = "active";
             break;
         case 'Cerrada':

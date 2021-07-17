@@ -86,7 +86,7 @@ class DisplayProposals extends React.Component {
 
     console.log(proposalInfo)
 
-    const campaignActive = (this.props.campaignStatus !== "Cerrada") || (this.props.campaignStatus !== "Exitosa")
+    const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
     const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
     const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(proposalInfo.inTime) && proposalInfo.status==='0';
     const cantRelease = campaignActive && this.props.isOwner && proposalInfo.status==='1';

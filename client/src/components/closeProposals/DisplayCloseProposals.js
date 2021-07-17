@@ -83,7 +83,7 @@ class DisplayCloseProposals extends React.Component {
 
     console.log(cproposalInfo)
 
-    const campaignActive = (this.props.campaignStatus !== "Cerrada") || (this.props.campaignStatus !== "Exitosa")
+    const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
     const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && cproposalInfo.inTime && (!cproposalInfo.senderHasVote);
     const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(cproposalInfo.inTime) && cproposalInfo.status==='0';
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { Icon, Pagination, Button, Label }  from 'semantic-ui-react'
+import { Dimmer, Loader, Icon, Pagination, Button, Label }  from 'semantic-ui-react'
 
 
 import CardProposal from "./CardProposal.js";
@@ -70,6 +70,8 @@ class DisplayProposals extends React.Component {
 
   async setProposalData(index) {
 
+    this.setState({ loaded: false });
+
     const proposalData = this.state.proposals[index];
 
     const proposalInfo = await campaignService.getProposalInfo(proposalData["index_proposal"]);
@@ -84,15 +86,17 @@ class DisplayProposals extends React.Component {
 
     console.log(proposalInfo)
 
-    const canVote = (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
-    const canClose = (this.props.isMember || this.props.isOwner) && !(proposalInfo.inTime) && proposalInfo.status==='0';
-    const cantRelease = this.props.isOwner && proposalInfo.status==='1';
+    const campaignActive = (this.props.campaignStatus !== "Cerrada") || (this.props.campaignStatus !== "Exitosa")
+    const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
+    const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(proposalInfo.inTime) && proposalInfo.status==='0';
+    const cantRelease = campaignActive && this.props.isOwner && proposalInfo.status==='1';
 
     this.setState({ proposal_data_i: index, 
                     proposal_data : proposalData, 
                     canVote: canVote, 
                     canClose: canClose,
-                    cantRelease: cantRelease });
+                    cantRelease: cantRelease,
+                    loaded:true });
   }
 
   async showProposal(index) {
@@ -258,6 +262,7 @@ class DisplayProposals extends React.Component {
   componentDidMount = async() => {
     try {
 
+      this.setState({ loaded: false });
       const pastProposals = await campaignService.getProposals();
       this.setState({ 
                       pastProposals : pastProposals.map(pu =>  pu.returnValues[0]), 
@@ -268,6 +273,7 @@ class DisplayProposals extends React.Component {
       await this.getProposals(1);
 
       const actualizeProposalInfo = async() => {this.setProposalData(this.state.proposal_data_i)};
+      
       await campaignService.suscribeToVoteProposal(actualizeProposalInfo);
       await campaignService.suscribeToClosedProposal(actualizeProposalInfo);
       await campaignService.suscribeToProposalRelease(actualizeProposalInfo);
@@ -277,6 +283,13 @@ class DisplayProposals extends React.Component {
             `Failed to load web3, accounts, or data contract. Check console for details.`,
         );
         console.error(error);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.state !== prevProps.state)
+    {
+      this.setProposalData(this.state.dproposal_data_i);
     }
   }
 
@@ -300,7 +313,17 @@ class DisplayProposals extends React.Component {
 
     return (  <div className="proposal-info" id="proposals_container" style={{display: "none"}}> 
 
-                { this.state.showMessage &&
+                {!this.state.loaded && 
+                  <Dimmer active>
+                    { this.state.active==="proposals_list" ?
+                    <h1 data-testid="info-loading"> Obteniendo los pedidos de presupuesto... </h1> :
+                    <h1 data-testid="info-loading"> Obteniendo detalle de pedido de presupuesto... </h1>
+                    }
+                    <Loader size='large' inline>Cargando...</Loader>
+                  </Dimmer>
+                }
+
+                { this.state.showMessage && this.state.loaded &&
                   <MessageModal
                   showMessage={this.state.showMessage}
                   handleMessageClose={this.handleMessageClose}
@@ -308,7 +331,7 @@ class DisplayProposals extends React.Component {
                   title={this.state.title_m} />
                 }           
                 
-                { this.state.active==="proposals_list" && proposal_nodes.length>0 &&
+                { this.state.active==="proposals_list" && proposal_nodes.length>0 && this.state.loaded &&
                 <div>
                   <Row  id="proposals_list">
                   {proposal_nodes}                
@@ -322,7 +345,7 @@ class DisplayProposals extends React.Component {
                   </Row>
                 </div>}
 
-                { this.state.active==="proposals_list" && proposal_nodes.length===0 &&
+                { this.state.active==="proposals_list" && proposal_nodes.length===0 && this.state.loaded &&
                 <div>  
                     <h1> Aún no hay pedidos de presupuesto para mostrar. </h1>
                     <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
@@ -331,7 +354,7 @@ class DisplayProposals extends React.Component {
                 }
                 
                 
-                { this.state.active==="proposals_detail" &&
+                { this.state.active==="proposals_detail" && this.state.loaded &&
                   <div  id="proposals_detail">
                     <ProposalDetail
                       index_proposal={this.state.proposal_data.index_proposal}

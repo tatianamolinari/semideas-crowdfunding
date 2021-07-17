@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { Icon, Pagination, Button, Label }  from 'semantic-ui-react'
+import { Dimmer, Loader, Icon, Pagination, Button, Label }  from 'semantic-ui-react'
 
 
 import CardCloseProposal from "./CardCloseProposal.js";
@@ -70,6 +70,8 @@ class DisplayCloseProposals extends React.Component {
 
   async setCloseProposalData(index) {
 
+    this.setState({ loaded: false });
+
     const cproposalData = this.state.cproposals[index];
     const cproposalInfo = await campaignService.getCloseProposalInfo(cproposalData["index_cproposal"]);
     
@@ -81,13 +83,15 @@ class DisplayCloseProposals extends React.Component {
 
     console.log(cproposalInfo)
 
-    const canVote = (!this.props.isOwner) && this.props.isMember && cproposalInfo.inTime && (!cproposalInfo.senderHasVote);
-    const canClose = (this.props.isMember || this.props.isOwner) && !(cproposalInfo.inTime) && cproposalInfo.status==='0';
+    const campaignActive = (this.props.campaignStatus !== "Cerrada") || (this.props.campaignStatus !== "Exitosa")
+    const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && cproposalInfo.inTime && (!cproposalInfo.senderHasVote);
+    const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(cproposalInfo.inTime) && cproposalInfo.status==='0';
 
     this.setState({ dproposal_data_i: index, 
                     dproposal_data : cproposalData, 
                     canVote: canVote, 
-                    canClose: canClose });
+                    canClose: canClose,
+                    loaded: true });
   }
 
   async showDProposal(index) {
@@ -213,6 +217,8 @@ class DisplayCloseProposals extends React.Component {
 
   async getListCProposals(page) {
 
+    this.setState({ loaded: false });
+
     const pastCProposals = await campaignService.getCloseProposals();
     this.setState({ 
                     pastCProposals : pastCProposals.map(pu =>  pu.returnValues[0]), 
@@ -229,10 +235,12 @@ class DisplayCloseProposals extends React.Component {
     try {
 
       await this.getListCProposals(1);
-      const actualizeCProposalInfo = async() => {this.setCloseProposalData(this.state.dproposal_data_i)};
-      const actualizeCProposalsListInfo = async() => {this.getListCProposals(this.state.activePage)};
+      const actualizeCProposalInfo = async() => { this.setCloseProposalData(this.state.dproposal_data_i) };
+      const actualizeCProposalsListInfo = async() => { this.getListCProposals(this.state.activePage) };
+      const actualizeNoActions = async() => { this.setState({canVote: false, canClose:false}); this.setCloseProposalData(this.state.dproposal_data_i) };
+
       await campaignService.suscribeToVoteCloseProposal(actualizeCProposalInfo);
-      await campaignService.suscribeToClosedCloseProposal(actualizeCProposalInfo);
+      await campaignService.suscribeToClosedCloseProposal(actualizeNoActions);
       await campaignService.suscribeToCreateCloseProposal(actualizeCProposalsListInfo);
 
     } catch (error) {
@@ -242,6 +250,14 @@ class DisplayCloseProposals extends React.Component {
         console.error(error);
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.state !== prevProps.state)
+    {
+      this.setState({canVote: false, canClose:false}); 
+      this.setCloseProposalData(this.state.dproposal_data_i);
+    }
+  } 
 
   render() {
 
@@ -263,6 +279,16 @@ class DisplayCloseProposals extends React.Component {
 
     return (  <div className="proposal-info" id="close_proposals_container" style={{display: "none"}}> 
               
+                {!this.state.loaded && 
+                  <Dimmer active>
+                    { this.state.active==="cproposals_list" ?
+                    <h1 data-testid="info-loading"> Obteniendo los pedidos de cierre... </h1> :
+                    <h1 data-testid="info-loading"> Obteniendo detalle de pedido de cierre... </h1>
+                    }
+                    <Loader size='large' inline>Cargando...</Loader>
+                  </Dimmer>
+                }
+                
                 { this.state.showMessage &&
                   <MessageModal
                   showMessage={this.state.showMessage}
@@ -271,7 +297,7 @@ class DisplayCloseProposals extends React.Component {
                   title={this.state.title_m} />
                 }           
                 
-                { this.state.active==="cproposals_list" && dproposal_nodes.length>0 && 
+                { this.state.active==="cproposals_list" && dproposal_nodes.length>0 && this.state.loaded &&
                 <div className="show-list-close-proposals">
                   { (this.props.isMember || this.props.isOwner) && this.props.out_grace_period &&
                     <CloseProposalModal 
@@ -289,7 +315,7 @@ class DisplayCloseProposals extends React.Component {
                   </Row>
                 </div>}
 
-                { this.state.active==="cproposals_list" && dproposal_nodes.length===0 &&
+                { this.state.active==="cproposals_list" && dproposal_nodes.length===0 && this.state.loaded &&
                 <div>  
                     <h1> Aún no hay pedidos de cierre para mostrar. </h1>
                     <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
@@ -303,7 +329,7 @@ class DisplayCloseProposals extends React.Component {
                 }
                 
                 
-                { this.state.active==="cproposals_detail" && 
+                { this.state.active==="cproposals_detail" && this.state.loaded &&
                   <div  id="cproposals_detail">
                     <CloseProposalDetail
                       index_cproposal={this.state.dproposal_data.index_cproposal}

@@ -155,7 +155,7 @@ class DisplayContent extends React.Component {
 
     let progress;
     const balance = await campaignService.getBalance();
-    if (this.state.status != 'Creada') { 
+    if (this.state.status !== 'Creada') { 
       progress = this.getProgress(this.props.data.finalContributions,balance); 
 
     } else {
@@ -240,7 +240,10 @@ class DisplayContent extends React.Component {
                 <div className="progress-container">
                   { this.state.status==="Creada" ?
                     <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei contribuidos`} /> :
-                    <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei restantes`} />
+                    <div>
+                      <h5> Fondos </h5>
+                       <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei restantes`} />
+                    </div>
                   }
                 </div>
               

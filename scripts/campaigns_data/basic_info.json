@@ -434,7 +434,7 @@
                             "value": false
                         }
                     ],
-                    "timeReached": false,
+                    "timeReached": true,
                     "closed": false
                 },
                 {
@@ -443,10 +443,6 @@
                     "created_date": "05/06/2021",
                     "author_i": 0,
                     "votes": [
-                        { 
-                            "accountIndex": 1,
-                            "value": true
-                        },
                         { 
                             "accountIndex": 2,
                             "value": false
@@ -925,7 +921,33 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": true
+                    "closed": false
+                },
+                {
+                    "title": "No hay fraude",
+                    "description": "Desde la fundación queremos desmentir los rumores de fraude que estan circulando para que puedan quedarse tranquilos de que lo que han contribuido ha servido para que ayudemos a los callejeritos. Si nos dan unos días publicaremos un link a una red social donde haremos un vivo y explicaremos lo ocurrido.",
+                    "created_date": "10/06/2021",
+                    "author_i": 0,
+                    "votes": [
+                        { 
+                            "accountIndex": 4,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 5,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 6,
+                            "value": false
+                        },
+                        { 
+                            "accountIndex": 7,
+                            "value": true
+                        }
+                    ],
+                    "timeReached": false,
+                    "closed": false
                 }
             ]
         },

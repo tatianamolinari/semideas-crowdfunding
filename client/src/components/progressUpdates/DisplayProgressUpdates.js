@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { Icon, Item, Pagination }  from 'semantic-ui-react'
+import { Dimmer, Loader, Icon, Item, Pagination }  from 'semantic-ui-react'
 
 import ItemProgressUpdates from "./ItemProgressUpdates.js";
 import ProgressUpdateDetail from "./ProgressUpdateDetail.js";
@@ -25,6 +25,9 @@ class DisplayProgressUpdates extends React.Component {
   };
 
   async getProgressUpdates(activePage) {
+    
+    this.setState({ loaded: false });
+    
     const allProgressUpdates = this.state.pastProgressUpdates;
     const progress_updates = []
     const i_progress_update = this.state.totalProgressUpdates - 1 - ((activePage-1)*(this.state.per_page));
@@ -69,6 +72,7 @@ class DisplayProgressUpdates extends React.Component {
   componentDidMount = async() => {
     try {
 
+      this.setState({ loaded: false });
       const pastProgressUpdates = await campaignService.getProgressUpdates();
       this.setState({ 
                       pastProgressUpdates : pastProgressUpdates.map(pu =>  pu.returnValues[0]), 
@@ -105,7 +109,15 @@ class DisplayProgressUpdates extends React.Component {
 
     return (  <div className="proposal-info" id="progress_container" style={{display: "none"}}>            
                 
-                { this.state.active==="progress_updates_list" && progress_updates_nodes.length>0 &&
+                {!this.state.loaded && 
+                  <Dimmer active>
+                    <h1 data-testid="info-loading"> Obteniendo los avances publicados... </h1>
+                    <Loader size='large' inline>Cargando...</Loader>
+                  </Dimmer>
+                }
+                
+                
+                { this.state.active==="progress_updates_list" && progress_updates_nodes.length>0 && this.state.loaded && 
                 <div>
                   <Row  id="progress_updates_list">
                     <Item.Group>
@@ -122,7 +134,7 @@ class DisplayProgressUpdates extends React.Component {
                 </div>
                 }
 
-                { this.state.active==="progress_updates_list" && progress_updates_nodes.length===0 &&
+                { this.state.active==="progress_updates_list" && progress_updates_nodes.length===0 && this.state.loaded && 
                 <div>  
                     <h1> Aún no hay avances del proyecto para mostrar. </h1>
                     <p> No dejes de estar pendiente a las nuevas actualizaciones que el owner pueda subir.</p>
@@ -131,7 +143,7 @@ class DisplayProgressUpdates extends React.Component {
                 }
                 
                 
-                { this.state.active==="progress_update_detail" &&
+                { this.state.active==="progress_update_detail" && this.state.loaded && 
                 <div  id="progress_update_detail">
                   <ProgressUpdateDetail
                   title={this.state.progress_update_data.title}

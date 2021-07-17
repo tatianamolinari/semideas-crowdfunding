@@ -89,7 +89,7 @@ class ContainerInfo extends React.Component {
           finalContributions: campaignInfo.finalContributions,
           remainingContributions: campaignInfo.remainingContributions,
           isOwner: isOwner,
-          out_grace_period: ((campaignInfo.out_grace_period && campaignInfo.status=='0') || campaignInfo.status=='1'),
+          out_grace_period: ((campaignInfo.out_grace_period && campaignInfo.status==='0') || campaignInfo.status==='1'),
           ipfsData: ipfsData
         });
       }
@@ -100,8 +100,16 @@ class ContainerInfo extends React.Component {
 
   }
 
+  actualizeStatusInfo = async() => {
+    const enum_status = await campaignService.getStatus();
+    const status = fromIntToStatusCampaign(enum_status);
+    this.setState({ status: status});
+  }
+
   componentDidMount = async() => {
-    this.loadCampaignData();
+    await this.loadCampaignData();
+    const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
+    await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
   }
 
   componentDidUpdate(prevProps) {
@@ -188,6 +196,7 @@ class ContainerInfo extends React.Component {
                           active="progress_updates_list"/> 
 
                           <DisplayProposals
+                          campaignStatus ={this.state.status}
                           instance={this.state.instance}
                           isMember={this.state.isMember}
                           isOwner={this.state.isOwner}
@@ -195,6 +204,7 @@ class ContainerInfo extends React.Component {
 
 
                           <DisplayCloseProposals
+                          campaignStatus ={this.state.status}
                           instance={this.state.instance}
                           isMember={this.state.isMember}
                           isOwner={this.state.isOwner}

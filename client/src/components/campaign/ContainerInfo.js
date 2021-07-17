@@ -106,20 +106,28 @@ class ContainerInfo extends React.Component {
     this.setState({ status: status});
   }
 
+  refreshSite = async () => {
+
+    this.setState({ loaded: false });
+    this.loadCampaignData();
+    if (this.state.active !== "general_data") {
+      this.change_active("general_data");
+    }
+
+  }
+
   componentDidMount = async() => {
     await this.loadCampaignData();
     const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
     await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
+
+    window.ethereum.on('accountsChanged', async(accounts) => { this.refreshSite() });
   }
 
+
   componentDidUpdate(prevProps) {
-    if(this.props.indexCampaign !== prevProps.indexCampaign)
-    {
-      this.setState({ loaded: false });
-      this.loadCampaignData();
-      if (this.state.active !== "general_data") {
-        this.change_active("general_data");
-      }
+    if(this.props.indexCampaign !== prevProps.indexCampaign) {
+      this.refreshSite();
     }
   } 
 

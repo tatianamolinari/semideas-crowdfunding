@@ -73,6 +73,9 @@ class ContainerInfo extends React.Component {
         const actualAccount = await campaignService.getFirstAccount();
         const isOwner = actualAccount===campaignInfo.owner;
 
+        const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
+        await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
+
         this.setState({
           loaded: true,
           instance: instance,
@@ -107,8 +110,6 @@ class ContainerInfo extends React.Component {
 
     this.setState({ loaded: false });
     await this.loadCampaignData();
-    const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
-    await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
     if (this.state.active !== "general_data") {
       this.change_active("general_data");
     }
@@ -117,9 +118,6 @@ class ContainerInfo extends React.Component {
 
   componentDidMount = async() => {
     await this.loadCampaignData();
-    const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
-    await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
-
     window.ethereum.on('accountsChanged', async(accounts) => { this.refreshSite() });
   }
 

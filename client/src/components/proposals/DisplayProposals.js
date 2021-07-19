@@ -89,13 +89,13 @@ class DisplayProposals extends React.Component {
     const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
     const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
     const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(proposalInfo.inTime) && proposalInfo.status==='0';
-    const cantRelease = campaignActive && this.props.isOwner && proposalInfo.status==='1';
+    const canRelease = campaignActive && this.props.isOwner && proposalInfo.status==='1';
 
     this.setState({ proposal_data_i: index, 
                     proposal_data : proposalData, 
                     canVote: canVote, 
                     canClose: canClose,
-                    cantRelease: cantRelease,
+                    canRelease: canRelease,
                     loaded:true });
   }
 
@@ -248,7 +248,7 @@ class DisplayProposals extends React.Component {
       else {
         title = "Retiro exitoso";
         message = "¡El retiro de fondos se envío de manera exitosa!\nRevisa tu wallet para ver los fondos agregados."; 
-        this.setState({ cantRelease: false}); 
+        this.setState({ canRelease: false}); 
       }
 
       this.setState({ loadingTansfer: false, 
@@ -287,7 +287,7 @@ class DisplayProposals extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.state !== prevProps.state)
+    if(this.props.campaignStatus !== prevProps.campaignStatus)
     {
       this.setProposalData(this.state.proposal_data_i);
     }
@@ -421,7 +421,7 @@ class DisplayProposals extends React.Component {
                           </Button>
                         </Col>
                         }
-                        { this.state.cantRelease &&
+                        { this.state.canRelease &&
                         <Col lg={6} className="aling-right">
                           <Button
                           loading={this.state.loadingTansfer}

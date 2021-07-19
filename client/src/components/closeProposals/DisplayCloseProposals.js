@@ -252,7 +252,7 @@ class DisplayCloseProposals extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.state !== prevProps.state)
+    if(this.props.campaignStatus !== prevProps.campaignStatus)
     {
       this.setState({canVote: false, canClose:false}); 
       this.setCloseProposalData(this.state.dproposal_data_i);

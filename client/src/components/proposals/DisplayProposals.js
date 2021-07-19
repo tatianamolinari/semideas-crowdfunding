@@ -289,7 +289,7 @@ class DisplayProposals extends React.Component {
   componentDidUpdate(prevProps) {
     if(this.props.state !== prevProps.state)
     {
-      this.setProposalData(this.state.dproposal_data_i);
+      this.setProposalData(this.state.proposal_data_i);
     }
   }
 

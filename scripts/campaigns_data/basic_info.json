@@ -950,52 +950,6 @@
                     "closed": false
                 }
             ]
-        },
-        {
-            "title": "Choose CTHULHU",
-            "description": "A finales de los años 70 y sobre todo durante la década de los 80, se vivió un fenómeno literario increíble que cambió la forma de entender la lectura en el mundo: la era del “librojuego”. Con sencillas historias narradas en segunda persona, como si el lector asumiese la personalidad del protagonista del libro, se le ofrecía la posibilidad de elegir entre diferentes caminos y formas de resolver los problemas planteados en la trama. En Choose Cthulhu hemos ido un paso más allá: nuestro desarrollo propuesto de un librojuego no son es meramente una aventura genérica; hemos querido que experimentes en primera persona los acontecimientos narrados en el ciclo de LOS MITOS DE CTHULHU del escritor e icono de la cultura popular H.P. Lovecraft (Si no lo conoces no sé a qué estás esperando…) Para eso necesitamo de tu ayuda para financiar el desarrollo y prometemos que al terminarlo quienes hayan sido colaboradores recibirán un 50% de descuento en nuestros productos con tope de un descuento por tipo de producto ¿Nos ayudas a llevar el terror cosmico desde otro punto de vista a todos los que deseen vivirlo en carne propia?",
-            "created_date": "19/12/2020",
-            "imagesPath": ["./scripts/images/choose1.jpg", "./scripts/images/choose2.jpg", "./scripts/images/choose3.jpg"],
-            "minimunContribution": 100,
-            "goal": 10300,
-            "out_grace_period": false,
-            "contributions": [
-                { 
-                    "accountIndex": 1,
-                    "value": 1500
-                },
-                { 
-                    "accountIndex": 2,
-                    "value": 1000
-                },
-                { 
-                    "accountIndex": 3,
-                    "value": 250
-                },
-                { 
-                    "accountIndex": 4,
-                    "value": 3000
-                },
-                { 
-                    "accountIndex": 5,
-                    "value": 400
-                },
-                { 
-                    "accountIndex": 6,
-                    "value": 4500
-                },
-                { 
-                    "accountIndex": 7,
-                    "value": 300
-                }
-            ],
-            "active": { 
-                "status": true
-            },
-            "progressUpdates": [],
-            "proposals": [],
-            "closeProposals": []
-        }
-        
+        }        
     ]
 }

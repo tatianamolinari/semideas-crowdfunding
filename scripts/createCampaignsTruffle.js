@@ -65,14 +65,19 @@ async function createCampaigns(jsonInfo){
     const campaignsData = {};
     campaignsData["campaigns"] = [];
 
+    let ipfsHash = null;
+    let path = null;
+
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
     
-        const path = await saveInfoIPFS(campaignInfo["imagesPath"],
-                                        campaignInfo["title"],
-                                        campaignInfo["description"],
-                                        campaignInfo["created_date"]);
+        if (ipfsHash == null) {
+            path = await saveInfoIPFS(campaignInfo["imagesPath"],
+                                            campaignInfo["title"],
+                                            campaignInfo["description"],
+                                            campaignInfo["created_date"]);
 
-        const ipfsHash = "0x" + addressToHexBytes(path);
+            ipfsHash = "0x" + addressToHexBytes(path);
+        }
 
         const campaign = await CrowdfundingCampaignDemo.new(
                                 campaignInfo["minimunContribution"], 
@@ -154,17 +159,29 @@ async function progressUpdates(web3, addr, jsonInfo, campaigns){
 
     let response = false;
     let i = 0;
+    const saved = {}
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
         {
             console.log(`Progress updates ${campaignInfo["title"]} ${i}`)
             for (const progressUpdates of campaignInfo["progressUpdates"]) {
-                const path = await saveInfoIPFS(progressUpdates["imagesPath"],
-                                                progressUpdates["title"],
-                                                progressUpdates["description"],
-                                                progressUpdates["created_date"]);
 
-                const ipfsHash = "0x" + addressToHexBytes(path);
+                let ipfsHash = null;
+                if (saved[progressUpdates["title"]] == null)  {
+                    await sleep(3000);
+                    const path = await saveInfoIPFS(progressUpdates["imagesPath"],
+                                                    progressUpdates["title"],
+                                                    progressUpdates["description"],
+                                                    progressUpdates["created_date"]);
+
+                    ipfsHash = "0x" + addressToHexBytes(path);
+                    saved[progressUpdates["title"]] = ipfsHash;
+
+                } else {
+                    
+                    ipfsHash = saved[progressUpdates["title"]];
+                
+                }
 
                 const campaign = campaigns[i]
                 const gasprice = await web3.eth.getGasPrice();
@@ -184,17 +201,29 @@ async function proposals(web3, addr, jsonInfo, campaigns){
 
     let response = false;
     let i = 0;
+    const saved = {}
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
         {
             let i_proposal = 0;
             for (const proposal of campaignInfo["proposals"]) {
-                const path = await saveInfoIPFS([],
-                                                proposal["title"],
-                                                proposal["description"],
-                                                proposal["created_date"]);
 
-                const ipfsHash = "0x" + addressToHexBytes(path);
+                let ipfsHash = null;
+                if (saved[proposal["title"]] == null)  {
+                    await sleep(3000);
+                    const path = await saveInfoIPFS([],
+                                                    proposal["title"],
+                                                    proposal["description"],
+                                                    proposal["created_date"]);
+
+                    ipfsHash = "0x" + addressToHexBytes(path);
+                    saved[proposal["title"]] = ipfsHash;
+
+                } else {
+                    
+                    ipfsHash = saved[proposal["title"]];
+                
+                }
 
                 const value = proposal["value"]
                 const recipient = addr[proposal["add_i"]]
@@ -272,6 +301,8 @@ async function closeProposals(web3, addr, jsonInfo, campaigns){
 
     let response = false;
     let i = 0;
+    const saved = {}
+
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
         {
@@ -279,12 +310,24 @@ async function closeProposals(web3, addr, jsonInfo, campaigns){
             let i_cproposal = 0;
             for (const dproposal of campaignInfo["closeProposals"]) {
                 console.log(`DP ${i_cproposal}`)
-                const path = await saveInfoIPFS([],
-                                                dproposal["title"],
-                                                dproposal["description"],
-                                                dproposal["created_date"]);
 
-                const ipfsHash = "0x" + addressToHexBytes(path);
+                let ipfsHash = null;
+                if (saved[dproposal["title"]] == null)  {
+                    await sleep(3000);
+                    const path = await saveInfoIPFS([],
+                                                    dproposal["title"],
+                                                    dproposal["description"],
+                                                    dproposal["created_date"]);
+
+                    ipfsHash = "0x" + addressToHexBytes(path);
+                    saved[dproposal["title"]] = ipfsHash;
+
+                } else {
+                    
+                    ipfsHash = saved[dproposal["title"]];
+                
+                }
+                
                 const author = addr[dproposal["author_i"]]
 
                 const campaign = campaigns[i]

@@ -37,8 +37,6 @@ class DisplayProposals extends React.Component {
     const i_proposal = this.state.totalProposals - 1 - ((activePage-1)*(this.state.per_page));
     const last_i = Math.max(-1, i_proposal - (this.state.per_page));
     
-    //console.log(`${i_proposal} ${last_i} ${activePage}`)
-
     for(let i=i_proposal; (i >= 0 && i > last_i) ; i--){
       const pHash = allProposals[i];
       const ipfsPath = hexBytesToAddress(pHash.substring(2));
@@ -83,8 +81,6 @@ class DisplayProposals extends React.Component {
     proposalData["status"] = proposalInfo.status;
     proposalData["limitTime"] = proposalInfo.limitTime;
     proposalData["hasVoted"] = proposalInfo.senderHasVote;
-
-    console.log(proposalInfo)
 
     const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
     const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
@@ -287,6 +283,7 @@ class DisplayProposals extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+
     if(this.props.campaignStatus !== prevProps.campaignStatus)
     {
       this.setProposalData(this.state.proposal_data_i);

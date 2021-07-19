@@ -170,10 +170,17 @@ class DisplayContent extends React.Component {
     
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
     await campaignService.suscribeToNewContribution(actualizeInfo);
+    //const actualizeStatusInfo = async() => {console.log("aca si llege")};
+    //await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
     const actualizeBalanceInfo = async() => {this.actualizeBalanceInfo()};
     await campaignService.suscribeToProposalRelease(actualizeBalanceInfo);
-    const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
-    await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.data.status !== prevProps.data.status)
+    {
+      this.actualizeStatusInfo();
+    }
   }
 
   getProgress(total,portion) {
@@ -183,7 +190,6 @@ class DisplayContent extends React.Component {
   }
 
 
-
   render() {
 
     let images = ["/images/prueba/prueba1.jpg","/images/prueba/prueba2.jpg","/images/prueba/prueba3.jpg","/images/prueba/prueba4.jpg"]
@@ -191,7 +197,6 @@ class DisplayContent extends React.Component {
     let created_at = "10/03/2021"
     let title = "Este titulo está mockeado"
 
-    //console.log(this.props);
     if (this.props.ipfsData) {
 
       images = this.props.ipfsData.images.map(path =>  ipfsService.getIPFSUrlFromPath(path));

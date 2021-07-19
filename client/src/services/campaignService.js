@@ -192,6 +192,7 @@ async getCloseProposals() {
       .on("connected", function(subscriptionId){
       })
       .on('data', function(event){
+          console.log("llego un evento");
           actualizeFunction();
       })
       .on('error', function(error, receipt) {

@@ -37,7 +37,6 @@ class DisplayCloseProposals extends React.Component {
     const i_cproposal = this.state.totalCProposals - 1 - ((activePage-1)*(this.state.per_page));
     const last_i = Math.max(-1, i_cproposal - (this.state.per_page));
     
-    //console.log(`${i_cproposal} ${last_i} ${activePage}`)
 
     for(let i=i_cproposal; (i >= 0 && i > last_i) ; i--){
       const pHash = allCProposals[i];
@@ -70,28 +69,28 @@ class DisplayCloseProposals extends React.Component {
 
   async setCloseProposalData(index) {
 
-    this.setState({ loaded: false });
+    if (this.state.cproposals.length > index)
+    {
+      this.setState({ loaded: false });
+      const cproposalData = this.state.cproposals[index];
+      const cproposalInfo = await campaignService.getCloseProposalInfo(cproposalData["index_cproposal"]);
+      
+      cproposalData["approvalsCount"] = cproposalInfo.approvalsCount;
+      cproposalData["disapprovalsCount"] = cproposalInfo.disapprovalsCount;
+      cproposalData["status"] = cproposalInfo.status;
+      cproposalData["limitTime"] = cproposalInfo.limitTime;
+      cproposalData["hasVoted"] = cproposalInfo.senderHasVote;
 
-    const cproposalData = this.state.cproposals[index];
-    const cproposalInfo = await campaignService.getCloseProposalInfo(cproposalData["index_cproposal"]);
-    
-    cproposalData["approvalsCount"] = cproposalInfo.approvalsCount;
-    cproposalData["disapprovalsCount"] = cproposalInfo.disapprovalsCount;
-    cproposalData["status"] = cproposalInfo.status;
-    cproposalData["limitTime"] = cproposalInfo.limitTime;
-    cproposalData["hasVoted"] = cproposalInfo.senderHasVote;
+      const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
+      const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && cproposalInfo.inTime && (!cproposalInfo.senderHasVote);
+      const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(cproposalInfo.inTime) && cproposalInfo.status==='0';
 
-    console.log(cproposalInfo)
-
-    const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
-    const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && cproposalInfo.inTime && (!cproposalInfo.senderHasVote);
-    const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(cproposalInfo.inTime) && cproposalInfo.status==='0';
-
-    this.setState({ dproposal_data_i: index, 
-                    dproposal_data : cproposalData, 
-                    canVote: canVote, 
-                    canClose: canClose,
-                    loaded: true });
+      this.setState({ dproposal_data_i: index, 
+                      dproposal_data : cproposalData, 
+                      canVote: canVote, 
+                      canClose: canClose,
+                      loaded: true });
+    }
   }
 
   async showDProposal(index) {
@@ -237,10 +236,10 @@ class DisplayCloseProposals extends React.Component {
       await this.getListCProposals(1);
       const actualizeCProposalInfo = async() => { this.setCloseProposalData(this.state.dproposal_data_i) };
       const actualizeCProposalsListInfo = async() => { this.getListCProposals(this.state.activePage) };
-      const actualizeNoActions = async() => { this.setState({canVote: false, canClose:false}); this.setCloseProposalData(this.state.dproposal_data_i) };
+      //const actualizeNoActions = async() => { this.setState({canVote: false, canClose:false}); this.setCloseProposalData(this.state.dproposal_data_i) };
 
       await campaignService.suscribeToVoteCloseProposal(actualizeCProposalInfo);
-      await campaignService.suscribeToClosedCloseProposal(actualizeNoActions);
+      //await campaignService.suscribeToClosedCloseProposal(actualizeNoActions);
       await campaignService.suscribeToCreateCloseProposal(actualizeCProposalsListInfo);
 
     } catch (error) {
@@ -254,7 +253,6 @@ class DisplayCloseProposals extends React.Component {
   componentDidUpdate(prevProps) {
     if(this.props.campaignStatus !== prevProps.campaignStatus)
     {
-      this.setState({canVote: false, canClose:false}); 
       this.setCloseProposalData(this.state.dproposal_data_i);
     }
   } 

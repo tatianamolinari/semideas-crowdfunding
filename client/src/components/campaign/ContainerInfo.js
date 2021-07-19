@@ -73,9 +73,6 @@ class ContainerInfo extends React.Component {
         const actualAccount = await campaignService.getFirstAccount();
         const isOwner = actualAccount===campaignInfo.owner;
 
-        console.log(campaignInfo)
-
-
         this.setState({
           loaded: true,
           instance: instance,
@@ -109,7 +106,9 @@ class ContainerInfo extends React.Component {
   refreshSite = async () => {
 
     this.setState({ loaded: false });
-    this.loadCampaignData();
+    await this.loadCampaignData();
+    const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
+    await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
     if (this.state.active !== "general_data") {
       this.change_active("general_data");
     }
@@ -204,7 +203,7 @@ class ContainerInfo extends React.Component {
                           active="progress_updates_list"/> 
 
                           <DisplayProposals
-                          campaignStatus ={this.state.status}
+                          campaignStatus={this.state.status}
                           instance={this.state.instance}
                           isMember={this.state.isMember}
                           isOwner={this.state.isOwner}
@@ -212,7 +211,7 @@ class ContainerInfo extends React.Component {
 
 
                           <DisplayCloseProposals
-                          campaignStatus ={this.state.status}
+                          campaignStatus={this.state.status}
                           instance={this.state.instance}
                           isMember={this.state.isMember}
                           isOwner={this.state.isOwner}

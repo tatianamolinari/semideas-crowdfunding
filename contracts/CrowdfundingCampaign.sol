@@ -407,7 +407,7 @@ contract CrowdfundingCampaign {
             cProposal.status = ProposalStatus.DISAPPROVED;
         }
 
-        emit CloseProposalClosed(_index);
+        //emit CloseProposalClosed(_index);
         emit ChangeStatusCampaign();
     }
 

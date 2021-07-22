@@ -69,7 +69,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
     it("The inversor should invest more than de minimun contribution", async() => {
 
         const campaign = this.campaign;
-        expect(campaign.contribute({ from: memberAccount, value: web3.utils.toWei("2", "wei") })).to.eventually.be.rejectedWith("The contribution is insuficient");
+        expect(campaign.contribute({ from: memberAccount, value: web3.utils.toWei("2", "wei") })).to.eventually.be.rejectedWith("The contribution is insufficient");
         
     });
 

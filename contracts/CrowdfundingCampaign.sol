@@ -58,8 +58,8 @@ contract CrowdfundingCampaign {
 
     /** @dev Constructor.
      *  @param _minimunContribution minimum contribution in wei that a person has to make to become a member.
-     *  @param _goal goal in wei that the proyect has to reach to be succesfull.
-     *  @param _ipfshash The url hash of the campaign data previusly stored in IPFS.
+     *  @param _goal goal in wei that the project has to reach to be successful.
+     *  @param _ipfshash The url hash of the campaign data previously stored in IPFS.
     **/
     constructor(uint _minimunContribution, uint _goal, bytes32 _ipfshash) {
         owner = msg.sender;
@@ -190,7 +190,7 @@ contract CrowdfundingCampaign {
      */
     event ProposalClosed(uint _index);
 
-    /** @dev Emitted when a proposal was release.
+    /** @dev Emitted when a proposal is release.
      *  @param _index The index of the proposal.
      */
     event ProposalRelease(uint _index);
@@ -210,7 +210,7 @@ contract CrowdfundingCampaign {
      */
     event CloseProposalClosed(uint _index);
 
-    /** @dev Emitted when the author creates a progress update to show how the proyect is going.
+    /** @dev Emitted when the author creates a progress update to show how the project is going.
      *  @param _ipfshash The url hash of the progress update data stored in IPFS.
      */
     event ProgressUpdate(bytes32 _ipfshash);
@@ -229,7 +229,7 @@ contract CrowdfundingCampaign {
     /** @dev Allow not members to contribute with the campaign and be a member of it.
      */
     function contribute() public notMembering statusCreated payable {
-        require(msg.value >= minimunContribution, "The contribution is insuficient");
+        require(msg.value >= minimunContribution, "The contribution is insufficient");
         contributions[msg.sender] = msg.value;
         membersCount++;
         emit NewContribution();
@@ -248,7 +248,7 @@ contract CrowdfundingCampaign {
     }
 
     /** @dev Allow only owner to save a new progress Update data ipfs hash.
-     *  @param _ipfshash url hash of the progress update data (description and pictures) previusly stored in IPFS.
+     *  @param _ipfshash url hash of the progress update data (description and pictures) previously stored in IPFS.
      */
     function saveProgressUpdate(bytes32 _ipfshash) 
         public restricted statusActive {
@@ -258,7 +258,7 @@ contract CrowdfundingCampaign {
     /** @dev Allow only owner to create a new proposal to get more founds.
      *  @param _value founds in wei that the owner want to release.
      *  @param _recipient address where the founds are going to be after release them.
-     *  @param _ipfshash url hash of the proposal data (description and pictures) previusly stored in IPFS.
+     *  @param _ipfshash url hash of the proposal data (description and pictures) previously stored in IPFS.
      */
     function createProposal(uint _value, address _recipient, bytes32 _ipfshash) 
         public restricted statusActive {
@@ -334,8 +334,8 @@ contract CrowdfundingCampaign {
         emit ProposalRelease(_index);
     }
 
-    /** @dev Allow only members to create a new proposal to finish de proyect and get the founds back.
-     *  @param _ipfshash url hash of the close proposal data (description) previusly stored in IPFS.
+    /** @dev Allow only members to create a new proposal to finish de project and get the founds back.
+     *  @param _ipfshash url hash of the close proposal data (description) previously stored in IPFS.
      */
     function createCloseProposal(bytes32 _ipfshash) public membering statusNotClosed {
 

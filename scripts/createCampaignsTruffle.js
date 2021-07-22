@@ -84,11 +84,14 @@ async function createCampaigns(jsonInfo){
                                 campaignInfo["goal"], 
                                 ipfsHash);
 
-        const campaingInfo = {}
-        campaingInfo["address"] = campaign.address
-        campaingInfo["ipfsPath"] = path
+        const blockNumber = await web3.eth.getBlockNumber();
 
-        campaignsData["campaigns"].push(campaingInfo);
+        const jsonCampaignInfo = {}
+        jsonCampaignInfo["address"] = campaign.address
+        jsonCampaignInfo["ipfsPath"] = path
+        jsonCampaignInfo["blockNumber"] = blockNumber;
+
+        campaignsData["campaigns"].push(jsonCampaignInfo);
         campaigns.push(campaign);
 
         if (campaignInfo["out_grace_period"])

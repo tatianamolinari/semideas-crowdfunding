@@ -1,7 +1,7 @@
 {
     "campaignsToCreate":[
         {
-            "title": "Una mano por una pata A",
+            "title": "Una mano por una pata",
             "description": "Hoy en día estamos ante una situación nunca antes vista para la mayoría de nosotros: Nos enfrentamos a una pandemia que nos ha golpeado en muchos aspectos: economico, afectivo y salud (entre otros). Sin embargo, al igual que en las peores crisis que hemos atravesado como país algo siempre resurge entre nosotros: la solidaridad. Eso, que también nos caracteriza, nos hay llevado a ayudarnos los unos a los otros de muchisimas maneras: volutarios en comedores, personas que recorren las calles ayudando a otras y alcanzandoles un plato de comida y compañía, jóvenes que se ofrecen a hacerles las compras a sus vecinos de avanzada edad, voluntarios para probar el desarrollo de vacunas. Lamentablemente si bien podemos hacer mucho, la ayuda no alcanza para todos y, cuando la situación es tan díficil, sin quererlo surgen los grandes olvidados: los callejeritos. Al principio de la pandemía hubo un boom de adopciones por el cual se adoptaron tanto perros como gatos. Sin embargo, de la misma manera se generó un boom de abandonos. Esto, sumado a la crisis economica que hizo que menos gente se involucrara con el rescate de callejeritos, generó una expansión en las colonias de gatos y perros por centros urbanos. Desde la organización Patitas Felices propones llevar a cabo un rescate masivo dentro del conurbano sur de gatos y perros callejeros, brindando atención veterinaria, aplicando las vacunas y castrando a la mayor cantidad posible de ellos para evitar que la situación empeore, dandoles refugio en una casona recientemete comprada que debemos reacondicionar y buscandoles un hogar ¿Nos ayudas dando una mano por una pata?",
             "created_date": "11/02/2021",
             "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
@@ -14,7 +14,7 @@
             }
         },
         {
-            "title": "Una mano por una pata B",
+            "title": "Una mano por una pata",
             "description": "Hoy en día estamos ante una situación nunca antes vista para la mayoría de nosotros: Nos enfrentamos a una pandemia que nos ha golpeado en muchos aspectos: economico, afectivo y salud (entre otros). Sin embargo, al igual que en las peores crisis que hemos atravesado como país algo siempre resurge entre nosotros: la solidaridad. Eso, que también nos caracteriza, nos hay llevado a ayudarnos los unos a los otros de muchisimas maneras: volutarios en comedores, personas que recorren las calles ayudando a otras y alcanzandoles un plato de comida y compañía, jóvenes que se ofrecen a hacerles las compras a sus vecinos de avanzada edad, voluntarios para probar el desarrollo de vacunas. Lamentablemente si bien podemos hacer mucho, la ayuda no alcanza para todos y, cuando la situación es tan díficil, sin quererlo surgen los grandes olvidados: los callejeritos. Al principio de la pandemía hubo un boom de adopciones por el cual se adoptaron tanto perros como gatos. Sin embargo, de la misma manera se generó un boom de abandonos. Esto, sumado a la crisis economica que hizo que menos gente se involucrara con el rescate de callejeritos, generó una expansión en las colonias de gatos y perros por centros urbanos. Desde la organización Patitas Felices propones llevar a cabo un rescate masivo dentro del conurbano sur de gatos y perros callejeros, brindando atención veterinaria, aplicando las vacunas y castrando a la mayor cantidad posible de ellos para evitar que la situación empeore, dandoles refugio en una casona recientemete comprada que debemos reacondicionar y buscandoles un hogar ¿Nos ayudas dando una mano por una pata?",
             "created_date": "11/02/2021",
             "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
@@ -56,7 +56,7 @@
             }
         },
         {
-            "title": "Una mano por una pata C",
+            "title": "Una mano por una pata",
             "description": "Hoy en día estamos ante una situación nunca antes vista para la mayoría de nosotros: Nos enfrentamos a una pandemia que nos ha golpeado en muchos aspectos: economico, afectivo y salud (entre otros). Sin embargo, al igual que en las peores crisis que hemos atravesado como país algo siempre resurge entre nosotros: la solidaridad. Eso, que también nos caracteriza, nos hay llevado a ayudarnos los unos a los otros de muchisimas maneras: volutarios en comedores, personas que recorren las calles ayudando a otras y alcanzandoles un plato de comida y compañía, jóvenes que se ofrecen a hacerles las compras a sus vecinos de avanzada edad, voluntarios para probar el desarrollo de vacunas. Lamentablemente si bien podemos hacer mucho, la ayuda no alcanza para todos y, cuando la situación es tan díficil, sin quererlo surgen los grandes olvidados: los callejeritos. Al principio de la pandemía hubo un boom de adopciones por el cual se adoptaron tanto perros como gatos. Sin embargo, de la misma manera se generó un boom de abandonos. Esto, sumado a la crisis economica que hizo que menos gente se involucrara con el rescate de callejeritos, generó una expansión en las colonias de gatos y perros por centros urbanos. Desde la organización Patitas Felices propones llevar a cabo un rescate masivo dentro del conurbano sur de gatos y perros callejeros, brindando atención veterinaria, aplicando las vacunas y castrando a la mayor cantidad posible de ellos para evitar que la situación empeore, dandoles refugio en una casona recientemete comprada que debemos reacondicionar y buscandoles un hogar ¿Nos ayudas dando una mano por una pata?",
             "created_date": "11/02/2021",
             "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
@@ -165,7 +165,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": true
+                    "closed": true,
+                    "release": false
                 },
                 {
                     "title": "Pago en veterinaria",
@@ -196,7 +197,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": true
+                    "closed": true,
+                    "release": false
                 },
                 {
                     "title": "Saldar deuda con proveedor de alimento",
@@ -227,7 +229,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": true
+                    "closed": true,
+                    "release": false
                 },
                 {
                     "title": "Pago a remisería por traslados Febrero",
@@ -258,7 +261,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": true
+                    "closed": true,
+                    "release": false
                 },
                 {
                     "title": "Pago a remisería por traslados Marzo",
@@ -289,7 +293,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": false
+                    "closed": false,
+                    "release": false
                 },
                 {
                     "title": "Preparse para el invierno",
@@ -316,7 +321,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": false
+                    "closed": false,
+                    "release": false
                 },
                 {
                     "title": "Confección de Cuchas",
@@ -339,7 +345,8 @@
                         }
                     ],
                     "timeReached": false,
-                    "closed": false
+                    "closed": false,
+                    "release": false
                 }
             ],
             "closeProposals": [
@@ -474,7 +481,7 @@
             ]
         },
         {
-            "title": "Una mano por una pata D",
+            "title": "Una mano por una pata",
             "description": "Hoy en día estamos ante una situación nunca antes vista para la mayoría de nosotros: Nos enfrentamos a una pandemia que nos ha golpeado en muchos aspectos: economico, afectivo y salud (entre otros). Sin embargo, al igual que en las peores crisis que hemos atravesado como país algo siempre resurge entre nosotros: la solidaridad. Eso, que también nos caracteriza, nos hay llevado a ayudarnos los unos a los otros de muchisimas maneras: volutarios en comedores, personas que recorren las calles ayudando a otras y alcanzandoles un plato de comida y compañía, jóvenes que se ofrecen a hacerles las compras a sus vecinos de avanzada edad, voluntarios para probar el desarrollo de vacunas. Lamentablemente si bien podemos hacer mucho, la ayuda no alcanza para todos y, cuando la situación es tan díficil, sin quererlo surgen los grandes olvidados: los callejeritos. Al principio de la pandemía hubo un boom de adopciones por el cual se adoptaron tanto perros como gatos. Sin embargo, de la misma manera se generó un boom de abandonos. Esto, sumado a la crisis economica que hizo que menos gente se involucrara con el rescate de callejeritos, generó una expansión en las colonias de gatos y perros por centros urbanos. Desde la organización Patitas Felices propones llevar a cabo un rescate masivo dentro del conurbano sur de gatos y perros callejeros, brindando atención veterinaria, aplicando las vacunas y castrando a la mayor cantidad posible de ellos para evitar que la situación empeore, dandoles refugio en una casona recientemete comprada que debemos reacondicionar y buscandoles un hogar ¿Nos ayudas dando una mano por una pata?",
             "created_date": "11/02/2021",
             "imagesPath": ["./scripts/images/pata1.jpg", "./scripts/images/pata2.jpg", "./scripts/images/pata3.jpg"],
@@ -583,7 +590,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": true
+                    "closed": true,
+                    "release": true
                 },
                 {
                     "title": "Pago en veterinaria",
@@ -614,7 +622,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": true
+                    "closed": true,
+                    "release": true
                 },
                 {
                     "title": "Saldar deuda con proveedor de alimento",
@@ -645,7 +654,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": true
+                    "closed": true,
+                    "release": true
                 },
                 {
                     "title": "Pago a remisería por traslados Febrero",
@@ -676,7 +686,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": true
+                    "closed": true,
+                    "release": true
                 },
                 {
                     "title": "Pago a remisería por traslados Marzo",
@@ -707,7 +718,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": false
+                    "closed": false,
+                    "release": false
                 },
                 {
                     "title": "Preparse para el invierno",
@@ -734,7 +746,8 @@
                         }
                     ],
                     "timeReached": true,
-                    "closed": false
+                    "closed": false,
+                    "release": false
                 },
                 {
                     "title": "Confección de Cuchas",
@@ -757,7 +770,8 @@
                         }
                     ],
                     "timeReached": false,
-                    "closed": false
+                    "closed": false,
+                    "release": false
                 }
             ],
             "closeProposals": [

@@ -236,6 +236,7 @@ async function proposals(web3, addr, jsonInfo, campaigns){
 
                 await voteProposals(web3, addr, i_proposal, proposal, campaign);
                 await activateProposals(web3, addr, i_proposal, proposal, campaign);
+                await releaseProposals(web3, addr, i_proposal, proposal, campaign)
 
                 i_proposal = i_proposal + 1;
             }
@@ -292,6 +293,21 @@ async function activateProposals(web3, addr, i_proposal, proposal, campaign){
 
     //const p = await campaign.getProposal.call(i_proposal);
     //console.log(p);
+
+    return response;
+
+}
+
+async function releaseProposals(web3, addr, i_proposal, proposal, campaign){
+
+    let response = false;
+    
+    if (proposal["release"]) {
+        const gasprice = await web3.eth.getGasPrice();
+        const gas = await campaign.release.estimateGas(i_proposal, { from: addr[0] });      
+        const transaction = await campaign.release.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+        response = response && (transaction.type == "mined");
+    }
 
     return response;
 

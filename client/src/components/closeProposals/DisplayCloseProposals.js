@@ -84,11 +84,13 @@ class DisplayCloseProposals extends React.Component {
       const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
       const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && cproposalInfo.inTime && (!cproposalInfo.senderHasVote);
       const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(cproposalInfo.inTime) && cproposalInfo.status==='0';
+      const canCreate = campaignActive && (this.props.isMember || this.props.isOwner) && this.props.out_grace_period
 
       this.setState({ dproposal_data_i: index, 
                       dproposal_data : cproposalData, 
                       canVote: canVote, 
                       canClose: canClose,
+                      canCreate: canCreate,
                       loaded: true });
     }
   }
@@ -233,6 +235,10 @@ class DisplayCloseProposals extends React.Component {
   componentDidMount = async() => {
     try {
 
+      const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
+      const canCreate = campaignActive && (this.props.isMember || this.props.isOwner) && this.props.out_grace_period
+      this.setState({ canCreate: canCreate});
+
       await this.getListCProposals(1);
       const actualizeCProposalInfo = async() => { this.setCloseProposalData(this.state.dproposal_data_i) };
       const actualizeCProposalsListInfo = async() => { this.getListCProposals(this.state.activePage) };
@@ -297,7 +303,7 @@ class DisplayCloseProposals extends React.Component {
                 
                 { this.state.active==="cproposals_list" && dproposal_nodes.length>0 && this.state.loaded &&
                 <div className="show-list-close-proposals">
-                  { (this.props.isMember || this.props.isOwner) && this.props.out_grace_period &&
+                  { this.state.canCreate &&
                     <CloseProposalModal 
                     createCPLoading={false}/>
                   }
@@ -318,7 +324,7 @@ class DisplayCloseProposals extends React.Component {
                     <h1> Aún no hay pedidos de cierre para mostrar. </h1>
                     <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
                 
-                    { (this.props.isMember || this.props.isOwner) && this.props.out_grace_period &&
+                    { this.state.canCreate &&
                       <CloseProposalModal 
                       createCPLoading={false}/>
                     }

@@ -140,7 +140,7 @@ class CampaignService {
 async getProgressUpdates() {
   
   const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: block - 500, toBlock: block }
+  const opts = { fromBlock: block - 50000, toBlock: block }
   const events = await this.instance.getPastEvents('ProgressUpdate', opts);
   return events;
 }
@@ -148,7 +148,7 @@ async getProgressUpdates() {
 async getProposals() {
   
   const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: block - 500, toBlock: block }
+  const opts = { fromBlock: block - 50000, toBlock: block }
   const events = await this.instance.getPastEvents('ProposalCreated', opts);
   return events;
 }
@@ -156,7 +156,7 @@ async getProposals() {
 async getCloseProposals() {
   
   const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: block - 500, toBlock: block }
+  const opts = { fromBlock: block - 50000, toBlock: block }
   const events = await this.instance.getPastEvents('CloseProposalCreated', opts);
   return events;
 }

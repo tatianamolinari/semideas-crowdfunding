@@ -170,8 +170,6 @@ class DisplayContent extends React.Component {
     
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
     await campaignService.suscribeToNewContribution(actualizeInfo);
-    //const actualizeStatusInfo = async() => {console.log("aca si llege")};
-    //await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
     const actualizeBalanceInfo = async() => {this.actualizeBalanceInfo()};
     await campaignService.suscribeToProposalRelease(actualizeBalanceInfo);
   }
@@ -242,9 +240,12 @@ class DisplayContent extends React.Component {
                   <div> Para poder comenzar esta campaña debía recaudar al menos <Label color="green"> <span data-testid="goal">{ this.props.data.goal }</span> wei </Label> y recaudó <Label color="green"> <span data-testid="finalContributions">{ this.props.data.finalContributions }</span> wei </Label> . </div>
                 }
                 <div> La contribución mínima { this.state.status==="Creada" ? "es" : "fue" } de <Label color="teal"><span data-testid="minimunContribution">{ this.props.data.minimunContribution }</span> wei</Label></div> 
+                { (this.state.status==="Cerrada" || this.state.status==="Exitosa")  &&
+                    <div> Los fondos sobrantes al cerrar la campaña fueron de <Label color="green"> <span data-testid="remainingContributions">{ this.props.data.remainingContributions }</span> wei </Label> . </div>
+                }
                 <div className="progress-container">
                   { this.state.status==="Creada" ?
-                    <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei contribuidos`} /> :
+                      <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei contribuidos`} /> :
                     <div>
                       <h5> Fondos </h5>
                        <ProgressBar variant="info" now={this.state.progress} label={`${this.state.balance} wei restantes`} />

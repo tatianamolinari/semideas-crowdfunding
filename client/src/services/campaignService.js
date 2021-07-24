@@ -14,6 +14,7 @@ class CampaignService {
     this.accounts = await this.web3.eth.getAccounts();
     this.networkId = await this.web3.eth.net.getId();
     this.instance = null;
+    this.initialBlockNumber = null;
     return true;
   }
 
@@ -35,6 +36,10 @@ class CampaignService {
     return (await this.web3.eth.getBlockNumber())
   }
 
+  getInitialBlock() {
+    return this.initialBlockNumber;
+  }
+
   async setInstance() {
     this.instance = await new this.web3.eth.Contract(
       CrowdfundingCampaignDemo.abi,
@@ -43,11 +48,12 @@ class CampaignService {
     return this.instance;
   }
 
-  async setInstanceFromAddress(address) {
+  async setInstanceFromAddress(address, blockNumber) {
     this.instance = await new this.web3.eth.Contract(
       CrowdfundingCampaignDemo.abi,
       CrowdfundingCampaignDemo.networks[this.networkId] && address,
     );
+    this.initialBlockNumber = blockNumber;
     return this.instance;
   }
 
@@ -139,24 +145,27 @@ class CampaignService {
 
 async getProgressUpdates() {
   
+  const initialBlock = this.getInitialBlock();
   const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: block - 50000, toBlock: block }
+  const opts = { fromBlock: initialBlock, toBlock: block }
   const events = await this.instance.getPastEvents('ProgressUpdate', opts);
   return events;
 }
 
 async getProposals() {
   
+  const initialBlock = this.getInitialBlock();
   const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: block - 50000, toBlock: block }
+  const opts = { fromBlock: initialBlock, toBlock: block }
   const events = await this.instance.getPastEvents('ProposalCreated', opts);
   return events;
 }
 
 async getCloseProposals() {
   
+  const initialBlock = this.getInitialBlock();
   const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: block - 50000, toBlock: block }
+  const opts = { fromBlock: initialBlock, toBlock: block }
   const events = await this.instance.getPastEvents('CloseProposalCreated', opts);
   return events;
 }

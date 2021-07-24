@@ -54,6 +54,7 @@ class ContainerInfo extends React.Component {
       const campaign = deployedCampaignsInfo["campaigns"][this.props.indexCampaign]
       const ipfsPath = campaign["ipfsPath"]
       const address = campaign["address"]
+      const blockNumber = campaign["blockNumber"];
 
       const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath);
 
@@ -66,7 +67,7 @@ class ContainerInfo extends React.Component {
         });
       }
       else {
-        const instance = await campaignService.setInstanceFromAddress(address);
+        const instance = await campaignService.setInstanceFromAddress(address, blockNumber);
         const campaignInfo = await campaignService.getCampaignInfo();
         const isMember = await campaignService.getMembership();
         const balance = await campaignService.getBalance();

@@ -31,15 +31,31 @@ class ClosePorposalModal extends React.Component {
           this.setState({ showMessage: true, message: mssj});
           console.log(mssj);
         }
+        else if (this.state.cpTitle.length < "5" || this.state.cpTitle.length > "30") {
+
+          this.setState({ createCPLoading: false, 
+            message: "El título debe tener entre 5 y 30 caracteres.", 
+            showMessage: true, 
+            title: "Error"});
+        }
+        else if (this.state.cpDescription.length < "25" || this.state.cpDescription.length > "1000") {
+
+          this.setState({ createCPLoading: false, 
+            message: "La descripción debe tener entre 25 y 1000 caracteres.", 
+            showMessage: true, 
+            title: "Error"});
+        }
         else {
 
           this.setState({ createCPLoading: true});
           this.handleClose();
 
+          const dateToday = new Date().toLocaleDateString('en-GB'); 
+
           const json_value =  {
             "title": this.state.cpTitle, 
             "description": this.state.cpDescription ,
-            "created_date": "20/01/01"
+            "created_date": dateToday
           }
 
           const ipfsHash = await ipfsService.addJson(json_value)

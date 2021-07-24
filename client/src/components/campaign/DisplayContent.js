@@ -219,8 +219,7 @@ class DisplayContent extends React.Component {
                 <h5> Estado: <Badge variant={this.state.badge_status}> { this.state.status } </Badge> </h5>
                 <div className="main-info-campaign">
                   <div>
-                    <Icon fitted name='user circle'/> 
-                    Owner:&nbsp; 
+                    <Icon fitted name='user circle'/> &nbsp;Owner:&nbsp; 
                     <a href={`https://etherscan.io/address/${this.props.data.owner}`}
                        target="_blank"
                        rel="noopener noreferrer"

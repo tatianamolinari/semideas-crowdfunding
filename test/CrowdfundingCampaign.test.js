@@ -729,10 +729,10 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const tx = await campaign.closeCloseProposal(i_proposal, { from: memberAccount });
         const { logs } = tx;
         expect(logs).to.be.an.instanceof(Array);
-        expect(logs).to.have.property('length', 2)
+        expect(logs).to.have.property('length', 1); //2);
 
-        expect(logs[0].event).to.equal('CloseProposalClosed');
-        expect(logs[1].event).to.equal('ChangeStatusCampaign');
+        //expect(logs[0].event).to.equal('CloseProposalClosed');
+        expect(logs[0].event).to.equal('ChangeStatusCampaign');
 
         const afterResult = await campaign.getCloseProposal(i_proposal);
 

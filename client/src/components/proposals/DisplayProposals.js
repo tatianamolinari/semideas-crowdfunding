@@ -68,31 +68,34 @@ class DisplayProposals extends React.Component {
 
   async setProposalData(index) {
 
-    this.setState({ loaded: false });
+    if (this.state.proposals.length > index)
+    {
+      this.setState({ loaded: false });
 
-    const proposalData = this.state.proposals[index];
+      const proposalData = this.state.proposals[index];
 
-    const proposalInfo = await campaignService.getProposalInfo(proposalData["index_proposal"]);
-    
-    proposalData["recipient"] = proposalInfo.recipient;
-    proposalData["value"] = proposalInfo.value;
-    proposalData["approvalsCount"] = proposalInfo.approvalsCount;
-    proposalData["disapprovalsCount"] = proposalInfo.disapprovalsCount;
-    proposalData["status"] = proposalInfo.status;
-    proposalData["limitTime"] = proposalInfo.limitTime;
-    proposalData["hasVoted"] = proposalInfo.senderHasVote;
+      const proposalInfo = await campaignService.getProposalInfo(proposalData["index_proposal"]);
+      
+      proposalData["recipient"] = proposalInfo.recipient;
+      proposalData["value"] = proposalInfo.value;
+      proposalData["approvalsCount"] = proposalInfo.approvalsCount;
+      proposalData["disapprovalsCount"] = proposalInfo.disapprovalsCount;
+      proposalData["status"] = proposalInfo.status;
+      proposalData["limitTime"] = proposalInfo.limitTime;
+      proposalData["hasVoted"] = proposalInfo.senderHasVote;
 
-    const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
-    const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
-    const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(proposalInfo.inTime) && proposalInfo.status==='0';
-    const canRelease = campaignActive && this.props.isOwner && proposalInfo.status==='1';
+      const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
+      const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
+      const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(proposalInfo.inTime) && proposalInfo.status==='0';
+      const canRelease = campaignActive && this.props.isOwner && proposalInfo.status==='1';
 
-    this.setState({ proposal_data_i: index, 
-                    proposal_data : proposalData, 
-                    canVote: canVote, 
-                    canClose: canClose,
-                    canRelease: canRelease,
-                    loaded:true });
+      this.setState({ proposal_data_i: index, 
+                      proposal_data : proposalData, 
+                      canVote: canVote, 
+                      canClose: canClose,
+                      canRelease: canRelease,
+                      loaded:true });
+    }
   }
 
   async showProposal(index) {

@@ -19,7 +19,7 @@ El problema que surge en la comunidad del crowdfunding es el uso de las platafor
   <li> Cada vez que el autor de la campaña quiera liberar fondos tendrá que explicar para qué y cuánto necesita. </li>
   <li> Los contribuyentes tendrán X cantidad de tiempo para votar a favor de la liberación de fondos o abstenerse. </li>
   <li> Si la cantidad de votos supera un porcentaje preestablecido, los fondos son trasladados a la billetera virtual del autor.</li>
-  <li> Los colaboradores pueden en cualquier momento elevar una petición de destrucción de la campaña si ven actitudes sospechosas y si la cantidad de votos supera un porcentaje preestablecido cada contribuyente recuperará parte de su inversión.</li>
+  <li> Los colaboradores pueden en cualquier momento elevar una petición de destrucción de la campaña si ven actitudes sospechosas y si la cantidad de votos supera un porcentaje preestablecido cada contribuyente recuperará parte de su colaboración.</li>
 
 </p>
 

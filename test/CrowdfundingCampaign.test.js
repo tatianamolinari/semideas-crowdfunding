@@ -847,7 +847,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const { logs } = tx;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)
-        expect(logs[0].event).to.equal('withdrawFounds');
+        expect(logs[0].event).to.equal('WithdrawFounds');
 
         const afterContributorBalance = await web3.eth.getBalance(memberAccount);
         const afterCampaignBalance = await web3.eth.getBalance(campaign.address);
@@ -870,7 +870,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const { logs } = tx1;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)
-        expect(logs[0].event).to.equal('withdrawFounds');
+        expect(logs[0].event).to.equal('WithdrawFounds');
 
         const afterContributorBalance = await web3.eth.getBalance(otherMemberAccount);
         const afterCampaignBalance = await web3.eth.getBalance(campaign.address);
@@ -893,7 +893,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const { logs } = tx2;
         expect(logs).to.be.an.instanceof(Array);
         expect(logs).to.have.property('length', 1)
-        expect(logs[0].event).to.equal('withdrawFounds');
+        expect(logs[0].event).to.equal('WithdrawFounds');
 
         const afterContributorBalance = await web3.eth.getBalance(anotherMemberAccount);
         const afterCampaignBalance = await web3.eth.getBalance(campaign.address);

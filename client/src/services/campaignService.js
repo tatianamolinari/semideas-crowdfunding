@@ -78,6 +78,19 @@ class CampaignService {
     return campaignData;
   }
 
+  async getBalancesInfo() {
+    const balanceValues = await this.instance.methods.getBalancesInfo().call();
+    const balanceInfo = getValuesFromHash(balanceValues);
+
+    const balancesData = {};
+    balancesData.goal = balanceInfo[0];
+    balancesData.finalContributions = balanceInfo[1];
+    balancesData.remainingContributions = balanceInfo[2];
+    balancesData.actualBalance = balanceInfo[3];
+
+    return balancesData;
+  }
+
   async getMembershipFromAddress(address) {
     return (await this.instance.methods.isMember(address).call());
   }

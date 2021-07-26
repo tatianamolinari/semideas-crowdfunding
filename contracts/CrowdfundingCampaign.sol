@@ -221,7 +221,7 @@ contract CrowdfundingCampaign {
 
     /** @dev Emitted when a member withdraw his founds.
      */
-    event withdrawFounds(address _member, uint contribution, uint goal, uint256 payment, uint founds);
+    event WithdrawFounds(address _member, uint contribution, uint goal, uint256 payment, uint founds);
 
 
     /* Functions */
@@ -422,10 +422,10 @@ contract CrowdfundingCampaign {
         
         require( payment < address(this).balance, "Payment can't be more than balance.");
 
-        payable(msg.sender).transfer(payment);
         withdraws[msg.sender] = true;
+        payable(msg.sender).transfer(payment);
 
-        emit withdrawFounds(msg.sender, contributions[msg.sender], finalContributions, payment, remainingContributions );
+        emit WithdrawFounds(msg.sender, contributions[msg.sender], finalContributions, payment, remainingContributions );
     }
 
 
@@ -453,6 +453,12 @@ contract CrowdfundingCampaign {
      */
     function getRemainingContributions() public view returns (uint) {
         return remainingContributions;
+    }
+
+    /** @dev Function to get all the balances of the campaign
+     */
+    function getBalancesInfo() public view returns (uint, uint, uint, uint) {
+        return (goal, finalContributions, remainingContributions, address(this).balance);
     }
 
     /** @dev Function to get the data of the campaign

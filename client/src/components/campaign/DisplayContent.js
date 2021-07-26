@@ -22,6 +22,10 @@ class DisplayContent extends React.Component {
     balance: this.props.data.balance,
     membersCount: this.props.data.membersCount,
     status: this.props.data.status,
+    goal: this.props.data.goal, 
+    finalContributions: this.props.data.finalContributions, 
+    remainingContributions: this.props.data.remainingContributions, 
+    balance: this.props.data.balance,
 
     rol: null,
     progress: 0,
@@ -82,6 +86,18 @@ class DisplayContent extends React.Component {
       );
       console.error(error);
     }
+  }
+
+  actualizeProgressInfo = () => {
+    let progress;
+    if (this.state.status !== 'Creada') { 
+      progress = this.getProgress(this.state.finalContributions,this.state.balance); 
+
+    } else {
+      progress = this.getProgress(this.state.goal, this.state.balance);
+    }
+
+    this.setState({ progress: progress });
   }
   
   actualizeRol = (isOwner,isMember) =>
@@ -153,18 +169,10 @@ class DisplayContent extends React.Component {
 
   componentDidMount = async() => {
 
-    let progress;
-    const balance = await campaignService.getBalance();
-    if (this.state.status !== 'Creada') { 
-      progress = this.getProgress(this.props.data.finalContributions,balance); 
+    this.actualizeProgressInfo();
 
-    } else {
-      progress = this.getProgress(this.props.data.goal, balance);
-    }
     const badge_status = fromStatusToBadgeClass(this.state.status);
-    
     this.setState({ badge_status: badge_status });
-    this.setState({ progress: progress });
 
     this.actualizeRol(this.state.isOwner, this.state.isMember);
     
@@ -174,10 +182,16 @@ class DisplayContent extends React.Component {
     await campaignService.suscribeToProposalRelease(actualizeBalanceInfo);
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     if(this.props.data.status !== prevProps.data.status)
     {
       this.actualizeStatusInfo();
+      const balancesInfo = await campaignService.getBalancesInfo();
+      this.setState({ goal: balancesInfo.goal, 
+                      finalContributions: balancesInfo.finalContributions, 
+                      remainingContributions: balancesInfo.remainingContributions, 
+                      balance: balancesInfo.actualBalance });
+      this.actualizeProgressInfo();
     }
   }
 
@@ -190,19 +204,12 @@ class DisplayContent extends React.Component {
 
   render() {
 
-    let images = ["/images/prueba/prueba1.jpg","/images/prueba/prueba2.jpg","/images/prueba/prueba3.jpg","/images/prueba/prueba4.jpg"]
-    let descripcion = "Lorem ipsum dolor sit amet consectetur adipiscing elit quis, condimentum odio class etiam justo euismod orci, lobortis cras aptent mauris nullam semper senectus. Etiam ligula malesuada sapien magna tincidunt scelerisque ridiculus vel, aenean aliquam arcu eget facilisis placerat cubilia nibh purus, eleifend mi sociis ad vitae nam tempor. Imperdiet arcu parturient libero suscipit accumsan erat convallis velit metus bibendum taciti, auctor neque felis per augue in maecenas vulputate enim. Montes senectus urna eros accumsan lobortis cras ante convallis lacus, volutpat ullamcorper platea fermentum morbi class hac laoreet pretium sagittis, luctus cursus pellentesque interdum sed nullam porta est. Morbi mattis tincidunt ligula ad blandit per varius vulputate lobortis, nam curae urna netus bibendum a non aenean, consequat ut nascetur mi viverra lectus ultrices dis. A magnis molestie ultrices suscipit euismod litora fames volutpat erat vehicula venenatis mattis neque nam interdum, tincidunt orci condimentum augue natoque magna libero arcu dui taciti mus sed hendrerit class."
-    let created_at = "10/03/2021"
-    let title = "Este titulo está mockeado"
+    const images = this.props.ipfsData.images.map(path =>  ipfsService.getIPFSUrlFromPath(path));
 
-    if (this.props.ipfsData) {
-
-      images = this.props.ipfsData.images.map(path =>  ipfsService.getIPFSUrlFromPath(path));
-
-      descripcion = this.props.ipfsData.description
-      created_at = this.props.ipfsData.created_date
-      title = this.props.ipfsData.title
-    }
+    const descripcion = this.props.ipfsData.description
+    const created_at = this.props.ipfsData.created_date
+    const title = this.props.ipfsData.title
+    
     
     return (  <div className="campaign-info" id="general_data_container"> 
                 <h3 className="name"> {title} 
@@ -235,12 +242,12 @@ class DisplayContent extends React.Component {
                 
                 <h5> Contribuciones </h5>
                 { this.state.status==="Creada" ?
-                  <div> Para que esta campaña comience se deben recaudar <Label color="green"> <span data-testid="goal">{ this.props.data.goal }</span> wei </Label> o más. </div> :
-                  <div> Para poder comenzar esta campaña debía recaudar al menos <Label color="green"> <span data-testid="goal">{ this.props.data.goal }</span> wei </Label> y recaudó <Label color="green"> <span data-testid="finalContributions">{ this.props.data.finalContributions }</span> wei </Label> . </div>
+                  <div> Para que esta campaña comience se deben recaudar <Label color="green"> <span data-testid="goal">{ this.state.goal }</span> wei </Label> o más. </div> :
+                  <div> Para poder comenzar esta campaña debía recaudar al menos <Label color="green"> <span data-testid="goal">{ this.state.goal }</span> wei </Label> y recaudó <Label color="green"> <span data-testid="finalContributions">{ this.state.finalContributions }</span> wei </Label> . </div>
                 }
                 <div> La contribución mínima { this.state.status==="Creada" ? "es" : "fue" } de <Label color="teal"><span data-testid="minimunContribution">{ this.props.data.minimunContribution }</span> wei</Label></div> 
                 { (this.state.status==="Cerrada" || this.state.status==="Exitosa")  &&
-                    <div> Los fondos sobrantes al cerrar la campaña fueron de <Label color="green"> <span data-testid="remainingContributions">{ this.props.data.remainingContributions }</span> wei </Label> . </div>
+                    <div> Los fondos sobrantes al cerrar la campaña fueron de <Label color="green"> <span data-testid="remainingContributions">{ this.state.remainingContributions }</span> wei </Label> . </div>
                 }
                 <div className="progress-container">
                   { this.state.status==="Creada" ?

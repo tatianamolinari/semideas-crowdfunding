@@ -204,15 +204,23 @@ class DisplayContent extends React.Component {
 
   render() {
 
-    const images = this.props.ipfsData.images.map(path =>  ipfsService.getIPFSUrlFromPath(path));
+    let images = ["/images/prueba/prueba1.jpg","/images/prueba/prueba2.jpg","/images/prueba/prueba3.jpg","/images/prueba/prueba4.jpg"]
+    let descripcion = "Lorem ipsum dolor sit amet consectetur adipiscing elit quis, condimentum odio class etiam justo euismod orci, lobortis cras aptent mauris nullam semper senectus. Etiam ligula malesuada sapien magna tincidunt scelerisque ridiculus vel, aenean aliquam arcu eget facilisis placerat cubilia nibh purus, eleifend mi sociis ad vitae nam tempor. Imperdiet arcu parturient libero suscipit accumsan erat convallis velit metus bibendum taciti, auctor neque felis per augue in maecenas vulputate enim. Montes senectus urna eros accumsan lobortis cras ante convallis lacus, volutpat ullamcorper platea fermentum morbi class hac laoreet pretium sagittis, luctus cursus pellentesque interdum sed nullam porta est. Morbi mattis tincidunt ligula ad blandit per varius vulputate lobortis, nam curae urna netus bibendum a non aenean, consequat ut nascetur mi viverra lectus ultrices dis. A magnis molestie ultrices suscipit euismod litora fames volutpat erat vehicula venenatis mattis neque nam interdum, tincidunt orci condimentum augue natoque magna libero arcu dui taciti mus sed hendrerit class."
+    let created_at = "10/03/2021"
+    let title = "Este titulo está mockeado"
 
-    const descripcion = this.props.ipfsData.description
-    const created_at = this.props.ipfsData.created_date
-    const title = this.props.ipfsData.title
+    if (this.props.ipfsData) {
+      images = this.props.ipfsData.images.map(path =>  ipfsService.getIPFSUrlFromPath(path));
+
+      descripcion = this.props.ipfsData.description
+      created_at = this.props.ipfsData.created_date
+      title = this.props.ipfsData.title
+    }
     
     
     return (  <div className="campaign-info" id="general_data_container"> 
                 <h3 className="name"> {title} 
+                  <span className="c_index_info"> ({this.props.data.c_index }) </span>
                   { (this.state.rol) && 
                   <Label color="teal">
                     <span data-testid="rol">

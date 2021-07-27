@@ -91,7 +91,8 @@ class ContainerInfo extends React.Component {
           remainingContributions: campaignInfo.remainingContributions,
           isOwner: isOwner,
           out_grace_period: ((campaignInfo.out_grace_period && campaignInfo.status==='0') || campaignInfo.status==='1'),
-          ipfsData: ipfsData
+          ipfsData: ipfsData,
+          c_index: this.props.indexCampaign
         });
       }
     } catch (error) {
@@ -194,7 +195,8 @@ class ContainerInfo extends React.Component {
                             balance: this.state.balance,
                             remainingContributions: this.state.remainingContributions,
                             finalContributions: this.state.finalContributions,
-                            isOwner: this.state.isOwner
+                            isOwner: this.state.isOwner,
+                            c_index: this.state.c_index
                           }}/>
 
                           <DisplayProgressUpdates

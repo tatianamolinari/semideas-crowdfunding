@@ -168,6 +168,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         const log = logs[0];
         expect(log.event).to.equal('ChangeStatusCampaign');
+        expect(log.args.status).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(1));
         expect(campaign.getFinalContributions()).to.eventually.be.a.bignumber.equal(campaignBalance); 
@@ -729,9 +730,8 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const tx = await campaign.closeCloseProposal(i_proposal, { from: memberAccount });
         const { logs } = tx;
         expect(logs).to.be.an.instanceof(Array);
-        expect(logs).to.have.property('length', 1); //2);
+        expect(logs).to.have.property('length', 1);
 
-        //expect(logs[0].event).to.equal('CloseProposalClosed');
         expect(logs[0].event).to.equal('ChangeStatusCampaign');
 
         const afterResult = await campaign.getCloseProposal(i_proposal);

@@ -26,13 +26,14 @@ class DisplayContent extends React.Component {
     finalContributions: this.props.data.finalContributions, 
     remainingContributions: this.props.data.remainingContributions, 
     balance: this.props.data.balance,
+    hasWithdraw: false,
 
     rol: null,
     progress: 0,
     badge_status:'',
 
     loaded: false,
-    changeActiveLoading: false,
+    changeTxLoading: false,
 
     showMessage: false,
     message: '',
@@ -123,7 +124,7 @@ class DisplayContent extends React.Component {
         }
         else {
 
-          this.setState({ changeActiveLoading: true});
+          this.setState({ changeTxLoading: true});
 
           campaignService.setActive().then((statusResponse) => {
             let title, message = "";
@@ -150,7 +151,7 @@ class DisplayContent extends React.Component {
               message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
             }
 
-            this.setState({ changeActiveLoading: false, 
+            this.setState({ changeTxLoading: false, 
                             message: message, 
                             showMessage: true, 
                             title: title});
@@ -164,6 +165,10 @@ class DisplayContent extends React.Component {
 
   }
 
+  withdraw = async() =>  {
+    console.log("aaaaaaaaaaaaaaaaaaa");
+  }
+
   handleMessageClose = () => this.setState({ showMessage: false});
 
 
@@ -175,6 +180,14 @@ class DisplayContent extends React.Component {
     this.setState({ badge_status: badge_status });
 
     this.actualizeRol(this.state.isOwner, this.state.isMember);
+
+    let hasWithdraw = false;
+    if (this.props.campaignStatus === "Cerrada" || this.props.campaignStatus === "Exitosa")
+    {
+      hasWithdraw = await campaignService.hasWithdraw(); 
+    }
+
+    this.setState( { hasWithdraw: hasWithdraw } );
     
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
     await campaignService.suscribeToNewContribution(actualizeInfo);
@@ -275,18 +288,32 @@ class DisplayContent extends React.Component {
                       contributeLoading={false}/>
                   </div> }
 
+                { this.state.showMessage &&
+                  <MessageModal
+                    showMessage={this.state.showMessage}
+                    handleMessageClose={this.handleMessageClose}
+                    message={this.state.message}
+                    title={this.state.title} />
+                }
+
+                { this.state.isMember && (!this.state.isOwner) && this.state.hasWithdraw && 
+                  ((this.props.campaignStatus === "Cerrada") || (this.props.campaignStatus === "Exitosa")) &&
+                  <div>
+                    <Button
+                      loading={this.state.changeTxLoading}
+                      className="normal-button"
+                      onClick={this.withdraw}
+                      data-testid="withdraw">
+                        Retirar fondos
+                    </Button>
+                  </div>
+                }
+
                 { this.state.progress >= 100 && this.state.isOwner && this.state.status==="Creada"
                   &&
                     <div>
-                      { this.state.showMessage &&
-                        <MessageModal
-                        showMessage={this.state.showMessage}
-                        handleMessageClose={this.handleMessageClose}
-                        message={this.state.message}
-                        title={this.state.title} />
-                      }
                       <Button
-                        loading={this.state.changeActiveLoading}
+                        loading={this.state.changeTxLoading}
                         className="normal-button"
                         onClick={this.activeCampaign}
                         data-testid="changeActiveButton">

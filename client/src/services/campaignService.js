@@ -153,6 +153,11 @@ class CampaignService {
     return hasVoted;
   }
 
+  async hasWithdraw() {
+    const senderHasWithdraw = await this.instance.methods.hasWithdraw().call();
+    return senderHasWithdraw;
+  }
+
 
 /** Get past events */
 
@@ -284,24 +289,6 @@ async getCloseProposals() {
     const currentBlock = await this.getCurrentBlock();
 
     this.instance.events.CloseProposalVoted({
-      fromBlock: currentBlock
-      }, function(error, event){ console.log(event); })
-      .on("connected", function(subscriptionId){
-      })
-      .on('data', function(event){
-          actualizeFunction();
-      })
-      .on('error', function(error, receipt) {
-        console.log("hubo un error");
-        console.log(error);
-      });
-  }
-
-  async suscribeToClosedCloseProposal(actualizeFunction){
-
-    const currentBlock = await this.getCurrentBlock();
-
-    this.instance.events.CloseProposalClosed({
       fromBlock: currentBlock
       }, function(error, event){ console.log(event); })
       .on("connected", function(subscriptionId){

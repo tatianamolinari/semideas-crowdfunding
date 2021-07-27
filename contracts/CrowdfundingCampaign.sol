@@ -205,11 +205,6 @@ contract CrowdfundingCampaign {
      */
     event CloseProposalVoted(uint _index);
 
-    /** @dev Emitted when a  close proposal is Closed.
-     *  @param _index The index of the close proposal.
-     */
-    event CloseProposalClosed(uint _index);
-
     /** @dev Emitted when the author creates a progress update to show how the project is going.
      *  @param _ipfshash The url hash of the progress update data stored in IPFS.
      */
@@ -217,7 +212,7 @@ contract CrowdfundingCampaign {
 
     /** @dev Emitted when the status of the campaign change.
      */
-    event ChangeStatusCampaign();
+    event ChangeStatusCampaign(CampaignStatus status);
 
     /** @dev Emitted when a member withdraw his founds.
      */
@@ -243,7 +238,7 @@ contract CrowdfundingCampaign {
         status = CampaignStatus.ACTIVE;
         finalContributions = address(this).balance;
 
-        emit ChangeStatusCampaign();
+        emit ChangeStatusCampaign(status);
          
     }
 
@@ -407,8 +402,7 @@ contract CrowdfundingCampaign {
             cProposal.status = ProposalStatus.DISAPPROVED;
         }
 
-        //emit CloseProposalClosed(_index);
-        emit ChangeStatusCampaign();
+        emit ChangeStatusCampaign(status);
     }
 
     /** @dev Allow only members to withdraw the remaining founds once the campaign is closed.
@@ -514,6 +508,12 @@ contract CrowdfundingCampaign {
      */
     function getCloseProposalsCount() public view returns (uint) {
         return closeProposals.length;
+    }
+
+    /** @dev Function to know if a member has withdraw it's founds 
+    */
+    function hasWithdraw() public view returns (bool) {
+        return withdraws[msg.sender];
     }
    
 }

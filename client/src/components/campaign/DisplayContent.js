@@ -26,7 +26,7 @@ class DisplayContent extends React.Component {
     finalContributions: this.props.data.finalContributions, 
     remainingContributions: this.props.data.remainingContributions, 
     balance: this.props.data.balance,
-    hasWithdraw: false,
+    canWithdraw: false,
 
     rol: null,
     progress: 0,
@@ -70,6 +70,13 @@ class DisplayContent extends React.Component {
       );
       console.error(error);
     }
+  }
+
+  actualizeWithdrawInfo = async() => {
+    const balance = await campaignService.getBalance();
+    const progress = this.getProgress(this.state.finalContributions,balance);
+    this.setState({ balance: balance, 
+                    progress: progress });
   }
 
   actualizeStatusInfo = async () =>  {
@@ -118,7 +125,7 @@ class DisplayContent extends React.Component {
 
         if(accounts.length===0)
         {
-          const mssj = "Para contribuir debes haber iniciado sesión en la wallet de metamask.";
+          const mssj = "Para activar la campaña debes haber iniciado sesión en la wallet de metamask.";
           this.setState({ showMessage: true, message: mssj});
           console.log(mssj);
         }
@@ -130,7 +137,7 @@ class DisplayContent extends React.Component {
             let title, message = "";
 
             if (statusResponse.error) {
-              title = "Hubo un error al contribuir";
+              title = "Hubo un error al activar la campaña";
               switch (statusResponse.errorMsg) {
                 case "Acción denegada":
                   message = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
@@ -147,8 +154,9 @@ class DisplayContent extends React.Component {
               }
             }
             else {
-              title = "Bienvenido al proyecto";
-              message = "¡La contribución que hiciste se ejecutó de manera exitosa!\n ¡Gracias por contribuir!"; 
+              title = "Activación exitosa";
+              message = "¡La campaña ahora está activa!\n Ya puedes subir novedades del proyecto y pedidos de presupuesto."; 
+              
             }
 
             this.setState({ changeTxLoading: false, 
@@ -166,7 +174,67 @@ class DisplayContent extends React.Component {
   }
 
   withdraw = async() =>  {
-    console.log("aaaaaaaaaaaaaaaaaaa");
+    try {
+      const accounts = await campaignService.getAccounts();
+
+      if(accounts.length===0)
+      {
+        const mssj = "Para retirar fondos debes haber iniciado sesión en la wallet de metamask.";
+        this.setState({ showMessage: true, message: mssj});
+        console.log(mssj);
+      }
+      else {
+
+        this.setState({ changeTxLoading: true});
+
+        campaignService.withdraw().then((statusResponse, receipt) => {
+
+          let title, message = "";
+
+          if (statusResponse.error) {
+            title = "Hubo un error al retirar fondos";
+            switch (statusResponse.errorMsg) {
+              case "Acción denegada":
+                message = "Has denegado la acción a tráves de metamask. Para que este completa debes aceptarla.";
+                break;
+              case "Nonce error":
+                message = "Error de nonce: El nonce de la cuenta elegida y de la transacción son diferentes.";
+                break;
+              case "Gas insuficiente":
+                message = "La operación llevó más gas que el que pusiste como límite.";
+                break;
+              default: 
+                message = "Error desconocido";
+                break;
+            }
+          }
+          else {
+
+            const returnValues = statusResponse.res.events.WithdrawFounds.returnValues;
+            
+            const contribution = returnValues.contribution;
+            const finalContributions = returnValues.finalContributions;
+            const remainingContributions = returnValues.remainingContributions;
+            const payment = returnValues.payment;
+
+            title = "Retiro de fondos exitoso";
+            message = `¡Ya has recibido tus fondos en tu cuenta!\n 
+                      Como contribuiste con ${contribution} wei, el total de contribuciones fue ${finalContributions} wei y el sobrante fue ${remainingContributions} wei se te han transferido ${payment} wei.
+                      Gracias por haber participado de esta campaña.`; 
+            this.setState({ canWithdraw: false});
+          }
+
+          this.setState({ changeTxLoading: false, 
+                          message: message, 
+                          showMessage: true, 
+                          title: title});
+        });
+      }
+    }
+    catch(error)  {
+      console.log("Este error traspasó");
+      console.log(error);
+    }
   }
 
   handleMessageClose = () => this.setState({ showMessage: false});
@@ -181,18 +249,25 @@ class DisplayContent extends React.Component {
 
     this.actualizeRol(this.state.isOwner, this.state.isMember);
 
-    let hasWithdraw = false;
-    if (this.props.campaignStatus === "Cerrada" || this.props.campaignStatus === "Exitosa")
+    let canWithdraw = false;
+
+    if (this.state.status === "Cerrada" || this.state.status === "Exitosa")
     {
-      hasWithdraw = await campaignService.hasWithdraw(); 
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+      const hasWithdraw = await campaignService.hasWithdraw(); 
+      canWithdraw = !hasWithdraw;
+      console.log(hasWithdraw)
+      console.log(canWithdraw)
     }
 
-    this.setState( { hasWithdraw: hasWithdraw } );
+    this.setState( { canWithdraw: canWithdraw } );
     
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
     await campaignService.suscribeToNewContribution(actualizeInfo);
     const actualizeBalanceInfo = async() => {this.actualizeBalanceInfo()};
     await campaignService.suscribeToProposalRelease(actualizeBalanceInfo);
+    const actualizeWithdrawInfo = async() => {this.actualizeWithdrawInfo()};
+    await campaignService.suscribeToWithdraw(actualizeWithdrawInfo);
   }
 
   async componentDidUpdate(prevProps) {
@@ -296,8 +371,8 @@ class DisplayContent extends React.Component {
                     title={this.state.title} />
                 }
 
-                { this.state.isMember && (!this.state.isOwner) && this.state.hasWithdraw && 
-                  ((this.props.campaignStatus === "Cerrada") || (this.props.campaignStatus === "Exitosa")) &&
+                { this.state.isMember && (!this.state.isOwner) && this.state.canWithdraw && 
+                  ((this.state.status === "Cerrada") || (this.state.status === "Exitosa")) &&
                   <div>
                     <Button
                       loading={this.state.changeTxLoading}

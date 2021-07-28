@@ -154,7 +154,7 @@ class CampaignService {
   }
 
   async hasWithdraw() {
-    const senderHasWithdraw = await this.instance.methods.hasWithdraw().call();
+    const senderHasWithdraw = await this.instance.methods.hasWithdraw().call({ from: this.accounts[0]});
     return senderHasWithdraw;
   }
 
@@ -338,6 +338,25 @@ async getCloseProposals() {
       });
   }
 
+  async suscribeToWithdraw(actualizeFunction){
+
+    const currentBlock = await this.getCurrentBlock();
+
+    this.instance.events.WithdrawFounds({
+      fromBlock: currentBlock
+      }, function(error, event){ console.log(event); })
+      .on("connected", function(subscriptionId){
+      })
+      .on('data', function(event){
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        actualizeFunction(event);
+      })
+      .on('error', function(error, receipt) {
+        console.log("hubo un error");
+        console.log(error);
+      });
+  }
+
 
 /** Manejo de trasacciones y errores */
 
@@ -362,10 +381,11 @@ async getCloseProposals() {
       console.log(error);
     }
 
-    resolve(statusResponse);
+    resolve(statusResponse, receipt);
   }
 
   transactionOnReipt(receipt, statusResponse, resolve){
+      statusResponse.res = receipt;
       console.log('reciept', receipt);
       if(receipt.status === '0x1' || receipt.status === 1  || receipt.status===true ){
         console.log('Transaction Success');
@@ -572,6 +592,27 @@ async getCloseProposals() {
     const gasprice = await this.web3.eth.getGasPrice();
     const gas = await this.instance.methods.closeCloseProposal(index).estimateGas({ from: this.accounts[0] });      
     const transaction = this.instance.methods.closeCloseProposal(index).send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
+    var service = this;
+
+    const promise = new Promise(function(resolve, reject) {
+
+      const statusResponse = {};
+      statusResponse.error = false;
+      statusResponse.errorMsg = "";
+
+      transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
+      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+
+    });
+
+    return promise;
+  }
+
+  async withdraw() {
+
+    const gasprice = await this.web3.eth.getGasPrice();
+    const gas = await this.instance.methods.withdraw().estimateGas({ from: this.accounts[0] });      
+    const transaction = this.instance.methods.withdraw().send({ from: this.accounts[0], gasPrice: gasprice, gas: gas }) ;    
     var service = this;
 
     const promise = new Promise(function(resolve, reject) {

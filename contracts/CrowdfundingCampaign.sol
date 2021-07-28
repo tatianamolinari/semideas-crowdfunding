@@ -216,7 +216,7 @@ contract CrowdfundingCampaign {
 
     /** @dev Emitted when a member withdraw his founds.
      */
-    event WithdrawFounds(address _member, uint contribution, uint goal, uint256 payment, uint founds);
+    event WithdrawFounds(address _member, uint contribution, uint finalContributions, uint256 payment, uint remainingContributions);
 
 
     /* Functions */

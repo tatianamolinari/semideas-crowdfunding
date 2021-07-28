@@ -80,6 +80,9 @@ class DisplayCloseProposals extends React.Component {
       cproposalData["status"] = cproposalInfo.status;
       cproposalData["limitTime"] = cproposalInfo.limitTime;
       cproposalData["hasVoted"] = cproposalInfo.senderHasVote;
+      cproposalData["author"] = cproposalInfo.author;
+      cproposalData["authorOwner"] = (cproposalInfo.author === this.props.owner);
+      console.log(cproposalData);
 
       const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
       const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && cproposalInfo.inTime && (!cproposalInfo.senderHasVote);
@@ -342,6 +345,8 @@ class DisplayCloseProposals extends React.Component {
                       dproposal_date={this.state.dproposal_data.proposal_date}
                       isMember={this.props.isMember}
                       isOwner={this.props.isOwner}
+                      authorOwner={this.state.dproposal_data.authorOwner}
+                      author={this.state.dproposal_data.author}
                       approvalsCount={this.state.dproposal_data.approvalsCount}
                       disapprovalsCount={this.state.dproposal_data.disapprovalsCount}
                       status={this.state.dproposal_data.status}

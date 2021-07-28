@@ -144,6 +144,7 @@ class CampaignService {
     dProposalData.limitTime = dProposalInfo[3];
     dProposalData.inTime = dProposalInfo[4];
     dProposalData.senderHasVote = dProposalInfo[5];
+    dProposalData.author = dProposalInfo[6];
 
     return dProposalData;
   }

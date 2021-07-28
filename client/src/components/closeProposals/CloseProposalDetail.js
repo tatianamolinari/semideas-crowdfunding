@@ -66,6 +66,27 @@ class CloseProposalDetail extends React.Component {
                 <p className="aling-right"> Fecha de creación <span data-testid="fecha_creacion">{this.props.dproposal_date}</span></p>
                 <h5 data-testid="estado"> Estado: <Badge variant={this.state.dproposal_data.badge_status}> { this.state.dproposal_data.status } </Badge> </h5>
                 <h5> Fecha de cierre de votación:  <span data-testid="limite">{ this.state.dproposal_data.limitTime }</span></h5>
+                <h5> 
+                    Autor:&nbsp; 
+                    <a href={`https://etherscan.io/address/${this.props.author}`}
+                       target="_blank"
+                       rel="noopener noreferrer" 
+                       data-testid="destinatario">
+                        { this.props.author }
+                    </a>&nbsp;
+                    { (this.props.authorOwner) ? 
+                    <Label color="green">
+                      <span data-testid="voted">
+                        Owner
+                      </span>
+                    </Label>:
+                     <Label color="red">
+                     <span data-testid="voted">
+                       Miembro
+                     </span>
+                   </Label>
+                  }
+                </h5> 
                 <p className="description" data-testid="descripcion"> {this.props.description} </p>
                 <hr style={{marginLeft: "6em", marginRight: "6em",  marginTop: "1.5em",  marginBottom: "1.5em"}}/>
               </div>);

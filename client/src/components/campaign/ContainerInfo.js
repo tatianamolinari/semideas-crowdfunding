@@ -216,6 +216,7 @@ class ContainerInfo extends React.Component {
                           instance={this.state.instance}
                           isMember={this.state.isMember}
                           isOwner={this.state.isOwner}
+                          owner={this.state.owner}
                           out_grace_period={this.state.out_grace_period}
                           active="cproposals_list"/>
                           

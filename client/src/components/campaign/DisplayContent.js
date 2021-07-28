@@ -79,6 +79,19 @@ class DisplayContent extends React.Component {
                     progress: progress });
   }
 
+  setCanWithdraw = async () => {
+
+    let canWithdraw = false;
+    
+    if (this.state.status === "Cerrada" || this.state.status === "Exitosa")
+    {
+      const hasWithdraw = await campaignService.hasWithdraw(); 
+      canWithdraw = !hasWithdraw;
+    }
+
+    this.setState( { canWithdraw: canWithdraw } );
+  }
+
   actualizeStatusInfo = async () =>  {
 
     try {
@@ -249,18 +262,7 @@ class DisplayContent extends React.Component {
 
     this.actualizeRol(this.state.isOwner, this.state.isMember);
 
-    let canWithdraw = false;
-
-    if (this.state.status === "Cerrada" || this.state.status === "Exitosa")
-    {
-      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-      const hasWithdraw = await campaignService.hasWithdraw(); 
-      canWithdraw = !hasWithdraw;
-      console.log(hasWithdraw)
-      console.log(canWithdraw)
-    }
-
-    this.setState( { canWithdraw: canWithdraw } );
+    this.setCanWithdraw();
     
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
     await campaignService.suscribeToNewContribution(actualizeInfo);
@@ -273,12 +275,13 @@ class DisplayContent extends React.Component {
   async componentDidUpdate(prevProps) {
     if(this.props.data.status !== prevProps.data.status)
     {
-      this.actualizeStatusInfo();
+      await this.actualizeStatusInfo();
       const balancesInfo = await campaignService.getBalancesInfo();
       this.setState({ goal: balancesInfo.goal, 
                       finalContributions: balancesInfo.finalContributions, 
                       remainingContributions: balancesInfo.remainingContributions, 
                       balance: balancesInfo.actualBalance });
+      this.setCanWithdraw();
       this.actualizeProgressInfo();
     }
   }

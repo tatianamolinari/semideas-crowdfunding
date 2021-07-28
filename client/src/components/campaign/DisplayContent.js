@@ -82,8 +82,6 @@ class DisplayContent extends React.Component {
   setCanWithdraw = async () => {
 
     let canWithdraw = false;
-    console.log("asasasasaaaaaaaaaaaaaaaaa")
-    console.log(this.state.status)
     if (this.state.status === "Cerrada" || this.state.status === "Exitosa")
     {
       const hasWithdraw = await campaignService.hasWithdraw(); 

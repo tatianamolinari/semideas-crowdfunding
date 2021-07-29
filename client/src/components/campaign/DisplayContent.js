@@ -25,7 +25,6 @@ class DisplayContent extends React.Component {
     goal: this.props.data.goal, 
     finalContributions: this.props.data.finalContributions, 
     remainingContributions: this.props.data.remainingContributions, 
-    balance: this.props.data.balance,
     canWithdraw: false,
 
     rol: null,
@@ -65,9 +64,7 @@ class DisplayContent extends React.Component {
                       progress: progress });
     }
     catch (error) {
-      alert(
-          `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
+      //alert(`Failed to load web3, accounts, or contract. Check console for details.`,);
       console.error(error);
     }
   }
@@ -101,9 +98,7 @@ class DisplayContent extends React.Component {
       this.setState({ status: status, badge_status: badge_status });
     }
     catch (error) {
-      alert(
-          `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
+      //alert(`Failed to load web3, accounts, or contract. Check console for details.`,);
       console.error(error);
     }
   }

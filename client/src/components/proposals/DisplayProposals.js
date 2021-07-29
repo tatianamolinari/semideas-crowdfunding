@@ -278,9 +278,7 @@ class DisplayProposals extends React.Component {
       await campaignService.suscribeToProposalRelease(actualizeProposalInfo);
 
     } catch (error) {
-        alert(
-            `Failed to load web3, accounts, or data contract. Check console for details.`,
-        );
+        //alert(`Failed to load web3, accounts, or data contract. Check console for details.`,);
         console.error(error);
     }
   }

@@ -245,16 +245,12 @@ class DisplayCloseProposals extends React.Component {
       await this.getListCProposals(1);
       const actualizeCProposalInfo = async() => { this.setCloseProposalData(this.state.dproposal_data_i) };
       const actualizeCProposalsListInfo = async() => { this.getListCProposals(this.state.activePage) };
-      //const actualizeNoActions = async() => { this.setState({canVote: false, canClose:false}); this.setCloseProposalData(this.state.dproposal_data_i) };
 
       await campaignService.suscribeToVoteCloseProposal(actualizeCProposalInfo);
-      //await campaignService.suscribeToClosedCloseProposal(actualizeNoActions);
       await campaignService.suscribeToCreateCloseProposal(actualizeCProposalsListInfo);
 
     } catch (error) {
-        alert(
-            `Failed to load web3, accounts, or data contract. Check console for details.`,
-        );
+        //alert(`Failed to load web3, accounts, or data contract. Check console for details.`,);
         console.error(error);
     }
   }

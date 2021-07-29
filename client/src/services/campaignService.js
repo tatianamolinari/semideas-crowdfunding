@@ -63,30 +63,28 @@ class CampaignService {
 
   async getCampaignInfo() {
     const campaignValues = await this.instance.methods.getCampaignInfo().call();
-    const campaignInfo = getValuesFromHash(campaignValues);
-             
+
     const campaignData = {};
-    campaignData.owner = campaignInfo[0];
-    campaignData.status = await campaignInfo[1];
-    campaignData.goal = campaignInfo[2]
-    campaignData.minimunContribution = campaignInfo[3];
-    campaignData.membersCount = campaignInfo[4];
-    campaignData.finalContributions = campaignInfo[5];
-    campaignData.remainingContributions = campaignInfo[6];
-    campaignData.out_grace_period = campaignInfo[7];
+    campaignData.owner = campaignValues._owner;
+    campaignData.status = campaignValues._status;
+    campaignData.goal = campaignValues._goal;
+    campaignData.minimunContribution = campaignValues._minimunContribution;
+    campaignData.membersCount = campaignValues._membersCount;
+    campaignData.finalContributions = campaignValues._finalContributions;
+    campaignData.remainingContributions = campaignValues._remainingContributions;
+    campaignData.out_grace_period = campaignValues._out_grace_period;
 
     return campaignData;
   }
 
   async getBalancesInfo() {
     const balanceValues = await this.instance.methods.getBalancesInfo().call();
-    const balanceInfo = getValuesFromHash(balanceValues);
 
     const balancesData = {};
-    balancesData.goal = balanceInfo[0];
-    balancesData.finalContributions = balanceInfo[1];
-    balancesData.remainingContributions = balanceInfo[2];
-    balancesData.actualBalance = balanceInfo[3];
+    balancesData.goal = balanceValues._goal;
+    balancesData.finalContributions = balanceValues._finalContributions;
+    balancesData.remainingContributions = balanceValues._remainingContributions;
+    balancesData.actualBalance = balanceValues._actualBalance;
 
     return balancesData;
   }
@@ -113,17 +111,16 @@ class CampaignService {
 
   async getProposalInfo(index) {
     const proposalValues = await this.instance.methods.getProposal(index).call({ from: this.accounts[0]});
-    const proposalInfo = getValuesFromHash(proposalValues);
-             
+            
     const proposalData = {};
-    proposalData.recipient = proposalInfo[0];
-    proposalData.value = proposalInfo[1];
-    proposalData.approvalsCount = proposalInfo[2]
-    proposalData.disapprovalsCount = proposalInfo[3];
-    proposalData.status = proposalInfo[4];
-    proposalData.limitTime = proposalInfo[5];
-    proposalData.inTime = proposalInfo[6];
-    proposalData.senderHasVote = proposalInfo[7];
+    proposalData.recipient = proposalValues._recipient;
+    proposalData.value = proposalValues._value;
+    proposalData.approvalsCount = proposalValues._approvalsCount;
+    proposalData.disapprovalsCount = proposalValues._disapprovalsCount;
+    proposalData.status = proposalValues._status;
+    proposalData.limitTime = proposalValues._limitTime;
+    proposalData.inTime = proposalValues._inTime;
+    proposalData.senderHasVote = proposalValues._senderHasVote;
 
     return proposalData;
   }
@@ -135,16 +132,15 @@ class CampaignService {
 
   async getCloseProposalInfo(index) {
     const dProposalValues = await this.instance.methods.getCloseProposal(index).call({ from: this.accounts[0]});
-    const dProposalInfo = getValuesFromHash(dProposalValues);
              
     const dProposalData = {};
-    dProposalData.approvalsCount = dProposalInfo[0]
-    dProposalData.disapprovalsCount = dProposalInfo[1];
-    dProposalData.status = dProposalInfo[2];
-    dProposalData.limitTime = dProposalInfo[3];
-    dProposalData.inTime = dProposalInfo[4];
-    dProposalData.senderHasVote = dProposalInfo[5];
-    dProposalData.author = dProposalInfo[6];
+    dProposalData.approvalsCount = dProposalValues._approvalsCount;
+    dProposalData.disapprovalsCount = dProposalValues._disapprovalsCount;
+    dProposalData.status = dProposalValues._status;
+    dProposalData.limitTime = dProposalValues._limitTime;
+    dProposalData.inTime = dProposalValues._inTime;
+    dProposalData.senderHasVote = dProposalValues._senderHasVote;
+    dProposalData.author = dProposalValues._author;
 
     return dProposalData;
   }

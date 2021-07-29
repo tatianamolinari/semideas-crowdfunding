@@ -83,9 +83,7 @@ class DisplayProgressUpdates extends React.Component {
 
 
     } catch (error) {
-        alert(
-            `Failed to load web3, accounts, or data contract. Check console for details.`,
-        );
+        //alert(`Failed to load web3, accounts, or data contract. Check console for details.`,);
         console.error(error);
     }
 };

@@ -1,12 +1,17 @@
 
 
 
-const CrowdfundingCampaign = artifacts.require("CrowdfundingCampaign.sol");
+//const CrowdfundingCampaign = artifacts.require("CrowdfundingCampaign.sol");
+const CrowdfundingCampaignDemo = artifacts.require("CrowdfundingCampaignDemo.sol");
 const { create } = require('../node_modules/ipfs-http-client');
 const fs = require('fs');
 const bs58 = require('bs58');
 const Web3 = require("web3");
 const ipfs_client = create('https://ipfs.infura.io:5001');
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function saveJsonIPFS(json_value){
     
@@ -60,26 +65,41 @@ async function createCampaigns(jsonInfo){
     const campaignsData = {};
     campaignsData["campaigns"] = [];
 
+    let ipfsHash = null;
+    let path = null;
+
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
     
-        const path = await saveInfoIPFS(campaignInfo["imagesPath"],
-                                        campaignInfo["title"],
-                                        campaignInfo["description"],
-                                        campaignInfo["created_date"]);
+        if (ipfsHash == null) {
+            path = await saveInfoIPFS(campaignInfo["imagesPath"],
+                                            campaignInfo["title"],
+                                            campaignInfo["description"],
+                                            campaignInfo["created_date"]);
 
-        const ipfsHash = "0x" + addressToHexBytes(path);
+            ipfsHash = "0x" + addressToHexBytes(path);
+        }
 
-        const campaign = await CrowdfundingCampaign.new(
+        const campaign = await CrowdfundingCampaignDemo.new(
                                 campaignInfo["minimunContribution"], 
                                 campaignInfo["goal"], 
                                 ipfsHash);
 
-        const campaingInfo = {}
-        campaingInfo["address"] = campaign.address
-        campaingInfo["ipfsPath"] = path
+        const blockNumber = await web3.eth.getBlockNumber();
 
-        campaignsData["campaigns"].push(campaingInfo);
+        const jsonCampaignInfo = {}
+        jsonCampaignInfo["address"] = campaign.address
+        jsonCampaignInfo["ipfsPath"] = path
+        jsonCampaignInfo["blockNumber"] = blockNumber;
+
+        campaignsData["campaigns"].push(jsonCampaignInfo);
         campaigns.push(campaign);
+
+        if (campaignInfo["out_grace_period"])
+        {
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.changeCreatedAt.estimateGas();      
+            await campaign.changeCreatedAt.sendTransaction({ gasPrice: gasprice, gas: gas }) ; 
+        }
     }
 
 
@@ -142,16 +162,29 @@ async function progressUpdates(web3, addr, jsonInfo, campaigns){
 
     let response = false;
     let i = 0;
+    const saved = {}
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
         {
+            console.log(`Progress updates ${campaignInfo["title"]} ${i}`)
             for (const progressUpdates of campaignInfo["progressUpdates"]) {
-                const path = await saveInfoIPFS(progressUpdates["imagesPath"],
-                                                progressUpdates["title"],
-                                                progressUpdates["description"],
-                                                progressUpdates["created_date"]);
 
-                const ipfsHash = "0x" + addressToHexBytes(path);
+                let ipfsHash = null;
+                if (saved[progressUpdates["title"]] == null)  {
+                    await sleep(3000);
+                    const path = await saveInfoIPFS(progressUpdates["imagesPath"],
+                                                    progressUpdates["title"],
+                                                    progressUpdates["description"],
+                                                    progressUpdates["created_date"]);
+
+                    ipfsHash = "0x" + addressToHexBytes(path);
+                    saved[progressUpdates["title"]] = ipfsHash;
+
+                } else {
+                    
+                    ipfsHash = saved[progressUpdates["title"]];
+                
+                }
 
                 const campaign = campaigns[i]
                 const gasprice = await web3.eth.getGasPrice();
@@ -171,16 +204,29 @@ async function proposals(web3, addr, jsonInfo, campaigns){
 
     let response = false;
     let i = 0;
+    const saved = {}
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
         {
+            let i_proposal = 0;
             for (const proposal of campaignInfo["proposals"]) {
-                const path = await saveInfoIPFS([],
-                                                proposal["title"],
-                                                proposal["description"],
-                                                proposal["created_date"]);
 
-                const ipfsHash = "0x" + addressToHexBytes(path);
+                let ipfsHash = null;
+                if (saved[proposal["title"]] == null)  {
+                    await sleep(3000);
+                    const path = await saveInfoIPFS([],
+                                                    proposal["title"],
+                                                    proposal["description"],
+                                                    proposal["created_date"]);
+
+                    ipfsHash = "0x" + addressToHexBytes(path);
+                    saved[proposal["title"]] = ipfsHash;
+
+                } else {
+                    
+                    ipfsHash = saved[proposal["title"]];
+                
+                }
 
                 const value = proposal["value"]
                 const recipient = addr[proposal["add_i"]]
@@ -190,6 +236,12 @@ async function proposals(web3, addr, jsonInfo, campaigns){
                 const gas = await campaign.createProposal.estimateGas(value, recipient, ipfsHash, { from: addr[0] });      
                 const transaction = await campaign.createProposal.sendTransaction(value, recipient, ipfsHash, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
                 response = response && (transaction.type == "mined");
+
+                await voteProposals(web3, addr, i_proposal, proposal, campaign);
+                await activateProposals(web3, addr, i_proposal, proposal, campaign);
+                await releaseProposals(web3, addr, i_proposal, proposal, campaign)
+
+                i_proposal = i_proposal + 1;
             }
         }
         i=i+1;
@@ -199,13 +251,175 @@ async function proposals(web3, addr, jsonInfo, campaigns){
 
 }
 
+async function voteProposals(web3, addr, i_proposal, jsonInfoProposal, campaign){
+
+    let response = false;
+    for (const vote of jsonInfoProposal["votes"]) {
+        const member = addr[vote["accountIndex"]]
+
+        if (vote["value"]) {
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.approveProposal.estimateGas(i_proposal, { from: member });      
+            const transaction = await campaign.approveProposal.sendTransaction(i_proposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
+            response = response && (transaction.type == "mined");
+        }
+        else {
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.disapproveProposal.estimateGas(i_proposal, { from: member });      
+            const transaction = await campaign.disapproveProposal.sendTransaction(i_proposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
+            response = response && (transaction.type == "mined");
+        }
+    };
+    return response;  
+
+}
+
+async function activateProposals(web3, addr, i_proposal, proposal, campaign){
+
+    let response = false;
+    
+    if (proposal["timeReached"]) {
+        const gasprice = await web3.eth.getGasPrice();
+        const gas = await campaign.changeLimitProposal.estimateGas(i_proposal, { from: addr[0] });      
+        const transaction = await campaign.changeLimitProposal.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+        response = response && (transaction.type == "mined");
+    }
+
+    if (proposal["timeReached"] && proposal["closed"]) {
+        console.log(`Closing ${i_proposal}`)
+        await sleep(3000);
+        const gasprice = await web3.eth.getGasPrice();
+        const gas = await campaign.closeProposal.estimateGas(i_proposal, { from: addr[0] });      
+        const transaction = await campaign.closeProposal.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+        response = response && (transaction.type == "mined");
+    }
+
+    //const p = await campaign.getProposal.call(i_proposal);
+    //console.log(p);
+
+    return response;
+
+}
+
+async function releaseProposals(web3, addr, i_proposal, proposal, campaign){
+
+    let response = false;
+    
+    if (proposal["release"]) {
+        const gasprice = await web3.eth.getGasPrice();
+        const gas = await campaign.release.estimateGas(i_proposal, { from: addr[0] });      
+        const transaction = await campaign.release.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+        response = response && (transaction.type == "mined");
+    }
+
+    return response;
+
+}
+
+async function closeProposals(web3, addr, jsonInfo, campaigns){
+
+    let response = false;
+    let i = 0;
+    const saved = {}
+
+    for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
+        if (campaignInfo["active"]["status"])
+        {
+            console.log(`${campaignInfo["title"]} ${i}`)
+            let i_cproposal = 0;
+            for (const dproposal of campaignInfo["closeProposals"]) {
+                console.log(`DP ${i_cproposal}`)
+
+                let ipfsHash = null;
+                if (saved[dproposal["title"]] == null)  {
+                    await sleep(3000);
+                    const path = await saveInfoIPFS([],
+                                                    dproposal["title"],
+                                                    dproposal["description"],
+                                                    dproposal["created_date"]);
+
+                    ipfsHash = "0x" + addressToHexBytes(path);
+                    saved[dproposal["title"]] = ipfsHash;
+
+                } else {
+                    
+                    ipfsHash = saved[dproposal["title"]];
+                
+                }
+                
+                const author = addr[dproposal["author_i"]]
+
+                const campaign = campaigns[i]
+                const gasprice = await web3.eth.getGasPrice();
+                const gas = await campaign.createCloseProposal.estimateGas(ipfsHash, { from: author });      
+                const transaction = await campaign.createCloseProposal.sendTransaction(ipfsHash, { from: author, gasPrice: gasprice, gas: gas }) ; 
+                response = response && (transaction.type == "mined");
+
+                await voteCloseProposals(web3, addr, i_cproposal, dproposal, campaign);
+                await activateCloseProposals(web3, addr, i_cproposal, dproposal, campaign);
+
+                i_cproposal = i_cproposal + 1;
+            }
+        }
+        i=i+1;
+
+    };
+    return response;  
+
+}
+
+async function voteCloseProposals(web3, addr, i_cproposal, jsonInfoProposal, campaign){
+
+    let response = false;
+    for (const vote of jsonInfoProposal["votes"]) {
+        const member = addr[vote["accountIndex"]]
+
+        if (vote["value"]) {
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.approveCloseProposal.estimateGas(i_cproposal, { from: member });      
+            const transaction = await campaign.approveCloseProposal.sendTransaction(i_cproposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
+            response = response && (transaction.type == "mined");
+        }
+        else {
+            const gasprice = await web3.eth.getGasPrice();
+            const gas = await campaign.disapproveCloseProposal.estimateGas(i_cproposal, { from: member });      
+            const transaction = await campaign.disapproveCloseProposal.sendTransaction(i_cproposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
+            response = response && (transaction.type == "mined");
+        }
+    };
+    return response;  
+
+}
+
+async function activateCloseProposals(web3, addr, i_cproposal, dproposal, campaign){
+
+    let response = false;
+    
+    if (dproposal["timeReached"]) {
+        const gasprice = await web3.eth.getGasPrice();
+        const gas = await campaign.changeLimitCloseProposal.estimateGas(i_cproposal, { from: addr[0] });      
+        const transaction = await campaign.changeLimitCloseProposal.sendTransaction(i_cproposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+        response = response && (transaction.type == "mined");
+    }
+
+    if (dproposal["closed"]) {
+        console.log(`Closing d ${i_cproposal}`)
+        await sleep(3000);
+        const gasprice = await web3.eth.getGasPrice();
+        const gas = await campaign.closeCloseProposal.estimateGas(i_cproposal, { from: addr[0] });      
+        const transaction = await campaign.closeCloseProposal.sendTransaction(i_cproposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
+        response = response && (transaction.type == "mined");
+    }
+
+    return response;
+
+}
+
 
 async function main() {
 
     const web3 = getWeb3();
-    console.log(web3.eth.accounts)
     const addr = await web3.eth.getAccounts();
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
     const jsonInfo = getBasicInfo();
     const campaigns = await createCampaigns(jsonInfo);
     console.log(`Creation passed: ${campaigns.length} new campaigns`);
@@ -216,13 +430,11 @@ async function main() {
     const progress = await progressUpdates(web3, addr, jsonInfo, campaigns)
     console.log(`Progress creation passed: ${progress}`);     
     const proposalsS = await proposals(web3, addr, jsonInfo, campaigns);
-    console.log(`Proposals creation passed: ${proposalsS}`);  
+    console.log(`Proposals creation passed: ${proposalsS}`);
+    const closeProposalsS = await closeProposals(web3, addr, jsonInfo, campaigns);
+    console.log(`Close Proposals creation passed: ${closeProposalsS}`);  
 }
 
-
-main()
-  .then(() => process.exit(0))
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+module.exports = function(callback) {
+    main().then(() => callback()).catch((err) => callback(err));
+}

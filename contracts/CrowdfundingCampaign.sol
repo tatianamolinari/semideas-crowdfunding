@@ -451,25 +451,40 @@ contract CrowdfundingCampaign {
 
     /** @dev Function to get all the balances of the campaign
      */
-    function getBalancesInfo() public view returns (uint, uint, uint, uint) {
-        return (goal, finalContributions, remainingContributions, address(this).balance);
+    function getBalancesInfo() public view returns (uint _goal, uint _finalContributions, uint _remainingContributions, uint _balance) {
+        _goal = goal;
+        _finalContributions = finalContributions;
+        _remainingContributions = remainingContributions;
+        _balance = address(this).balance;
     }
 
     /** @dev Function to get the data of the campaign
      */
-    function getCampaignInfo() public view returns (address, CampaignStatus, uint, uint, uint, uint, uint, bool) {
-        bool out_grace_period = (created_at + 14 days) <= block.timestamp;
-        return (owner, status, goal, minimunContribution, membersCount, finalContributions, remainingContributions, out_grace_period);
+    function getCampaignInfo() public view returns (address _owner, CampaignStatus _status, uint _goal, uint _minimunContribution, uint _membersCount, uint _finalContributions, uint _remainingContributions, bool _out_grace_period) {
+        _owner = owner;
+        _status = status;
+        _goal = goal;
+        _minimunContribution = minimunContribution;
+        _membersCount = membersCount;
+        _finalContributions = finalContributions; 
+        _remainingContributions = remainingContributions; 
+        _out_grace_period = (created_at + 14 days) <= block.timestamp;
     } 
 
     /** @dev Function to get the data of a proposal.
      *  @param _index index of the proposal to return
      */
-    function getProposal(uint _index) public view returns (address, uint, uint, uint, ProposalStatus, uint, bool, bool) {
+    function getProposal(uint _index) public view returns (address _recipient, uint _value, uint _approvalsCount, uint _disapprovalsCount, ProposalStatus _status, uint _limitTime, bool _inTime, bool _senderHasVote) {
         Proposal storage proposal = proposals[_index];
-        bool inTime = block.timestamp <= proposal.limitTime;
-        bool senderHasVote = proposal.voters[msg.sender];
-        return (proposal.recipient, proposal.value, proposal.approvalsCount, proposal.disapprovalsCount, proposal.status, proposal.limitTime, inTime, senderHasVote);
+
+        _recipient = proposal.recipient; 
+        _value = proposal.value;
+        _approvalsCount = proposal.approvalsCount; 
+        _disapprovalsCount = proposal.disapprovalsCount;
+        _status = proposal.status;
+        _limitTime = proposal.limitTime;
+        _inTime = block.timestamp <= proposal.limitTime;
+        _senderHasVote = proposal.voters[msg.sender];
     } 
 
      /** @dev Function to know if a member has already vot a proposal.
@@ -489,11 +504,16 @@ contract CrowdfundingCampaign {
     /** @dev Function to get the data of a close proposal.
      *  @param _index index of the proposal to return
      */
-    function getCloseProposal(uint _index) public view returns (uint, uint, ProposalStatus, uint, bool, bool, address) {
+    function getCloseProposal(uint _index) public view returns (uint _approvalsCount, uint _disapprovalsCount, ProposalStatus _status, uint _limitTime, bool _inTime, bool _senderHasVote, address _author) {
         CloseProposal storage cProposal = closeProposals[_index];
-        bool inTime = block.timestamp <= cProposal.limitTime;
-        bool senderHasVote = cProposal.voters[msg.sender];
-        return (cProposal.approvalsCount, cProposal.disapprovalsCount, cProposal.status, cProposal.limitTime, inTime, senderHasVote, cProposal.author);
+
+        _approvalsCount = cProposal.approvalsCount;
+        _disapprovalsCount = cProposal.disapprovalsCount;
+        _status = cProposal.status;
+        _limitTime = cProposal.limitTime;
+        _inTime = block.timestamp <= cProposal.limitTime;
+        _senderHasVote = cProposal.voters[msg.sender]; 
+        _author = cProposal.author;
     } 
 
     /** @dev Function to know if a member has already vot a close proposal.

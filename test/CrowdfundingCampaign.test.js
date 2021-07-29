@@ -37,28 +37,19 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
     it("Checking CrowdFunding Campaign values from method get campaign info", async() => {
         const campaign = this.campaign;
-        const campaingInfo = await campaign.getCampaignInfo();
+        const campaignInfo = await campaign.getCampaignInfo();
 
-        const owner = campaingInfo['0'];
-        const status = campaingInfo['1'];
-        const goal = campaingInfo['2'];
-        const minimunContribution = campaingInfo['3'];
-        const membersCount = campaingInfo['4'];
-        const finalContributions = campaingInfo['5'];
-        const remainingContributions = campaingInfo['6'];
-        const out_grace_period = campaingInfo['7'];
-
-        expect(owner).to.be.equal(authorAddress);
-        expect(status).to.be.a.bignumber.equal(new BN(0));
-        expect(goal).to.be.a.bignumber.equal(new BN(300));
-        expect(minimunContribution).to.be.a.bignumber.equal(new BN(5));
-        expect(membersCount).to.be.a.bignumber.equal(new BN(0));
-        expect(finalContributions).to.be.a.bignumber.equal(new BN(0));
-        expect(remainingContributions).to.be.a.bignumber.equal(new BN(0));
-        expect(out_grace_period).to.be.a.false;
+        expect(campaignInfo._owner).to.be.equal(authorAddress);
+        expect(campaignInfo._status).to.be.a.bignumber.equal(new BN(0));
+        expect(campaignInfo._goal).to.be.a.bignumber.equal(new BN(300));
+        expect(campaignInfo._minimunContribution).to.be.a.bignumber.equal(new BN(5));
+        expect(campaignInfo._membersCount).to.be.a.bignumber.equal(new BN(0));
+        expect(campaignInfo._finalContributions).to.be.a.bignumber.equal(new BN(0));
+        expect(campaignInfo._remainingContributions).to.be.a.bignumber.equal(new BN(0));
+        expect(campaignInfo._out_grace_period).to.be.a.false;
     });
 
-    it("The owner should not be able to be an inversor", async() => {
+    it("The owner should not be able to be a contributor", async() => {
 
         const campaign = this.campaign;
 
@@ -66,7 +57,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(campaign.contribute({ from: authorAddress, value: web3.utils.toWei("10", "wei") })).to.eventually.be.rejectedWith("Sender is already a member.");
     });
 
-    it("The inversor should invest more than de minimun contribution", async() => {
+    it("The contributor should invest more than de minimun contribution", async() => {
 
         const campaign = this.campaign;
         expect(campaign.contribute({ from: memberAccount, value: web3.utils.toWei("2", "wei") })).to.eventually.be.rejectedWith("The contribution is insufficient");
@@ -229,23 +220,16 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
 
         const result = await campaign.getProposal(0);
-
-        const recipient = result['0'];
-        const value = result['1'];
-        const approvalsCount = result['2'];
-        const disapprovalsCount = result['3'];
-        const status = result['4'];
-        const limitTimestamp = result['5'];
         
-        const limitDate = new Date(limitTimestamp.toNumber() * 1000);
+        const limitDate = new Date(result._limitTime.toNumber() * 1000);
         const diffTime = Math.abs(limitDate - limitDateExpected);
         const diffMinutes = diffTime / (1000*60); 
 
-        expect(recipient).to.be.equal(recipientProposalAccount);
-        expect(value).to.be.a.bignumber.equal(new BN(3));
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
-        expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
-        expect(status).to.be.a.bignumber.equal(new BN(0));
+        expect(result._recipient).to.be.equal(recipientProposalAccount);
+        expect(result._value).to.be.a.bignumber.equal(new BN(3));
+        expect(result._approvalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(result._disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(result._status).to.be.a.bignumber.equal(new BN(0));
         expect(diffMinutes).to.be.lessThan(1);
         expect(diffMinutes).to.be.greaterThan(0);
     });
@@ -257,15 +241,13 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getProposal(i_proposal);
-        const approvalsCount = result['2'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(result._approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
         expect(campaign.approveProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
 
         const afterResult = await campaign.getProposal(i_proposal);
-        const afterApprovalsCount = afterResult['2'];
-        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(afterResult._approvalsCount).to.be.a.bignumber.equal(new BN(0));
     });
 
     it("Before vote a close hasVotedProposal should be false", async() => {
@@ -282,8 +264,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getProposal(i_proposal);
-        const approvalsCount = result['2'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(result._approvalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
 
@@ -296,8 +277,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(log.event).to.equal('ProposalVoted');
 
         const afterResult = await campaign.getProposal(i_proposal);
-        const afterApprovalsCount = afterResult['2'];
-        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(afterResult._approvalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
     it("Before vote a close hasVotedProposal should be true", async() => {
@@ -314,14 +294,12 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getProposal(i_proposal);
-        const approvalsCount = result['2'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(result._approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.approveProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The proposal has been already voted by the sender");;
 
         const afterResult = await campaign.getProposal(i_proposal);
-        const afterApprovalsCount = afterResult['2'];
-        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(afterResult._approvalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
     it("Only members can disapprove a proposal", async() => {
@@ -330,15 +308,13 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getProposal(i_proposal);
-        const disapprovalsCount = result['3'];
-        expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(result._disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
         expect(campaign.disapproveProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
 
         const afterResult = await campaign.getProposal(i_proposal);
-        const afterDisapprovalsCount = afterResult['3'];
-        expect(afterDisapprovalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(afterResult._disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
     });
 
     it("Members can disapprove a proposal and a event ProposalVoted is emited", async() => {
@@ -347,8 +323,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getProposal(i_proposal);
-        const disapprovalsCount = result['3'];
-        expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(result._disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
         
@@ -361,8 +336,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(log.event).to.equal('ProposalVoted');
 
         const afterResult = await campaign.getProposal(i_proposal);
-        const afterDisapprovalsCount = afterResult['3'];
-        expect(afterDisapprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(afterResult._disapprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
     it("Member can not disapprove a proposal twice", async() => {
@@ -371,14 +345,12 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getProposal(i_proposal);
-        const disapprovalsCount = result['3'];
-        expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(result._disapprovalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.disapproveProposal(i_proposal, { from: anotherMemberAccount })).to.eventually.be.rejectedWith("The proposal has been already voted by the sender");
 
         const afterResult = await campaign.getProposal(i_proposal);
-        const afterDisapprovalsCount = afterResult['3'];
-        expect(afterDisapprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(afterResult._disapprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
     it("Only members can close a proposal", async() => {
@@ -405,8 +377,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getProposal(i_proposal);
-        const status = result['4'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(0));
+        expect(result._status).to.be.a.a.bignumber.equal(new BN(0));
 
         await time.increase(604800);
 
@@ -414,9 +385,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         await campaign.closeProposal(i_proposal, { from: memberAccount });
 
         const afterResult = await campaign.getProposal(i_proposal);
-
-        const afterStatus = afterResult['4'];
-        expect(afterStatus).to.be.a.a.bignumber.not.equal(new BN(0));
+        expect(afterResult._status).to.be.a.a.bignumber.not.equal(new BN(0));
         
     });
 
@@ -426,8 +395,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const afterResult = await campaign.getProposal(i_proposal);
-        const afterStatus = afterResult['4'];
-        expect(afterStatus).to.be.a.a.bignumber.equal(new BN(2));
+        expect(afterResult._status).to.be.a.a.bignumber.equal(new BN(2));
     });
 
     it("When a proposal has more disapprovals than approvals votes the result at close should be status DISAPPROVED", async() => {
@@ -444,9 +412,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         
         await campaign.closeProposal(i_proposal, { from: memberAccount });
         const afterResult = await campaign.getProposal(i_proposal);
-
-        const afterStatus = afterResult['4'];
-        expect(afterStatus).to.be.a.a.bignumber.equal(new BN(2));
+        expect(afterResult._status).to.be.a.a.bignumber.equal(new BN(2));
     });
 
     it("When a proposal has more approvals than disapprovals votes the result at close should be status APPROVED", async() => {
@@ -463,9 +429,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         
         await campaign.closeProposal(i_proposal, { from: memberAccount });
         const afterResult = await campaign.getProposal(i_proposal);
-
-        const afterStatus = afterResult['4'];
-        expect(afterStatus).to.be.a.a.bignumber.equal(new BN(1));
+        expect(afterResult._status).to.be.a.a.bignumber.equal(new BN(1));
     });
 
     it("Member can not approve a proposal if it is not longer active", async() => {
@@ -474,8 +438,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getProposal(i_proposal);
-        const status = result['4'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(2));
+        expect(result._status).to.be.a.a.bignumber.equal(new BN(2));
 
         expect(campaign.approveProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The proposal is not longer active.");
     });
@@ -486,8 +449,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getProposal(i_proposal);
-        const status = result['4'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(2));
+        expect(result._status).to.be.a.a.bignumber.equal(new BN(2));
 
         expect(campaign.approveProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The proposal is not longer active.");
         
@@ -499,8 +461,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getProposal(i_proposal);
-        const status = result['4'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(2));
+        expect(result._status).to.be.a.a.bignumber.equal(new BN(2));
 
         expect(campaign.release(i_proposal, { from: authorAddress })).to.eventually.be.rejectedWith("The proposal is not approved.");
         
@@ -515,8 +476,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 2
 
         const result = await campaign.getProposal(i_proposal);
-        const status = result['4'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(1));
+        expect(result._status).to.be.a.a.bignumber.equal(new BN(1));
 
         const tx = await campaign.release(i_proposal, { from: authorAddress });
         const { logs } = tx;
@@ -563,19 +523,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         expect(campaign.getCloseProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(1));
         const result = await campaign.getCloseProposal(0);
-
-        const approvalsCount = result['0'];
-        const disapprovalsCount = result['1'];
-        const status = result['2'];
-        const limitTimestamp = result['3'];
         
-        const limitDate = new Date(limitTimestamp.toNumber() * 1000);
+        const limitDate = new Date(result._limitTime.toNumber() * 1000);
         const diffTime = Math.abs(limitDate - limitDateExpected);
         const diffMinutes = diffTime / (1000*60);
 
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
-        expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
-        expect(status).to.be.a.a.bignumber.equal(new BN(0));
+        expect(result._approvalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(result._disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(result._status).to.be.a.a.bignumber.equal(new BN(0));
         expect(diffMinutes).to.be.lessThan(1);
         expect(diffMinutes).to.be.greaterThan(0);
     });
@@ -586,15 +541,13 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getCloseProposal(i_proposal);
-        const approvalsCount = result['0'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(result._approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
         expect(campaign.approveCloseProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
 
         const afterResult = await campaign.getCloseProposal(i_proposal);
-        const afterApprovalsCount = afterResult['0'];
-        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(afterResult._approvalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
     it("Before vote a close hasVotedCloseProposal should be false", async() => {
@@ -611,15 +564,13 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getCloseProposal(i_proposal);
-        const approvalsCount = result['0'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(result._approvalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
         await campaign.approveCloseProposal(i_proposal, { from: memberAccount });
 
         const afterResult = await campaign.getCloseProposal(i_proposal);
-        const afterApprovalsCount = afterResult['0'];
-        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(2));
+        expect(afterResult._approvalsCount).to.be.a.bignumber.equal(new BN(2));
     });
 
     it("After vote a close hasVotedCloseProposal should be true", async() => {
@@ -636,14 +587,12 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getCloseProposal(i_proposal);
-        const approvalsCount = result['0'];
-        expect(approvalsCount).to.be.a.bignumber.equal(new BN(2));
+        expect(result._approvalsCount).to.be.a.bignumber.equal(new BN(2));
 
         expect(campaign.approveCloseProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejectedWith("The close proposal has been already voted by the sender");;
 
         const afterResult = await campaign.getCloseProposal(i_proposal);
-        const afterApprovalsCount = afterResult['0'];
-        expect(afterApprovalsCount).to.be.a.bignumber.equal(new BN(2));
+        expect(afterResult._approvalsCount).to.be.a.bignumber.equal(new BN(2));
     });
 
     it("Only members can disapprove a close proposal", async() => {
@@ -652,15 +601,13 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getCloseProposal(i_proposal);
-        const disapprovalsCount = result['1'];
-        expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(result._disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(noMemberAccount)).to.eventually.be.false;
         expect(campaign.disapproveCloseProposal(i_proposal, { from: noMemberAccount })).to.eventually.be.rejectedWith("Sender is not a member.");
 
         const afterResult = await campaign.getCloseProposal(i_proposal);
-        const afterDisapprovalsCount = afterResult['1'];
-        expect(afterDisapprovalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(afterResult._disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
     });
 
     it("Members can disapprove a close proposal", async() => {
@@ -669,15 +616,13 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getCloseProposal(i_proposal);
-        const disapprovalsCount = result['1'];
-        expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
+        expect(result._disapprovalsCount).to.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
         await campaign.disapproveCloseProposal(i_proposal, { from: anotherMemberAccount });
 
         const afterResult = await campaign.getCloseProposal(i_proposal);
-        const afterDisapprovalsCount = afterResult['1'];
-        expect(afterDisapprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(afterResult._disapprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
     it("Member can not disapprove a close proposal twice", async() => {
@@ -686,14 +631,12 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getCloseProposal(i_proposal);
-        const disapprovalsCount = result['1'];
-        expect(disapprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(result._disapprovalsCount).to.be.a.bignumber.equal(new BN(1));
 
         expect(campaign.disapproveCloseProposal(i_proposal, { from: anotherMemberAccount })).to.eventually.be.rejectedWith("The close proposal has been already voted by the sender");
 
         const afterResult = await campaign.getCloseProposal(i_proposal);
-        const afterDisapprovalsCount = afterResult['1'];
-        expect(afterDisapprovalsCount).to.be.a.bignumber.equal(new BN(1));
+        expect(afterResult._disapprovalsCount).to.be.a.bignumber.equal(new BN(1));
     });
 
     it("Only members can close a close proposal", async() => {
@@ -720,8 +663,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getCloseProposal(i_proposal);
-        const status = result['2'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(0));
+        expect(result._status).to.be.a.a.bignumber.equal(new BN(0));
 
         await time.increase(604800);
 
@@ -735,9 +677,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(logs[0].event).to.equal('ChangeStatusCampaign');
 
         const afterResult = await campaign.getCloseProposal(i_proposal);
-
-        const afterStatus = afterResult['2'];
-        expect(afterStatus).to.be.a.a.bignumber.not.equal(new BN(0));
+        expect(afterResult._status).to.be.a.a.bignumber.not.equal(new BN(0));
         
     });
 
@@ -747,8 +687,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const afterResult = await campaign.getCloseProposal(i_proposal);
-        const afterStatus = afterResult['2'];
-        expect(afterStatus).to.be.a.a.bignumber.equal(new BN(1));
+        expect(afterResult._status).to.be.a.a.bignumber.equal(new BN(1));
     });
     
 
@@ -766,9 +705,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         
         await campaign.closeCloseProposal(i_proposal, { from: memberAccount });
         const afterResult = await campaign.getCloseProposal(i_proposal);
-
-        const afterStatus = afterResult['2'];
-        expect(afterStatus).to.be.a.a.bignumber.equal(new BN(2));
+        expect(afterResult._status).to.be.a.a.bignumber.equal(new BN(2));
     });
 
     it("When a close proposal has equal approvals and disapprovals votes the result at close should be status DISAPPROVED", async() => {
@@ -784,9 +721,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         
         await campaign.closeCloseProposal(i_proposal, { from: memberAccount });
         const afterResult = await campaign.getCloseProposal(i_proposal);
-
-        const afterStatus = afterResult['2'];
-        expect(afterStatus).to.be.a.a.bignumber.equal(new BN(2));
+        expect(afterResult._status).to.be.a.a.bignumber.equal(new BN(2));
     });
 
     it("Member can not approve a proposal if it is not longer active", async() => {
@@ -795,8 +730,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getCloseProposal(i_proposal);
-        const status = result['2'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(1));
+        expect(result._status).to.be.a.a.bignumber.equal(new BN(1));
 
         expect(campaign.approveCloseProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejected;
     });
@@ -807,8 +741,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
 
         const result = await campaign.getCloseProposal(i_proposal);
-        const status = result['2'];
-        expect(status).to.be.a.a.bignumber.equal(new BN(1));
+        expect(result._status).to.be.a.a.bignumber.equal(new BN(1));
 
         expect(campaign.closeCloseProposal(i_proposal, { from: memberAccount })).to.eventually.be.rejected;
         
@@ -887,7 +820,6 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
         const contributorBalance = await web3.eth.getBalance(anotherMemberAccount);
         const campaignBalance = await web3.eth.getBalance(campaign.address);
-
 
         const tx2 = await campaign.withdraw({ from: anotherMemberAccount });
         const { logs } = tx2;

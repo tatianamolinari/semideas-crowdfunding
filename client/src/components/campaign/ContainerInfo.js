@@ -47,7 +47,6 @@ class ContainerInfo extends React.Component {
     this.setState({ active: new_active});
   }
 
-
   loadCampaignData = async() => {
 
     try {
@@ -75,7 +74,7 @@ class ContainerInfo extends React.Component {
         const isOwner = actualAccount===campaignInfo.owner;
 
         const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
-        await campaignService.suscribeToChangeStatus(actualizeStatusInfo);
+        await campaignService.subscribeToChangeStatus(actualizeStatusInfo);
 
         this.setState({
           loaded: true,
@@ -96,13 +95,11 @@ class ContainerInfo extends React.Component {
         });
       }
     } catch (error) {
-      //alert(`Failed to load web3, ipfs data, accounts, or contract. Check console for details.`);
       console.error(error);
     }
-
   }
 
-  actualizeStatusInfo = async() => {
+  actualizeStatusInfo = async() => {  
     const enum_status = await campaignService.getStatus();
     const status = fromIntToStatusCampaign(enum_status);
     this.setState({ status: status});
@@ -115,7 +112,6 @@ class ContainerInfo extends React.Component {
     if (this.state.active !== "general_data") {
       this.change_active("general_data");
     }
-
   }
 
   componentDidMount = async() => {
@@ -123,14 +119,11 @@ class ContainerInfo extends React.Component {
     window.ethereum.on('accountsChanged', async(accounts) => { this.refreshSite() });
   }
 
-
   componentDidUpdate(prevProps) {
     if(this.props.indexCampaign !== prevProps.indexCampaign) {
       this.refreshSite();
     }
   } 
-
-
 
   render() {
               return (<Row className="container-info"> 

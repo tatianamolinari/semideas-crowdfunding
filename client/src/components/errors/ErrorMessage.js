@@ -5,10 +5,7 @@ import { Row } from "react-bootstrap";
 class ErrorMessage extends React.Component {
 
   render() {
-
-    
     return (
-
       <Row>
         <div className="title-error-msj">
           <Message negative>

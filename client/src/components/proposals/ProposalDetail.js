@@ -11,8 +11,6 @@ class ProposalDetail extends React.Component {
   };
 
   setProposalData() {
-
-
     const proposal_data = {
       recipient: this.props.recipient,
       value: this.props.value,
@@ -22,40 +20,28 @@ class ProposalDetail extends React.Component {
       limitTime: new Date(this.props.limitTime * 1000).toLocaleDateString('en-GB'),
       badge_status: fromStatusToBadgeClass(fromIntToStatusProposal(this.props.status))
     }
-
-    this.setState({
-      proposal_data: proposal_data  });
-
+    this.setState({ proposal_data: proposal_data  });
   }
 
   componentDidUpdate(prevProps) {
-    if((this.props.status !== prevProps.status) || (this.props.hasVoted !== prevProps.hasVoted ))
-    {
+    if((this.props.status !== prevProps.status) || (this.props.hasVoted !== prevProps.hasVoted )) {
       this.setState({ loaded: false });
       this.setProposalData();
     }
   }
 
   componentDidMount = async() => {
-    try {
-
+    try { 
       this.setProposalData();
-
       this.setState({
           loaded: true,
       });
-
     } catch (error) {
-        //alert(`Failed to load web3, accounts, or data contract. Check console for details.`,);
         console.error(error);
     }
   }
 
-  setProposalData
-
   render() {
-
-    
     return (  <div className="proposal-detail">            
                 <h3 className="title" data-testid="titulo"> {this.props.title} 
                   { (this.props.hasVoted) && 

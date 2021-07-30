@@ -16,7 +16,6 @@ class DisplayContent extends React.Component {
 
   state = {
     active: this.props.active,
-    
     isOwner: this.props.data.isOwner,
     isMember: this.props.data.isMember,
     balance: this.props.data.balance,
@@ -26,14 +25,11 @@ class DisplayContent extends React.Component {
     finalContributions: this.props.data.finalContributions, 
     remainingContributions: this.props.data.remainingContributions, 
     canWithdraw: false,
-
     rol: null,
     progress: 0,
     badge_status:'',
-
     loaded: false,
     changeTxLoading: false,
-
     showMessage: false,
     message: '',
     title: ''
@@ -42,9 +38,7 @@ class DisplayContent extends React.Component {
   actualizeBalanceInfo = async () => {
     const balance = await campaignService.getBalance();
     const progress = this.getProgress(this.props.data.goal,balance);
-      
-      this.setState({ balance: balance, 
-                      progress: progress });
+    this.setState({ balance: balance, progress: progress });
   }
 
   actualizeContributionInfo = async() =>  {
@@ -64,7 +58,6 @@ class DisplayContent extends React.Component {
                       progress: progress });
     }
     catch (error) {
-      //alert(`Failed to load web3, accounts, or contract. Check console for details.`,);
       console.error(error);
     }
   }
@@ -72,19 +65,16 @@ class DisplayContent extends React.Component {
   actualizeWithdrawInfo = async() => {
     const balance = await campaignService.getBalance();
     const progress = this.getProgress(this.state.finalContributions,balance);
-    this.setState({ balance: balance, 
-                    progress: progress });
+    this.setState({ balance: balance, progress: progress });
   }
 
   setCanWithdraw = async () => {
-
     let canWithdraw = false;
     if (this.state.status === "Cerrada" || this.state.status === "Exitosa")
     {
       const hasWithdraw = await campaignService.hasWithdraw(); 
       canWithdraw = !hasWithdraw;
     }
-
     this.setState( { canWithdraw: canWithdraw } );
   }
 
@@ -94,11 +84,9 @@ class DisplayContent extends React.Component {
       const enum_status = await campaignService.getStatus();
       const status = fromIntToStatusCampaign(enum_status);
       const badge_status = fromStatusToBadgeClass(status);
-      
       this.setState({ status: status, badge_status: badge_status });
     }
     catch (error) {
-      //alert(`Failed to load web3, accounts, or contract. Check console for details.`,);
       console.error(error);
     }
   }
@@ -111,13 +99,11 @@ class DisplayContent extends React.Component {
     } else {
       progress = this.getProgress(this.state.goal, this.state.balance);
     }
-
     this.setState({ progress: progress });
   }
   
-  actualizeRol = (isOwner,isMember) =>
-  {
-    if (isOwner){
+  actualizeRol = (isOwner,isMember) => {
+    if (isOwner) {
       this.setState({ rol: "Eres el owner" });
     }
     else if (isMember) {
@@ -125,13 +111,11 @@ class DisplayContent extends React.Component {
     }
   }
 
-  activeCampaign = async() =>  {
+  activeCampaign = async() => {
    
       try {
         const accounts = await campaignService.getAccounts();
-
-        if(accounts.length===0)
-        {
+        if(accounts.length===0) {
           const mssj = "Para activar la campaña debes haber iniciado sesión en la wallet de metamask.";
           this.setState({ showMessage: true, message: mssj});
           console.log(mssj);
@@ -139,10 +123,8 @@ class DisplayContent extends React.Component {
         else {
 
           this.setState({ changeTxLoading: true});
-
           campaignService.setActive().then((statusResponse) => {
             let title, message = "";
-
             if (statusResponse.error) {
               title = "Hubo un error al activar la campaña";
               switch (statusResponse.errorMsg) {
@@ -163,9 +145,7 @@ class DisplayContent extends React.Component {
             else {
               title = "Activación exitosa";
               message = "¡La campaña ahora está activa!\n Ya puedes subir novedades del proyecto y pedidos de presupuesto."; 
-              
             }
-
             this.setState({ changeTxLoading: false, 
                             message: message, 
                             showMessage: true, 
@@ -174,30 +154,22 @@ class DisplayContent extends React.Component {
         }
       }
       catch(error)  {
-        console.log("Este error traspasó");
         console.log(error);
       }
-
   }
 
   withdraw = async() =>  {
     try {
       const accounts = await campaignService.getAccounts();
-
-      if(accounts.length===0)
-      {
+      if(accounts.length===0) {
         const mssj = "Para retirar fondos debes haber iniciado sesión en la wallet de metamask.";
         this.setState({ showMessage: true, message: mssj});
         console.log(mssj);
       }
       else {
-
         this.setState({ changeTxLoading: true});
-
         campaignService.withdraw().then((statusResponse, receipt) => {
-
           let title, message = "";
-
           if (statusResponse.error) {
             title = "Hubo un error al retirar fondos";
             switch (statusResponse.errorMsg) {
@@ -218,7 +190,6 @@ class DisplayContent extends React.Component {
           else {
 
             const returnValues = statusResponse.res.events.WithdrawFounds.returnValues;
-            
             const contribution = returnValues.contribution;
             const finalContributions = returnValues.finalContributions;
             const remainingContributions = returnValues.remainingContributions;
@@ -230,7 +201,6 @@ class DisplayContent extends React.Component {
                       Gracias por haber participado de esta campaña.`; 
             this.setState({ canWithdraw: false});
           }
-
           this.setState({ changeTxLoading: false, 
                           message: message, 
                           showMessage: true, 
@@ -239,7 +209,6 @@ class DisplayContent extends React.Component {
       }
     }
     catch(error)  {
-      console.log("Este error traspasó");
       console.log(error);
     }
   }
@@ -248,27 +217,22 @@ class DisplayContent extends React.Component {
 
 
   componentDidMount = async() => {
-
     this.actualizeProgressInfo();
-
     const badge_status = fromStatusToBadgeClass(this.state.status);
     this.setState({ badge_status: badge_status });
-
     this.actualizeRol(this.state.isOwner, this.state.isMember);
-
     this.setCanWithdraw();
     
     const actualizeInfo = async() => {this.actualizeContributionInfo()};
-    await campaignService.suscribeToNewContribution(actualizeInfo);
+    await campaignService.subscribeToNewContribution(actualizeInfo);
     const actualizeBalanceInfo = async() => {this.actualizeBalanceInfo()};
-    await campaignService.suscribeToProposalRelease(actualizeBalanceInfo);
+    await campaignService.subscribeToProposalRelease(actualizeBalanceInfo);
     const actualizeWithdrawInfo = async() => {this.actualizeWithdrawInfo()};
-    await campaignService.suscribeToWithdraw(actualizeWithdrawInfo);
+    await campaignService.subscribeToWithdraw(actualizeWithdrawInfo);
   }
 
   async componentDidUpdate(prevProps) {
-    if(this.props.data.status !== prevProps.data.status)
-    {
+    if(this.props.data.status !== prevProps.data.status) {
       await this.actualizeStatusInfo();
       const balancesInfo = await campaignService.getBalancesInfo();
       this.setState({ goal: balancesInfo.goal, 
@@ -281,11 +245,9 @@ class DisplayContent extends React.Component {
   }
 
   getProgress(total,portion) {
-
     const progress = (((parseInt(portion)/parseInt(total)))* 100).toFixed(2);
     return Math.min(progress,100);
   }
-
 
   render() {
 
@@ -301,7 +263,6 @@ class DisplayContent extends React.Component {
       created_at = this.props.ipfsData.created_date
       title = this.props.ipfsData.title
     }
-    
     
     return (  <div className="campaign-info" id="general_data_container"> 
                 <h3 className="name"> {title} 

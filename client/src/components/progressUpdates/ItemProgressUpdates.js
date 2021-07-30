@@ -6,9 +6,7 @@ import { Item, Icon } from 'semantic-ui-react'
 class ItemProgressUpdates extends React.Component {
 
     render() {
-    
       return ( 
-       
                 <Item>
                   <Item.Image size='small' src={this.props.image} />
                   <Item.Content onClick={this.props.onClick} className="div-clickleable">
@@ -25,7 +23,6 @@ class ItemProgressUpdates extends React.Component {
                     </Item.Extra>
                     <hr/>
                   </Item.Content>
-                  
                 </Item>);
     }
   }

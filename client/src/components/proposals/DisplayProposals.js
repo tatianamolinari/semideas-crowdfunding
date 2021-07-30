@@ -9,7 +9,6 @@ import MessageModal from "../modals/MessageModal"
 
 import { campaignService } from "../../services/campaignService.js"
 import { ipfsService } from "../../services/ipfsService.js"
-import { hexBytesToAddress } from "../../helpers/utils.js"
 
 class DisplayProposals extends React.Component {
 
@@ -31,7 +30,6 @@ class DisplayProposals extends React.Component {
   };
 
   async getProposals(activePage) {
-
     const allProposals = this.state.pastProposals;
     const proposals = []
     const i_proposal = this.state.totalProposals - 1 - ((activePage-1)*(this.state.per_page));
@@ -39,12 +37,9 @@ class DisplayProposals extends React.Component {
     
     for(let i=i_proposal; (i >= 0 && i > last_i) ; i--){
       const pHash = allProposals[i];
-      const ipfsPath = hexBytesToAddress(pHash.substring(2));
-
-      const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath);
-      
-      proposals.push(
-        {
+      const ipfsPath = ipfsService.getIPFSHash(pHash);
+      const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath); 
+      proposals.push({
           "index_proposal": i,
           "title": ipfsData.title, 
           "description": ipfsData.description ,
@@ -56,7 +51,6 @@ class DisplayProposals extends React.Component {
       loaded: true,
       proposals: proposals
     });
-
   }
 
   handlePaginationChange = (e, { activePage }) => {
@@ -67,15 +61,10 @@ class DisplayProposals extends React.Component {
   handleMessageClose = () => this.setState({ showMessage: false});
 
   async setProposalData(index) {
-
-    if (this.state.proposals.length > index)
-    {
+    if (this.state.proposals.length > index) {
       this.setState({ loaded: false });
-
       const proposalData = this.state.proposals[index];
-
       const proposalInfo = await campaignService.getProposalInfo(proposalData["index_proposal"]);
-      
       proposalData["recipient"] = proposalInfo.recipient;
       proposalData["value"] = proposalInfo.value;
       proposalData["approvalsCount"] = proposalInfo.approvalsCount;
@@ -83,12 +72,10 @@ class DisplayProposals extends React.Component {
       proposalData["status"] = proposalInfo.status;
       proposalData["limitTime"] = proposalInfo.limitTime;
       proposalData["hasVoted"] = proposalInfo.senderHasVote;
-
       const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
       const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && proposalInfo.inTime && (!proposalInfo.senderHasVote);
       const canClose = campaignActive && (this.props.isMember || this.props.isOwner) && !(proposalInfo.inTime) && proposalInfo.status==='0';
       const canRelease = campaignActive && this.props.isOwner && proposalInfo.status==='1';
-
       this.setState({ proposal_data_i: index, 
                       proposal_data : proposalData, 
                       canVote: canVote, 
@@ -99,19 +86,15 @@ class DisplayProposals extends React.Component {
   }
 
   async showProposal(index) {
-
     await this.setProposalData(index);
     this.setState({ active: "proposals_detail"});
   }
   
   async disapprove() {
-
     this.setState({ loadingVote: true});
     const index = this.state.proposal_data["index_proposal"];
-
     campaignService.disapproveProposal(index).then((statusResponse) => {
       let title, message = "";
-
       if (statusResponse.error) {
         title = "Hubo un error al votar";
         switch (statusResponse.errorMsg) {
@@ -134,7 +117,6 @@ class DisplayProposals extends React.Component {
         message = "¡Tu voto se envió de manera exitosa!\n ¡Gracias por tu compromiso!";
         this.setState({ canVote: false}); 
       }
-
       this.setState({ loadingVote: false, 
                       message_m: message, 
                       showMessage: true, 
@@ -145,10 +127,8 @@ class DisplayProposals extends React.Component {
   async approve() {
     this.setState({ loadingVote: true});
     const index = this.state.proposal_data["index_proposal"];
-
     campaignService.approveProposal(index).then((statusResponse) => {
       let title, message = "";
-
       if (statusResponse.error) {
         title = "Hubo un error al votar";
         switch (statusResponse.errorMsg) {
@@ -171,7 +151,6 @@ class DisplayProposals extends React.Component {
         message = "¡Tu voto se envió de manera exitosa!\n ¡Gracias por tu compromiso!"; 
         this.setState({ canVote: false}); 
       }
-
       this.setState({ loadingVote: false, 
                       message_m: message, 
                       showMessage: true, 
@@ -220,13 +199,10 @@ class DisplayProposals extends React.Component {
   }
 
   async release() {
-
     this.setState({ loadingTansfer: true});
     const index = this.state.proposal_data["index_proposal"];
-
     campaignService.release(index).then((statusResponse) => {
       let title, message = "";
-
       if (statusResponse.error) {
         title = "Hubo un error al cerrar el pedido";
         switch (statusResponse.errorMsg) {
@@ -249,50 +225,38 @@ class DisplayProposals extends React.Component {
         message = "¡El retiro de fondos se envío de manera exitosa!\nRevisa tu wallet para ver los fondos agregados."; 
         this.setState({ canRelease: false}); 
       }
-
       this.setState({ loadingTansfer: false, 
                       message_m: message, 
                       showMessage: true, 
                       title_m: title});
     });
-
   }
 
   componentDidMount = async() => {
     try {
-
       this.setState({ loaded: false });
       const pastProposals = await campaignService.getProposals();
-      this.setState({ 
-                      pastProposals : pastProposals.map(pu =>  pu.returnValues[0]), 
+      this.setState({ pastProposals : pastProposals.map(pu =>  pu.returnValues[0]), 
                       totalProposals: pastProposals.length,
-                      totalPages: Math.ceil(pastProposals.length/this.state.per_page)
-                    });
-
+                      totalPages: Math.ceil(pastProposals.length/this.state.per_page) });
       await this.getProposals(1);
-
       const actualizeProposalInfo = async() => {this.setProposalData(this.state.proposal_data_i)};
-      
-      await campaignService.suscribeToVoteProposal(actualizeProposalInfo);
-      await campaignService.suscribeToClosedProposal(actualizeProposalInfo);
-      await campaignService.suscribeToProposalRelease(actualizeProposalInfo);
+      await campaignService.subscribeToVoteProposal(actualizeProposalInfo);
+      await campaignService.subscribeToClosedProposal(actualizeProposalInfo);
+      await campaignService.subscribeToProposalRelease(actualizeProposalInfo);
 
     } catch (error) {
-        //alert(`Failed to load web3, accounts, or data contract. Check console for details.`,);
         console.error(error);
     }
   }
 
   componentDidUpdate(prevProps) {
-
-    if(this.props.campaignStatus !== prevProps.campaignStatus)
-    {
+    if(this.props.campaignStatus !== prevProps.campaignStatus) {
       this.setProposalData(this.state.proposal_data_i);
     }
   }
 
   render() {
-
     let proposal_nodes = []
       for (const [index, proposal] of this.state.proposals.entries()) {
         proposal_nodes.push(
@@ -307,7 +271,6 @@ class DisplayProposals extends React.Component {
           </Col>
         )
     }
-
 
     return (  <div className="proposal-info" id="proposals_container" style={{display: "none"}}> 
 
@@ -344,13 +307,11 @@ class DisplayProposals extends React.Component {
                 </div>}
 
                 { this.state.active==="proposals_list" && proposal_nodes.length===0 && this.state.loaded &&
-                <div>  
-                    <h1> Aún no hay pedidos de presupuesto para mostrar. </h1>
-                    <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
-                </div>
-               
+                  <div>  
+                      <h1> Aún no hay pedidos de presupuesto para mostrar. </h1>
+                      <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
+                  </div>
                 }
-                
                 
                 { this.state.active==="proposals_detail" && this.state.loaded &&
                   <div  id="proposals_detail">

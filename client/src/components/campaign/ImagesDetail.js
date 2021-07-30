@@ -11,13 +11,10 @@ class ImagesDetail extends React.Component {
         <Col key={i} lg={4}> <img data-testid="campaign-photo" src={src_image} alt="" className="photos" /> </Col>
       );
     });
-
     return images;
   }
 
   render() {
-    
-
     return (  <Row className="image-detail-container">
                 {this.renderImages()}
               </Row>);

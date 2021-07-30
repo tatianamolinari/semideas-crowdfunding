@@ -3,12 +3,9 @@ import { Carousel } from "react-bootstrap";
 
 class CarrouselImages extends React.Component {
 
-    
-
     render() {
-
     var itemsCarrousel = []
-      for (const [index, image] of this.props.images.entries()) {
+    for (const [index, image] of this.props.images.entries()) {
         itemsCarrousel.push(
             <Carousel.Item key={index}>
                 <img
@@ -20,12 +17,10 @@ class CarrouselImages extends React.Component {
                 <Carousel.Caption>
                     <h3>Imagen {index+1}</h3>
                 </Carousel.Caption>
-            </Carousel.Item>
-        )
+            </Carousel.Item>);
     }
   
-      return ( 
-                <Carousel>
+      return (  <Carousel>
                     {itemsCarrousel}
                 </Carousel>);
   }

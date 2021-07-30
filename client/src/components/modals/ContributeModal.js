@@ -5,7 +5,6 @@ import MessageModal from "../modals/MessageModal"
 
 import { campaignService } from "../../services/campaignService.js"
 
-
 class ContributeModal extends React.Component {
 
   state = {
@@ -21,21 +20,16 @@ class ContributeModal extends React.Component {
     if (parseInt(this.state.value) >= parseInt(this.state.minimunContribution)){
       try {
         const accounts = await campaignService.getAccounts();
-
-        if(accounts.length===0)
-        {
+        if(accounts.length===0) {
           const mssj = "Para contribuir debes haber iniciado sesión en la wallet de metamask.";
           this.setState({ showMessage: true, message: mssj});
           console.log(mssj);
         }
         else {
-
           this.setState({ contributeLoading: true});
           this.handleClose();
-
           campaignService.contribute(this.state.value).then((statusResponse) => {
             let title, message = "";
-
             if (statusResponse.error) {
               title = "Hubo un error al contribuir";
               switch (statusResponse.errorMsg) {
@@ -66,37 +60,31 @@ class ContributeModal extends React.Component {
         }
       }
       catch(error)  {
-        console.log("Este error traspasó");
         console.log(error);
       }
     }
     else {
-      console.log(this.state.value);
-      console.log(this.state.minimunContribution);
       const msg = "La contribución debe ser mayor a la mínima";
       this.setState({ message: msg, showMessage:true});
     }
   }
 
   handleClose = () => this.setState({ show: false});
+  
   handleShow = () => this.setState({ show: true});
 
   handleMessageClose = () => this.setState({ showMessage: false});
 
-
   render() {
-
-    
     return (
-
       <div>
 
         { this.state.showMessage &&
-        <MessageModal
-        showMessage={this.state.showMessage}
-        handleMessageClose={this.handleMessageClose}
-        message={this.state.message}
-        title={this.state.title} />
+          <MessageModal
+          showMessage={this.state.showMessage}
+          handleMessageClose={this.handleMessageClose}
+          message={this.state.message}
+          title={this.state.title} />
         }
       
         <Button

@@ -4,8 +4,7 @@ import { Card, Icon } from 'semantic-ui-react'
 
 class CardProposal extends React.Component {
 
-    render() {
-    
+  render() {
       return (  <div className="proposal-item-list">
                     <Card>
                         <Card.Content header={this.props.title} data-testid="title"/>

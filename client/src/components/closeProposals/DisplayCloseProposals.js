@@ -10,7 +10,6 @@ import CloseProposalModal from "../modals/CloseProposalModal"
 
 import { campaignService } from "../../services/campaignService.js"
 import { ipfsService } from "../../services/ipfsService.js"
-import { hexBytesToAddress } from "../../helpers/utils.js"
 
 class DisplayCloseProposals extends React.Component {
 
@@ -37,26 +36,19 @@ class DisplayCloseProposals extends React.Component {
     const i_cproposal = this.state.totalCProposals - 1 - ((activePage-1)*(this.state.per_page));
     const last_i = Math.max(-1, i_cproposal - (this.state.per_page));
     
-
     for(let i=i_cproposal; (i >= 0 && i > last_i) ; i--){
       const pHash = allCProposals[i];
-      const ipfsPath = hexBytesToAddress(pHash.substring(2));
-
+      const ipfsPath = ipfsService.getIPFSHash(pHash);
       const ipfsData = await ipfsService.getJsonFromIPFSHash(ipfsPath);
-      
-      cproposals.push(
-        {
+      cproposals.push({
           "index_cproposal": i,
           "title": ipfsData.title, 
           "description": ipfsData.description ,
           "proposal_date": ipfsData.created_date
         });
     }
-
-    this.setState({
-      loaded: true,
-      cproposals: cproposals
-    });
+    
+    this.setState({ loaded: true,  cproposals: cproposals });
 
   }
 
@@ -69,8 +61,7 @@ class DisplayCloseProposals extends React.Component {
 
   async setCloseProposalData(index) {
 
-    if (this.state.cproposals.length > index)
-    {
+    if (this.state.cproposals.length > index) {
       this.setState({ loaded: false });
       const cproposalData = this.state.cproposals[index];
       const cproposalInfo = await campaignService.getCloseProposalInfo(cproposalData["index_cproposal"]);
@@ -82,7 +73,6 @@ class DisplayCloseProposals extends React.Component {
       cproposalData["hasVoted"] = cproposalInfo.senderHasVote;
       cproposalData["author"] = cproposalInfo.author;
       cproposalData["authorOwner"] = (cproposalInfo.author === this.props.owner);
-      console.log(cproposalData);
 
       const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
       const canVote = campaignActive && (!this.props.isOwner) && this.props.isMember && cproposalInfo.inTime && (!cproposalInfo.senderHasVote);
@@ -99,19 +89,15 @@ class DisplayCloseProposals extends React.Component {
   }
 
   async showDProposal(index) {
-
     await this.setCloseProposalData(index);
     this.setState({ active: "cproposals_detail"});
   }
   
   async disapprove() {
-
     this.setState({ loadingVote: true});
     const index = this.state.dproposal_data["index_cproposal"];
-
     campaignService.disapproveCloseProposal(index).then((statusResponse) => {
       let title, message = "";
-
       if (statusResponse.error) {
         title = "Hubo un error al votar";
         switch (statusResponse.errorMsg) {
@@ -134,21 +120,18 @@ class DisplayCloseProposals extends React.Component {
         message = "¡Tu voto se envió de manera exitosa!\n ¡Gracias por tu compromiso!";
         this.setState({ canVote: false}); 
       }
-
       this.setState({ loadingVote: false, 
                       message_m: message, 
                       showMessage: true, 
                       title_m: title});
-      });
+    });
   }
 
   async approve() {
-    this.setState({ loadingVote: true});
+    this.setState({ loadingVote: true });
     const index = this.state.dproposal_data["index_cproposal"];
-
     campaignService.approveCloseProposal(index).then((statusResponse) => {
       let title, message = "";
-
       if (statusResponse.error) {
         title = "Hubo un error al votar";
         switch (statusResponse.errorMsg) {
@@ -171,23 +154,18 @@ class DisplayCloseProposals extends React.Component {
         message = "¡Tu voto se envió de manera exitosa!\n ¡Gracias por tu compromiso!"; 
         this.setState({ canVote: false}); 
       }
-
       this.setState({ loadingVote: false, 
                       message_m: message, 
                       showMessage: true, 
                       title_m: title});
     });
-
   }
 
   async closeCProposal() {
-
     this.setState({ loadingClose: true});
     const index = this.state.dproposal_data["index_cproposal"];
-
     campaignService.closeCloseProposal(index).then((statusResponse) => {
       let title, message = "";
-
       if (statusResponse.error) {
         title = "Hubo un error al cerrar el pedido";
         switch (statusResponse.errorMsg) {
@@ -210,61 +188,46 @@ class DisplayCloseProposals extends React.Component {
         message = "¡El cierre del pedido se envío de manera exitosa!"; 
         this.setState({ canClose: false}); 
       }
-
       this.setState({ loadingClose: false, 
                       message_m: message, 
                       showMessage: true, 
                       title_m: title});
     });
-
   }
 
   async getListCProposals(page) {
-
     this.setState({ loaded: false });
-
     const pastCProposals = await campaignService.getCloseProposals();
-    this.setState({ 
-                    pastCProposals : pastCProposals.map(pu =>  pu.returnValues[0]), 
+    this.setState({ pastCProposals : pastCProposals.map(pu =>  pu.returnValues[0]), 
                     totalCProposals: pastCProposals.length,
-                    totalPages: Math.ceil(pastCProposals.length/this.state.per_page)
-                  });
-
+                    totalPages: Math.ceil(pastCProposals.length/this.state.per_page) });
     await this.getCProposals(page);
-
   }
-
 
   componentDidMount = async() => {
     try {
-
       const campaignActive = (this.props.campaignStatus !== "Cerrada") && (this.props.campaignStatus !== "Exitosa")
       const canCreate = campaignActive && (this.props.isMember || this.props.isOwner) && this.props.out_grace_period
       this.setState({ canCreate: canCreate});
-
       await this.getListCProposals(1);
       const actualizeCProposalInfo = async() => { this.setCloseProposalData(this.state.dproposal_data_i) };
       const actualizeCProposalsListInfo = async() => { this.getListCProposals(this.state.activePage) };
-
-      await campaignService.suscribeToVoteCloseProposal(actualizeCProposalInfo);
-      await campaignService.suscribeToCloseProposalDissaproved(actualizeCProposalInfo);
-      await campaignService.suscribeToCreateCloseProposal(actualizeCProposalsListInfo);
+      await campaignService.subscribeToVoteCloseProposal(actualizeCProposalInfo);
+      await campaignService.subscribeToCloseProposalDissaproved(actualizeCProposalInfo);
+      await campaignService.subscribeToCreateCloseProposal(actualizeCProposalsListInfo);
 
     } catch (error) {
-        //alert(`Failed to load web3, accounts, or data contract. Check console for details.`,);
         console.error(error);
     }
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.campaignStatus !== prevProps.campaignStatus)
-    {
+    if(this.props.campaignStatus !== prevProps.campaignStatus) {
       this.setCloseProposalData(this.state.dproposal_data_i);
     }
   } 
 
   render() {
-
     let dproposal_nodes = []
       for (const [index, dproposal] of this.state.cproposals.entries()) {
         dproposal_nodes.push(
@@ -280,9 +243,8 @@ class DisplayCloseProposals extends React.Component {
         )
     }
 
-
-    return (  <div className="proposal-info" id="close_proposals_container" style={{display: "none"}}> 
-              
+    return ( 
+            <div className="proposal-info" id="close_proposals_container" style={{display: "none"}}> 
                 {!this.state.loaded && 
                   <Dimmer active>
                     { this.state.active==="cproposals_list" ?
@@ -292,7 +254,7 @@ class DisplayCloseProposals extends React.Component {
                     <Loader size='large' inline>Cargando...</Loader>
                   </Dimmer>
                 }
-                
+        
                 { this.state.showMessage &&
                   <MessageModal
                   showMessage={this.state.showMessage}
@@ -302,34 +264,36 @@ class DisplayCloseProposals extends React.Component {
                 }           
                 
                 { this.state.active==="cproposals_list" && dproposal_nodes.length>0 && this.state.loaded &&
-                <div className="show-list-close-proposals">
-                  { this.state.canCreate &&
-                    <CloseProposalModal 
-                    createCPLoading={false}/>
-                  }
-                  <Row  id="cproposals_list">
-                  {dproposal_nodes}                
-                  </Row> 
-                  <Row className="justify-content-md-center">
-                    <Pagination
-                      activePage={this.state.activePage}
-                      onPageChange={this.handlePaginationChange}
-                      totalPages={this.state.totalPages}
-                    />
-                  </Row>
-                </div>}
-
-                { this.state.active==="cproposals_list" && dproposal_nodes.length===0 && this.state.loaded &&
-                <div>  
-                    <h1> Aún no hay pedidos de cierre para mostrar. </h1>
-                    <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
-                
+                  <div className="show-list-close-proposals">
+                    
                     { this.state.canCreate &&
                       <CloseProposalModal 
                       createCPLoading={false}/>
                     }
-                </div>
-               
+
+                    <Row  id="cproposals_list">
+                      { dproposal_nodes }                
+                    </Row> 
+                    <Row className="justify-content-md-center">
+                      <Pagination
+                        activePage={this.state.activePage}
+                        onPageChange={this.handlePaginationChange}
+                        totalPages={this.state.totalPages}
+                      />
+                    </Row>
+                  </div>
+                }
+
+                { this.state.active==="cproposals_list" && dproposal_nodes.length===0 && this.state.loaded &&
+                  <div>  
+                      <h1> Aún no hay pedidos de cierre para mostrar. </h1>
+                      <p> No dejes de estar pendiente a los nuevos pedidos que puedan aparecer.</p>
+                  
+                      { this.state.canCreate &&
+                        <CloseProposalModal 
+                        createCPLoading={false}/>
+                      }
+                  </div>               
                 }
                 
                 

@@ -24,47 +24,37 @@ class ClosePorposalModal extends React.Component {
     if (true){
       try {
         const accounts = await campaignService.getAccounts();
-
-        if(accounts.length===0)
-        {
+        if(accounts.length===0) {
           const mssj = "Para crear un pedido debes haber iniciado sesión en la wallet de metamask.";
           this.setState({ showMessage: true, message: mssj});
           console.log(mssj);
         }
         else if (this.state.cpTitle.length < "5" || this.state.cpTitle.length > "30") {
-
           this.setState({ createCPLoading: false, 
             message: "El título debe tener entre 5 y 30 caracteres.", 
             showMessage: true, 
             title: "Error"});
         }
         else if (this.state.cpDescription.length < "25" || this.state.cpDescription.length > "1000") {
-
           this.setState({ createCPLoading: false, 
             message: "La descripción debe tener entre 25 y 1000 caracteres.", 
             showMessage: true, 
             title: "Error"});
         }
         else {
-
           this.setState({ createCPLoading: true});
           this.handleClose();
-
           const dateToday = new Date().toLocaleDateString('en-GB'); 
-
           const json_value =  {
             "title": this.state.cpTitle, 
             "description": this.state.cpDescription ,
             "created_date": dateToday
           }
-
           const ipfsHash = await ipfsService.addJson(json_value)
-          console.log(ipfsService.getIPFSUrlFromPath(ipfsHash));
           const bytes32Hash = "0x" + addressToHexBytes(ipfsHash);
 
           campaignService.createCloseProposal(bytes32Hash).then((statusResponse) => {
             let title, message = "";
-
             if (statusResponse.error) {
               title = "Hubo un error al crear elpedido";
               switch (statusResponse.errorMsg) {
@@ -86,7 +76,6 @@ class ClosePorposalModal extends React.Component {
               title = "Creación exitosa";
               message = "¡Tu pedido de cierre fue creado correctamente!\n ¡Gracias por involucrarte con la campaña!"; 
             }
-
             this.setState({ createCPLoading: false, 
                             message: message, 
                             showMessage: true, 
@@ -95,7 +84,6 @@ class ClosePorposalModal extends React.Component {
         }
       }
       catch(error)  {
-        console.log("Este error traspasó");
         console.log(error);
       }
     }
@@ -106,24 +94,21 @@ class ClosePorposalModal extends React.Component {
   }
 
   handleClose = () => this.setState({ show: false});
+  
   handleShow = () => this.setState({ show: true});
 
   handleMessageClose = () => this.setState({ showMessage: false});
 
-
   render() {
-
-    
     return (
-
       <div>
 
         { this.state.showMessage &&
-        <MessageModal
-        showMessage={this.state.showMessage}
-        handleMessageClose={this.handleMessageClose}
-        message={this.state.message}
-        title={this.state.title} />
+          <MessageModal
+          showMessage={this.state.showMessage}
+          handleMessageClose={this.handleMessageClose}
+          message={this.state.message}
+          title={this.state.title} />
         }
       
         <Button

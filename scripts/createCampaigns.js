@@ -375,7 +375,7 @@ async function main() {
     await closeProposals(web3, addr, jsonInfo, campaigns);
     console.log(`Campaigns Close Proposals creation completed.`);  
 
-    console.log("Creation process completed.");
+    console.log(`Creation process completed.`);
 }
 
 module.exports = function(callback) {

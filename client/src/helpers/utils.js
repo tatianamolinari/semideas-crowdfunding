@@ -89,22 +89,6 @@ function fromStatusToBadgeClass(status) {
     return badge_class;
 }
 
-function getValuesFromHash(hashmap) {
-    const array_values = [];
-
-    for (const key in hashmap) {
-        array_values.push(hashmap[key]);
-    }
-    return array_values;
-}
-
-/*function fromSolidity2String(bytes32) {
-    return bytes32toString(web3.toAscii(bytes32));
-}
-
-function bytes32toString(toParse) {
-    return toParse.slice(0, toParse.indexOf("\u0000"));
-}*/
 
 function addressToHexBytes(address){
     const out = bs58.decode(address);
@@ -117,4 +101,4 @@ function hexBytesToAddress(bytes){
     return out;
 }
 
-export { fromIntToStatusCampaign, fromIntToStatusProposal, fromStatusToBadgeClass, getValuesFromHash, sleep, addressToHexBytes, hexBytesToAddress };
+export { fromIntToStatusCampaign, fromIntToStatusProposal, fromStatusToBadgeClass, sleep, addressToHexBytes, hexBytesToAddress };

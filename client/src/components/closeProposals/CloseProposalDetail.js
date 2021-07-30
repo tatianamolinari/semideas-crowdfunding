@@ -11,7 +11,6 @@ class CloseProposalDetail extends React.Component {
   };
 
   setDProposalData() {
-
     const dproposal_data = {
       approvalsCount: this.props.approvalsCount,
       disapprovalsCount: this.props.disapprovalsCount,
@@ -19,15 +18,11 @@ class CloseProposalDetail extends React.Component {
       limitTime: new Date(this.props.limitTime * 1000).toLocaleDateString('en-GB'),
       badge_status: fromStatusToBadgeClass(fromIntToStatusProposal(this.props.status))
     }
-
-    this.setState({
-      dproposal_data: dproposal_data  });
-
+    this.setState({ dproposal_data: dproposal_data  });
   }
 
   componentDidUpdate(prevProps) {
-    if((this.props.status !== prevProps.status) || (this.props.hasVoted !== prevProps.hasVoted ))
-    {
+    if((this.props.status !== prevProps.status) || (this.props.hasVoted !== prevProps.hasVoted )) {
       this.setState({ loaded: false });
       this.setDProposalData();
     }
@@ -35,22 +30,16 @@ class CloseProposalDetail extends React.Component {
 
   componentDidMount = async() => {
     try {
-
       this.setDProposalData();
-
       this.setState({
           loaded: true,
       });
-
     } catch (error) {
-        //alert(`Failed to load web3, accounts, or data contract. Check console for details.`,);
         console.error(error);
     }
   }
 
   render() {
-
-    
     return (  <div className="proposal-detail">            
                 <h3 className="title" data-testid="titulo"> {this.props.title} 
                   { (this.props.hasVoted) && 

@@ -1,14 +1,16 @@
 import getWeb3 from "../getWeb3";
 import CrowdfundingCampaignDemo from "../contracts/CrowdfundingCampaignDemo.json";
 
-import { getValuesFromHash } from "../helpers/utils.js"
-
 class CampaignService {
     
   constructor() {
     this.init();
   }
 
+  /**
+   * Creates a new connection to the blockchain network selected. 
+   * @returns {Boolean} true when connect.
+   */
   async init() {
     this.web3 = await getWeb3();
     this.accounts = await this.web3.eth.getAccounts();
@@ -18,36 +20,54 @@ class CampaignService {
     return true;
   }
 
+  /**
+   * Returns the list of accounts in the wallet.
+   * @returns {Array} accounts.
+   */
   async getAccounts(){
     return (await this.web3.eth.getAccounts());
   }
 
+  /**
+   * Get the selected account from the wallet.
+   * @returns {String} address of selected account.
+   */
   getFirstAccount(){
     return this.accounts[0];
   }
 
+  /**
+   * Check if the network selected has the contract deployed.
+   * @returns {Boolean} true if the network select is correct and false otherwise
+   */
   async isCorrectNetwork() {
     const initialized = await this.init();
     console.log(`Now initialized is ${initialized}`);
     return CrowdfundingCampaignDemo.networks[this.networkId];
   }
 
+  /**
+   * Get the currect block of the network.
+   * @returns {Number} current block number.
+   */
   async getCurrentBlock(){
     return (await this.web3.eth.getBlockNumber())
   }
 
+  /**
+   * Get the initial block of the contract.
+   * @returns {Number} initial block number.
+   */
   getInitialBlock() {
     return this.initialBlockNumber;
   }
 
-  async setInstance() {
-    this.instance = await new this.web3.eth.Contract(
-      CrowdfundingCampaignDemo.abi,
-      CrowdfundingCampaignDemo.networks[this.networkId] && CrowdfundingCampaignDemo.networks[this.networkId].address,
-    );
-    return this.instance;
-  }
-
+  /**
+   *  Set the initial block number and an instance of the contract from an address.
+   * @param {String} address the address contract.
+   * @param {Number} blockNumber initial block number.
+   * @returns {Object} a CrowdfundingCampaignDemo instance.
+   */
   async setInstanceFromAddress(address, blockNumber) {
     this.instance = await new this.web3.eth.Contract(
       CrowdfundingCampaignDemo.abi,
@@ -57,13 +77,20 @@ class CampaignService {
     return this.instance;
   }
 
+  /**
+   * Get the current CrowdfundingCampaignDemo instance.
+   * @returns {Object} the CrowdfundingCampaignDemo instance.
+   */
   getInstance(){
     return this.instance;
   }
 
+  /**
+   * Returns a json object with the campaign info of the current CrowdfundingCampaignDemo instance.
+   * @returns {JSON} campaign info as json.
+   * */
   async getCampaignInfo() {
     const campaignValues = await this.instance.methods.getCampaignInfo().call();
-
     const campaignData = {};
     campaignData.owner = campaignValues._owner;
     campaignData.status = campaignValues._status;
@@ -77,6 +104,10 @@ class CampaignService {
     return campaignData;
   }
 
+  /**
+   * Returns a json object with the balance campaign info of the current CrowdfundingCampaignDemo instance.
+   * @returns {JSON} balance campaign info as json.
+   * */
   async getBalancesInfo() {
     const balanceValues = await this.instance.methods.getBalancesInfo().call();
 
@@ -89,26 +120,52 @@ class CampaignService {
     return balancesData;
   }
 
+  /**
+   * Check if an address it's from a member of the campaign.
+   * @param {String} address
+   * @returns {Boolean} true if the address passed as param is a member and false otherwise. 
+   */
   async getMembershipFromAddress(address) {
     return (await this.instance.methods.isMember(address).call());
   }
 
+  /**
+   * Check if the selected address it's from a member of the campaign.
+   * @returns {Boolean} true if the selected address passed as param is a member and false otherwise. 
+   */
   async getMembership() {
     return (this.getMembershipFromAddress(this.accounts[0]))
   }
 
+  /**
+   * Get the balance of the campaign.
+   * @returns {Number} campaign balance in wei. 
+   */
   async getBalance() {
     return (await this.web3.eth.getBalance(this.instance.options.address));
   }
 
+  /**
+   * Get the quantity of members of the campaign.
+   * @returns {Number} qty memmbers. 
+   */
   async getMembersCount() {
     return (await this.instance.methods.membersCount().call());
   }
 
+  /**
+   * Get the campaign status.
+   * @returns {Number} current campaign status. 
+   */
   async getStatus() {
     return (await this.instance.methods.getStatus().call());
   }
 
+  /**
+   * Returns a json object with the proposal info of the index passed by param.
+   * @param {Number} index the proposal index.
+   * @returns {JSON} proposal info as json.
+   * */
   async getProposalInfo(index) {
     const proposalValues = await this.instance.methods.getProposal(index).call({ from: this.accounts[0]});
             
@@ -125,11 +182,21 @@ class CampaignService {
     return proposalData;
   }
 
+  /**
+   * Check if the selected account has voted the proposal of the index passed by param.
+   * @param {Number} index the proposal index.
+   * @returns {Boolean} true if the account has voted the proposal and false otherwise.
+   * */
   async hasVotedProposal(index) {
     const hasVoted = await this.instance.methods.hasVotedProposal(index).call();
     return hasVoted;
   }
 
+  /**
+   * Returns a json object with the close proposal info of the index passed by param.
+   * @param {Number} index the close proposal index.
+   * @returns {JSON} close proposal info as json.
+   * */
   async getCloseProposalInfo(index) {
     const dProposalValues = await this.instance.methods.getCloseProposal(index).call({ from: this.accounts[0]});
              
@@ -145,11 +212,21 @@ class CampaignService {
     return dProposalData;
   }
 
+  /**
+   * Check if the selected account has voted the close proposal of the index passed by param.
+   * @param {Number} index the close proposal index.
+   * @returns {Boolean} true if the account has voted the close proposal and false otherwise.
+   * */
   async hasVotedCloseProposal(index) {
     const hasVoted = await this.instance.methods.hasVotedCloseProposal(index).call();
     return hasVoted;
   }
 
+  /**
+   * Check if the selected account has withdraw his remaining founds.
+   * @param {Number} index the close proposal index.
+   * @returns {Boolean} true if the selected account has withdraw his remaining founds and false otherwise.
+   * */
   async hasWithdraw() {
     const senderHasWithdraw = await this.instance.methods.hasWithdraw().call({ from: this.accounts[0]});
     return senderHasWithdraw;
@@ -186,9 +263,9 @@ async getCloseProposals() {
 }
 
 
-/** Suscripción a eventos */
+/** Events subscriptions */
 
-  async suscribeToNewContribution(actualizeFunction){
+  async subscribeToNewContribution(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -206,7 +283,7 @@ async getCloseProposals() {
       });
   }
 
-  async suscribeToChangeStatus(actualizeFunction){
+  async subscribeToChangeStatus(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -227,7 +304,7 @@ async getCloseProposals() {
 
   }
 
-  async suscribeToVoteProposal(actualizeFunction){
+  async subscribeToVoteProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -245,7 +322,7 @@ async getCloseProposals() {
       });
   }
 
-  async suscribeToClosedProposal(actualizeFunction){
+  async subscribeToClosedProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -263,7 +340,7 @@ async getCloseProposals() {
       });
   }
 
-  async suscribeToCreateCloseProposal(actualizeFunction){
+  async subscribeToCreateCloseProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -281,7 +358,7 @@ async getCloseProposals() {
       });
   }
 
-  async suscribeToVoteCloseProposal(actualizeFunction){
+  async subscribeToVoteCloseProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -299,7 +376,7 @@ async getCloseProposals() {
       });
   }
 
-  async suscribeToCloseProposalDissaproved(actualizeFunction){
+  async subscribeToCloseProposalDissaproved(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -317,7 +394,7 @@ async getCloseProposals() {
       });
   }
 
-  async suscribeToProgressUpdate(actualizeFunction){
+  async subscribeToProgressUpdate(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -335,7 +412,7 @@ async getCloseProposals() {
       });
   }
 
-  async suscribeToProposalRelease(actualizeFunction){
+  async subscribeToProposalRelease(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -353,7 +430,7 @@ async getCloseProposals() {
       });
   }
 
-  async suscribeToWithdraw(actualizeFunction){
+  async subscribeToWithdraw(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
 
@@ -373,7 +450,7 @@ async getCloseProposals() {
   }
 
 
-/** Manejo de trasacciones y errores */
+/** Handle transactions */
 
   transactionOnError(error, receipt, statusResponse, resolve)  { 
     statusResponse.error = true;
@@ -387,19 +464,16 @@ async getCloseProposals() {
     }
     else if (receipt && (receipt.cumulativeGasUsed === receipt.gasUsed)) {
       statusResponse.errorMsg = "Gas insuficiente";
-      //console.log(receipt.cumulativeGasUsed);
-      //console.log(receipt.gasUsed);
     }
     else {
       statusResponse.errorMsg = "Error desconocido"
       console.log(statusResponse.errorMsg);
       console.log(error);
     }
-
     resolve(statusResponse, receipt);
   }
 
-  transactionOnReipt(receipt, statusResponse, resolve){
+  transactionOnReceipt(receipt, statusResponse, resolve){
       statusResponse.res = receipt;
       console.log('reciept', receipt);
       if(receipt.status === '0x1' || receipt.status === 1  || receipt.status===true ){
@@ -412,7 +486,7 @@ async getCloseProposals() {
   }
 
 
-/** Trasancciones que cambian el estado de la campaña */
+/** Transactions */
 
   async contribute(value) {
     const gasprice = await this.web3.eth.getGasPrice();

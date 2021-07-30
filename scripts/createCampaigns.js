@@ -1,7 +1,3 @@
-
-
-
-//const CrowdfundingCampaign = artifacts.require("CrowdfundingCampaign.sol");
 const CrowdfundingCampaignDemo = artifacts.require("CrowdfundingCampaignDemo.sol");
 const { create } = require('../node_modules/ipfs-http-client');
 const fs = require('fs');
@@ -10,22 +6,25 @@ const Web3 = require("web3");
 const ipfs_client = create('https://ipfs.infura.io:5001');
 
 function sleep(ms) {
+    
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function saveJsonIPFS(json_value){
-    
+
     const result = await ipfs_client.add(JSON.stringify(json_value));
     return result.path;
 }
 
 async function saveImageIPFS(path_image){
-    const imgdata = fs.readFileSync(path_image);
-    const result = await ipfs_client.add(imgdata);
+    
+    const img_data = fs.readFileSync(path_image);
+    const result = await ipfs_client.add(img_data);
     return result.path;
 }
 
 async function saveInfoIPFS(imagesPath,title,description,date){
+    
     const jsonData = {};
     const ipfsImagesPaths = [];
 
@@ -44,23 +43,27 @@ async function saveInfoIPFS(imagesPath,title,description,date){
 }
 
 function addressToHexBytes(address){
+    
     const out = bs58.decode(address);
     const hexBytes = new Buffer(out).toString('hex');
     return hexBytes.substring(4);
 }
 
 function getBasicInfo(){
+    
     const basic_info = JSON.parse(fs.readFileSync("./scripts/campaigns_data/basic_info.json"));
     return basic_info;
 }
 
 function getWeb3(){
+    
     const provider = new Web3.providers.HttpProvider("http://127.0.0.1:7545");
     const web3 = new Web3(provider);
     return web3;
 }
 
 async function createCampaigns(jsonInfo){
+    
     const campaigns = []
     const campaignsData = {};
     campaignsData["campaigns"] = [];
@@ -102,7 +105,6 @@ async function createCampaigns(jsonInfo){
         }
     }
 
-
     var fs = require('fs');
     fs.writeFileSync("./client/src/contracts/campaignAddresses.json", 
                       JSON.stringify(campaignsData), 
@@ -114,12 +116,10 @@ async function createCampaigns(jsonInfo){
                     });
     
     return campaigns;
-
 }
 
 async function sendContributions(web3, addr, jsonInfo, campaigns){
 
-    let response = false;
     let i = 0;
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
 
@@ -129,18 +129,14 @@ async function sendContributions(web3, addr, jsonInfo, campaigns){
             const campaign = campaigns[i]
             const gasprice = await web3.eth.getGasPrice();
             const gas = await campaign.contribute.estimateGas({ from: addr[addr_index], value: value });      
-            const transaction = await campaign.contribute.sendTransaction({ from: addr[addr_index], gasPrice: gasprice, gas: gas, value: value }) ; 
-            response = response && (transaction.logs.type == "mined");
-        };
+            await campaign.contribute.sendTransaction({ from: addr[addr_index], gasPrice: gasprice, gas: gas, value: value }) ; 
+        }
         i=i+1;
-    };
-    return response;  
-
+    }
 }
 
 async function changeActive(web3, addr, jsonInfo, campaigns){
 
-    let response = false;
     let i = 0;
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
@@ -148,25 +144,19 @@ async function changeActive(web3, addr, jsonInfo, campaigns){
             const campaign = campaigns[i]
             const gasprice = await web3.eth.getGasPrice();
             const gas = await campaign.setActive.estimateGas({ from: addr[0] });      
-            const transaction = await campaign.setActive.sendTransaction({ from: addr[0], gasPrice: gasprice, gas: gas }) ; 
-            response = response && (transaction.type == "mined");
+            await campaign.setActive.sendTransaction({ from: addr[0], gasPrice: gasprice, gas: gas }) ; 
         }
         i=i+1;
-
-    };
-    return response;  
-
+    }
 }
 
 async function progressUpdates(web3, addr, jsonInfo, campaigns){
 
-    let response = false;
     let i = 0;
-    const saved = {}
+    const saved = {};
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
         {
-            console.log(`Progress updates ${campaignInfo["title"]} ${i}`)
             for (const progressUpdates of campaignInfo["progressUpdates"]) {
 
                 let ipfsHash = null;
@@ -181,30 +171,24 @@ async function progressUpdates(web3, addr, jsonInfo, campaigns){
                     saved[progressUpdates["title"]] = ipfsHash;
 
                 } else {
-                    
+
                     ipfsHash = saved[progressUpdates["title"]];
-                
                 }
 
                 const campaign = campaigns[i]
                 const gasprice = await web3.eth.getGasPrice();
                 const gas = await campaign.saveProgressUpdate.estimateGas(ipfsHash, { from: addr[0] });      
-                const transaction = await campaign.saveProgressUpdate.sendTransaction(ipfsHash, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
-                response = response && (transaction.type == "mined");
+                await campaign.saveProgressUpdate.sendTransaction(ipfsHash, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
             }
         }
         i=i+1;
-
-    };
-    return response;  
-
+    }
 }
 
 async function proposals(web3, addr, jsonInfo, campaigns){
 
-    let response = false;
     let i = 0;
-    const saved = {}
+    const saved = {};
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
         {
@@ -234,8 +218,7 @@ async function proposals(web3, addr, jsonInfo, campaigns){
                 const campaign = campaigns[i]
                 const gasprice = await web3.eth.getGasPrice();
                 const gas = await campaign.createProposal.estimateGas(value, recipient, ipfsHash, { from: addr[0] });      
-                const transaction = await campaign.createProposal.sendTransaction(value, recipient, ipfsHash, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
-                response = response && (transaction.type == "mined");
+                await campaign.createProposal.sendTransaction(value, recipient, ipfsHash, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
 
                 await voteProposals(web3, addr, i_proposal, proposal, campaign);
                 await activateProposals(web3, addr, i_proposal, proposal, campaign);
@@ -245,90 +228,62 @@ async function proposals(web3, addr, jsonInfo, campaigns){
             }
         }
         i=i+1;
-
-    };
-    return response;  
-
+    }
 }
 
 async function voteProposals(web3, addr, i_proposal, jsonInfoProposal, campaign){
 
-    let response = false;
     for (const vote of jsonInfoProposal["votes"]) {
         const member = addr[vote["accountIndex"]]
 
         if (vote["value"]) {
             const gasprice = await web3.eth.getGasPrice();
             const gas = await campaign.approveProposal.estimateGas(i_proposal, { from: member });      
-            const transaction = await campaign.approveProposal.sendTransaction(i_proposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
-            response = response && (transaction.type == "mined");
+            await campaign.approveProposal.sendTransaction(i_proposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
         }
         else {
             const gasprice = await web3.eth.getGasPrice();
             const gas = await campaign.disapproveProposal.estimateGas(i_proposal, { from: member });      
-            const transaction = await campaign.disapproveProposal.sendTransaction(i_proposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
-            response = response && (transaction.type == "mined");
+            await campaign.disapproveProposal.sendTransaction(i_proposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
         }
-    };
-    return response;  
-
+    }
 }
 
 async function activateProposals(web3, addr, i_proposal, proposal, campaign){
-
-    let response = false;
     
     if (proposal["timeReached"]) {
         const gasprice = await web3.eth.getGasPrice();
         const gas = await campaign.changeLimitProposal.estimateGas(i_proposal, { from: addr[0] });      
-        const transaction = await campaign.changeLimitProposal.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
-        response = response && (transaction.type == "mined");
+        await campaign.changeLimitProposal.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ;
     }
 
     if (proposal["timeReached"] && proposal["closed"]) {
-        console.log(`Closing ${i_proposal}`)
         await sleep(3000);
         const gasprice = await web3.eth.getGasPrice();
         const gas = await campaign.closeProposal.estimateGas(i_proposal, { from: addr[0] });      
-        const transaction = await campaign.closeProposal.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
-        response = response && (transaction.type == "mined");
+        await campaign.closeProposal.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
     }
-
-    //const p = await campaign.getProposal.call(i_proposal);
-    //console.log(p);
-
-    return response;
-
 }
 
 async function releaseProposals(web3, addr, i_proposal, proposal, campaign){
-
-    let response = false;
     
     if (proposal["release"]) {
         const gasprice = await web3.eth.getGasPrice();
         const gas = await campaign.release.estimateGas(i_proposal, { from: addr[0] });      
-        const transaction = await campaign.release.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
-        response = response && (transaction.type == "mined");
+        await campaign.release.sendTransaction(i_proposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
     }
-
-    return response;
-
 }
 
 async function closeProposals(web3, addr, jsonInfo, campaigns){
 
-    let response = false;
     let i = 0;
-    const saved = {}
+    const saved = {};
 
     for (const campaignInfo of jsonInfo["campaignsToCreate"]) {
         if (campaignInfo["active"]["status"])
         {
-            console.log(`${campaignInfo["title"]} ${i}`)
             let i_cproposal = 0;
             for (const dproposal of campaignInfo["closeProposals"]) {
-                console.log(`DP ${i_cproposal}`)
 
                 let ipfsHash = null;
                 if (saved[dproposal["title"]] == null)  {
@@ -340,11 +295,9 @@ async function closeProposals(web3, addr, jsonInfo, campaigns){
 
                     ipfsHash = "0x" + addressToHexBytes(path);
                     saved[dproposal["title"]] = ipfsHash;
-
                 } else {
                     
                     ipfsHash = saved[dproposal["title"]];
-                
                 }
                 
                 const author = addr[dproposal["author_i"]]
@@ -352,8 +305,7 @@ async function closeProposals(web3, addr, jsonInfo, campaigns){
                 const campaign = campaigns[i]
                 const gasprice = await web3.eth.getGasPrice();
                 const gas = await campaign.createCloseProposal.estimateGas(ipfsHash, { from: author });      
-                const transaction = await campaign.createCloseProposal.sendTransaction(ipfsHash, { from: author, gasPrice: gasprice, gas: gas }) ; 
-                response = response && (transaction.type == "mined");
+                await campaign.createCloseProposal.sendTransaction(ipfsHash, { from: author, gasPrice: gasprice, gas: gas }) ; 
 
                 await voteCloseProposals(web3, addr, i_cproposal, dproposal, campaign);
                 await activateCloseProposals(web3, addr, i_cproposal, dproposal, campaign);
@@ -362,57 +314,41 @@ async function closeProposals(web3, addr, jsonInfo, campaigns){
             }
         }
         i=i+1;
-
     };
-    return response;  
-
 }
 
 async function voteCloseProposals(web3, addr, i_cproposal, jsonInfoProposal, campaign){
 
-    let response = false;
     for (const vote of jsonInfoProposal["votes"]) {
         const member = addr[vote["accountIndex"]]
 
         if (vote["value"]) {
             const gasprice = await web3.eth.getGasPrice();
             const gas = await campaign.approveCloseProposal.estimateGas(i_cproposal, { from: member });      
-            const transaction = await campaign.approveCloseProposal.sendTransaction(i_cproposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
-            response = response && (transaction.type == "mined");
+            await campaign.approveCloseProposal.sendTransaction(i_cproposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
         }
         else {
             const gasprice = await web3.eth.getGasPrice();
             const gas = await campaign.disapproveCloseProposal.estimateGas(i_cproposal, { from: member });      
-            const transaction = await campaign.disapproveCloseProposal.sendTransaction(i_cproposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
-            response = response && (transaction.type == "mined");
+            await campaign.disapproveCloseProposal.sendTransaction(i_cproposal, { from: member, gasPrice: gasprice, gas: gas }) ; 
         }
-    };
-    return response;  
-
+    }
 }
 
 async function activateCloseProposals(web3, addr, i_cproposal, dproposal, campaign){
-
-    let response = false;
     
     if (dproposal["timeReached"]) {
         const gasprice = await web3.eth.getGasPrice();
         const gas = await campaign.changeLimitCloseProposal.estimateGas(i_cproposal, { from: addr[0] });      
-        const transaction = await campaign.changeLimitCloseProposal.sendTransaction(i_cproposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
-        response = response && (transaction.type == "mined");
+        await campaign.changeLimitCloseProposal.sendTransaction(i_cproposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
     }
 
     if (dproposal["closed"]) {
-        console.log(`Closing d ${i_cproposal}`)
         await sleep(3000);
         const gasprice = await web3.eth.getGasPrice();
         const gas = await campaign.closeCloseProposal.estimateGas(i_cproposal, { from: addr[0] });      
-        const transaction = await campaign.closeCloseProposal.sendTransaction(i_cproposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
-        response = response && (transaction.type == "mined");
+        await campaign.closeCloseProposal.sendTransaction(i_cproposal, { from: addr[0], gasPrice: gasprice, gas: gas }) ; 
     }
-
-    return response;
-
 }
 
 
@@ -423,16 +359,23 @@ async function main() {
     const jsonInfo = getBasicInfo();
     const campaigns = await createCampaigns(jsonInfo);
     console.log(`Creation passed: ${campaigns.length} new campaigns`);
-    const contributed = await sendContributions(web3, addr, jsonInfo, campaigns);
-    console.log(`Contributed passed: ${contributed}`);
-    const actived = await changeActive(web3, addr, jsonInfo, campaigns);
-    console.log(`Actived passed: ${actived}`);
-    const progress = await progressUpdates(web3, addr, jsonInfo, campaigns)
-    console.log(`Progress creation passed: ${progress}`);     
-    const proposalsS = await proposals(web3, addr, jsonInfo, campaigns);
-    console.log(`Proposals creation passed: ${proposalsS}`);
-    const closeProposalsS = await closeProposals(web3, addr, jsonInfo, campaigns);
-    console.log(`Close Proposals creation passed: ${closeProposalsS}`);  
+    
+    await sendContributions(web3, addr, jsonInfo, campaigns);
+    console.log(`Contribution to campaigns completed.`);
+    
+    await changeActive(web3, addr, jsonInfo, campaigns);
+    console.log(`Campaigns activation completed.`);
+    
+    await progressUpdates(web3, addr, jsonInfo, campaigns)
+    console.log(`Campaigns Progress Update creation completed.`);     
+    
+    await proposals(web3, addr, jsonInfo, campaigns);
+    console.log(`Campaigns Proposals creation completed.`);
+    
+    await closeProposals(web3, addr, jsonInfo, campaigns);
+    console.log(`Campaigns Close Proposals creation completed.`);  
+
+    console.log("Creation process completed.");
 }
 
 module.exports = function(callback) {

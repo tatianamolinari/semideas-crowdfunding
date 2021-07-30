@@ -247,6 +247,7 @@ class DisplayCloseProposals extends React.Component {
       const actualizeCProposalsListInfo = async() => { this.getListCProposals(this.state.activePage) };
 
       await campaignService.suscribeToVoteCloseProposal(actualizeCProposalInfo);
+      await campaignService.suscribeToCloseProposalDissaproved(actualizeCProposalInfo);
       await campaignService.suscribeToCreateCloseProposal(actualizeCProposalsListInfo);
 
     } catch (error) {

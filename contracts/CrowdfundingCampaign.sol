@@ -205,6 +205,11 @@ contract CrowdfundingCampaign {
      */
     event CloseProposalVoted(uint _index);
 
+     /** @dev Emitted when a close proposal is dissaproved.
+     *  @param _index The index of the close proposal.
+     */
+    event CloseProposalDissaproved(uint _index);
+
     /** @dev Emitted when the author creates a progress update to show how the project is going.
      *  @param _ipfshash The url hash of the progress update data stored in IPFS.
      */
@@ -390,19 +395,20 @@ contract CrowdfundingCampaign {
         CloseProposal storage cProposal = closeProposals[_index];
 
         if (cProposal.approvalsCount > cProposal.disapprovalsCount) {
+            cProposal.status = ProposalStatus.APPROVED; 
+            remainingContributions = address(this).balance;
             if (cProposal.author == owner) {
                 status = CampaignStatus.SUCCESSFUL;
             } else {
                 status = CampaignStatus.FAIL;
             }
-            cProposal.status = ProposalStatus.APPROVED; 
-            remainingContributions = address(this).balance;
+            emit ChangeStatusCampaign(status);
         }
         else {
             cProposal.status = ProposalStatus.DISAPPROVED;
+            emit CloseProposalDissaproved(_index);
         }
-
-        emit ChangeStatusCampaign(status);
+        
     }
 
     /** @dev Allow only members to withdraw the remaining founds once the campaign is closed.

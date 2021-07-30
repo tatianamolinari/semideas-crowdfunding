@@ -299,6 +299,24 @@ async getCloseProposals() {
       });
   }
 
+  async suscribeToCloseProposalDissaproved(actualizeFunction){
+
+    const currentBlock = await this.getCurrentBlock();
+
+    this.instance.events.CloseProposalDissaproved({
+      fromBlock: currentBlock
+      }, function(error, event){ console.log(event); })
+      .on("connected", function(subscriptionId){
+      })
+      .on('data', function(event){
+          actualizeFunction();
+      })
+      .on('error', function(error, receipt) {
+        console.log("hubo un error");
+        console.log(error);
+      });
+  }
+
   async suscribeToProgressUpdate(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
@@ -540,8 +558,7 @@ async getCloseProposals() {
 
     return promise;
   }
-  
-
+ 
   async approveCloseProposal(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();

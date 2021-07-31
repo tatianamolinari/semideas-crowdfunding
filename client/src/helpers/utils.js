@@ -1,11 +1,9 @@
 
-const bs58 = require('bs58');
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// CampaignStatus { CREATED, ACTIVE, FAIL, SUCCESSFUL }
+/**
+ * Get a string campaign status from the enum contract number.
+ * @param {String} string_number string enum from contract. 
+ * @return {String} status.
+ */
 function fromIntToStatusCampaign(string_number) {
     let status = "";
     switch (string_number) {
@@ -22,15 +20,17 @@ function fromIntToStatusCampaign(string_number) {
             status = "Exitosa";
             break;
         default:
-            console.log("Invalid Status");
-            console.log(string_number);
             break;
     }
 
     return status;
 }
 
-// ProposalStatus { ACTIVE, APPROVED, DISAPPROVED, SUCCESSFUL }
+/**
+ * Get a string proposal status from the enum contract number.
+ * @param {String} string_number string enum from contract. 
+ * @return {String} status.
+ */
 function fromIntToStatusProposal(string_number) {
     let status = "";
     switch (string_number) {
@@ -47,14 +47,17 @@ function fromIntToStatusProposal(string_number) {
             status = "Exitoso";
             break;
         default:
-            console.log("Invalid Status");
-            console.log(string_number);
             break;
     }
 
     return status;
 }
 
+/**
+ * Get the badge class to show the status from the a string status.
+ * @param {String} status campaign or proposal status.. 
+ * @return {String} badge css class.
+ */
 function fromStatusToBadgeClass(status) {
     let badge_class = "";
     switch (status) {
@@ -81,8 +84,6 @@ function fromStatusToBadgeClass(status) {
             badge_class = "danger";
             break;
         default:
-            //console.log("Invalid Status");
-            //console.log(status);
             break;
     }
 
@@ -90,15 +91,4 @@ function fromStatusToBadgeClass(status) {
 }
 
 
-function addressToHexBytes(address){
-    const out = bs58.decode(address);
-    const hexBytes = new Buffer(out).toString('hex');
-    return hexBytes.substring(4);
-}
-
-function hexBytesToAddress(bytes){
-    const out = bs58.encode(new Buffer("1220" + bytes, 'hex'));
-    return out;
-}
-
-export { fromIntToStatusCampaign, fromIntToStatusProposal, fromStatusToBadgeClass, sleep, addressToHexBytes, hexBytesToAddress };
+export { fromIntToStatusCampaign, fromIntToStatusProposal, fromStatusToBadgeClass };

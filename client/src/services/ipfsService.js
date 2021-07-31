@@ -1,6 +1,6 @@
-import { hexBytesToAddress } from "../helpers/utils.js" 
-const uint8ArrayToString = require('uint8arrays/to-string')
-const { create } = require('ipfs-http-client')
+const uint8ArrayToString = require('uint8arrays/to-string');
+const { create } = require('ipfs-http-client');
+const bs58 = require('bs58');
 
 class IPFSService {
     
@@ -59,13 +59,35 @@ class IPFSService {
         return JSON.parse(await this.getFileFromIPFSHash(hash));
     }
 
+
+    addressToHexBytes(address){
+        const out = bs58.decode(address);
+        const hexBytes = new Buffer(out).toString('hex');
+        return hexBytes.substring(4);
+    }
+    
+    hexBytesToAddress(bytes){
+        const out = bs58.encode(new Buffer("1220" + bytes, 'hex'));
+        return out;
+    }
+
     /**
      * Get an IPFS hash (path) from a bytes32 saved in the blockchain.
      * @param {String} bytes32 
      * @returns {String} original IPFS hash (path). 
      */
     getIPFSHash(bytes32){
-        return hexBytesToAddress(bytes32.substring(2));
+        return this.hexBytesToAddress(bytes32.substring(2));
+    }
+
+     /**
+     * Get an bytes32 to save in the blockchain from IPFS hash.
+     * @param {String} original IPFS hash (path).  
+     * @returns {String} bytes32 
+     */
+    getBytes32Hash(ipfsHash){
+        const bytes32Hash = "0x" + this.addressToHexBytes(ipfsHash);
+        return bytes32Hash;
     }
 
 }

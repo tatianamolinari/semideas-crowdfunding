@@ -162,7 +162,7 @@ class CampaignService {
   }
 
   /**
-   * Returns a json object with the proposal info of the index passed by param.
+   * Returns a json object with the proposal info of the index passed as param.
    * @param {Number} index the proposal index.
    * @returns {JSON} proposal info as json.
    * */
@@ -183,7 +183,7 @@ class CampaignService {
   }
 
   /**
-   * Check if the selected account has voted the proposal of the index passed by param.
+   * Check if the selected account has voted the proposal of the index passed as param.
    * @param {Number} index the proposal index.
    * @returns {Boolean} true if the account has voted the proposal and false otherwise.
    * */
@@ -193,7 +193,7 @@ class CampaignService {
   }
 
   /**
-   * Returns a json object with the close proposal info of the index passed by param.
+   * Returns a json object with the close proposal info of the index passed as param.
    * @param {Number} index the close proposal index.
    * @returns {JSON} close proposal info as json.
    * */
@@ -213,7 +213,7 @@ class CampaignService {
   }
 
   /**
-   * Check if the selected account has voted the close proposal of the index passed by param.
+   * Check if the selected account has voted the close proposal of the index passed as param.
    * @param {Number} index the close proposal index.
    * @returns {Boolean} true if the account has voted the close proposal and false otherwise.
    * */
@@ -233,38 +233,54 @@ class CampaignService {
   }
 
 
-/** Get past events */
+  /** Get past events */
 
-async getProgressUpdates() {
-  
-  const initialBlock = this.getInitialBlock();
-  const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: initialBlock, toBlock: block }
-  const events = await this.instance.getPastEvents('ProgressUpdate', opts);
-  return events;
-}
+  /**
+   * Gets all the progress updates events from the initial block of the instance.
+   * @returns {Array} progress updates events.
+   */
+  async getProgressUpdates() {
+    
+    const initialBlock = this.getInitialBlock();
+    const block = await this.web3.eth.getBlockNumber();
+    const opts = { fromBlock: initialBlock, toBlock: block }
+    const events = await this.instance.getPastEvents('ProgressUpdate', opts);
+    return events;
+  }
 
-async getProposals() {
-  
-  const initialBlock = this.getInitialBlock();
-  const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: initialBlock, toBlock: block }
-  const events = await this.instance.getPastEvents('ProposalCreated', opts);
-  return events;
-}
+  /**
+   * Gets all the proposals events from the initial block of the instance.
+   * @returns {Array} proposals events.
+   */
+  async getProposals() {
+    
+    const initialBlock = this.getInitialBlock();
+    const block = await this.web3.eth.getBlockNumber();
+    const opts = { fromBlock: initialBlock, toBlock: block }
+    const events = await this.instance.getPastEvents('ProposalCreated', opts);
+    return events;
+  }
 
-async getCloseProposals() {
-  
-  const initialBlock = this.getInitialBlock();
-  const block = await this.web3.eth.getBlockNumber();
-  const opts = { fromBlock: initialBlock, toBlock: block }
-  const events = await this.instance.getPastEvents('CloseProposalCreated', opts);
-  return events;
-}
+  /**
+   * Gets all the close proposals events from the initial block of the instance.
+   * @returns {Array} close proposals events.
+   */
+  async getCloseProposals() {
+    
+    const initialBlock = this.getInitialBlock();
+    const block = await this.web3.eth.getBlockNumber();
+    const opts = { fromBlock: initialBlock, toBlock: block }
+    const events = await this.instance.getPastEvents('CloseProposalCreated', opts);
+    return events;
+  }
 
 
 /** Events subscriptions */
 
+  /**
+   * Subscribe to new contribution events from the currect block.
+   * @param {Function} actualizeFunction function to execute every time a new event is emit by the contract.
+   */
   async subscribeToNewContribution(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
@@ -283,6 +299,10 @@ async getCloseProposals() {
       });
   }
 
+  /**
+   * Subscribe to change status campaign events from the currect block.
+   * @param {Function} actualizeFunction function to execute every time a new event is emit by the contract.
+   */
   async subscribeToChangeStatus(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
@@ -304,6 +324,10 @@ async getCloseProposals() {
 
   }
 
+  /**
+   * Subscribe to vote proposals events from the currect block.
+   * @param {Function} actualizeFunction function to execute every time a new event is emit by the contract.
+   */
   async subscribeToVoteProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
@@ -322,6 +346,10 @@ async getCloseProposals() {
       });
   }
 
+  /**
+   * Subscribe to close proposals events from the currect block.
+   * @param {Function} actualizeFunction function to execute every time a new event is emit by the contract.
+   */
   async subscribeToClosedProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
@@ -340,6 +368,10 @@ async getCloseProposals() {
       });
   }
 
+  /**
+   * Subscribe to create close proposal events from the currect block.
+   * @param {Function} actualizeFunction function to execute every time a new event is emit by the contract.
+   */
   async subscribeToCreateCloseProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
@@ -358,6 +390,10 @@ async getCloseProposals() {
       });
   }
 
+  /**
+   * Subscribe to vote close proposal events from the currect block.
+   * @param {Function} actualizeFunction function to execute every time a new event is emit by the contract.
+   */
   async subscribeToVoteCloseProposal(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
@@ -376,6 +412,10 @@ async getCloseProposals() {
       });
   }
 
+  /**
+   * Subscribe to close proposal dissaproved events from the currect block.
+   * @param {Function} actualizeFunction function to execute every time a new event is emit by the contract.
+   */
   async subscribeToCloseProposalDissaproved(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
@@ -394,24 +434,10 @@ async getCloseProposals() {
       });
   }
 
-  async subscribeToProgressUpdate(actualizeFunction){
-
-    const currentBlock = await this.getCurrentBlock();
-
-    this.instance.events.ProgressUpdate({
-      fromBlock: currentBlock
-      }, function(error, event){ console.log(event); })
-      .on("connected", function(subscriptionId){
-      })
-      .on('data', function(event){
-          actualizeFunction(event);
-      })
-      .on('error', function(error, receipt) {
-        console.log("hubo un error");
-        console.log(error);
-      });
-  }
-
+  /**
+   * Subscribe to proposal realease events from the currect block.
+   * @param {Function} actualizeFunction function to execute every time a new event is emit by the contract.
+   */
   async subscribeToProposalRelease(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
@@ -430,6 +456,10 @@ async getCloseProposals() {
       });
   }
 
+  /**
+   * Subscribe to withdraw events from the currect block.
+   * @param {Function} actualizeFunction function to execute every time a new event is emit by the contract.
+   */
   async subscribeToWithdraw(actualizeFunction){
 
     const currentBlock = await this.getCurrentBlock();
@@ -488,6 +518,10 @@ async getCloseProposals() {
 
 /** Transactions */
 
+   /**
+   * Send contribution from the account selected to the campaign.
+   * @param {Number} vale value to contribute.
+   * */
   async contribute(value) {
     const gasprice = await this.web3.eth.getGasPrice();
     const gas = await this.instance.methods.contribute().estimateGas({ from: this.accounts[0], value: value });      
@@ -508,6 +542,9 @@ async getCloseProposals() {
     return promise;
   }
 
+  /**
+   * Change the campaign status to Active.
+   * */
   async setActive() {
     const gasprice = await this.web3.eth.getGasPrice();
     const gas = await this.instance.methods.setActive().estimateGas({ from: this.accounts[0] });      
@@ -528,6 +565,10 @@ async getCloseProposals() {
     return promise;
   }
 
+  /**
+   * Send an approve vote from the selected account to the proposal from the index passed as param.
+   * @param {Number} index the index of the proposal to approve.
+   * */
   async approveProposal(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
@@ -548,7 +589,11 @@ async getCloseProposals() {
 
     return promise;
   }
-
+  
+  /**
+   * Send a disapprove vote from the selected account to the proposal from the index passed as param.
+   * @param {Number} index the index of the proposal to disapprove.
+   * */
   async disapproveProposal(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
@@ -570,6 +615,10 @@ async getCloseProposals() {
     return promise;
   }
 
+  /**
+   * Close the proposal from the index passed as param.
+   * @param {Number} index the index of the proposal to close.
+   * */
   async closeProposal(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
@@ -591,6 +640,10 @@ async getCloseProposals() {
     return promise;
   }
 
+  /**
+   * Release the founds from the proposal from the index passed as param.
+   * @param {Number} index the index of the proposal approved to realese founds.
+   * */
   async release(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
@@ -612,6 +665,10 @@ async getCloseProposals() {
     return promise;
   }
 
+  /**
+   * Creates a new Close proposal using the IPFS hash passed as param.
+   * @param {String} ipfshash IPFS hash.
+   * */
   async createCloseProposal(ipfshash) {
     
     const gasprice = await this.web3.eth.getGasPrice();
@@ -633,6 +690,10 @@ async getCloseProposals() {
     return promise;
   }
  
+  /**
+   * Send an approve vote from the selected account to the close proposal from the index passed as param.
+   * @param {Number} index the index of the close proposal to approve.
+   * */
   async approveCloseProposal(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
@@ -654,6 +715,10 @@ async getCloseProposals() {
     return promise;
   }
 
+  /**
+   * Send a disapprove vote from the selected account to the close proposal from the index passed as param.
+   * @param {Number} index the index of the close proposal to disapprove.
+   * */
   async disapproveCloseProposal(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
@@ -675,6 +740,10 @@ async getCloseProposals() {
     return promise;
   }
 
+  /**
+   * Close the close proposal from the index passed as param.
+   * @param {Number} index the index of the close proposal to close.
+   * */
   async closeCloseProposal(index) {
 
     const gasprice = await this.web3.eth.getGasPrice();
@@ -696,6 +765,9 @@ async getCloseProposals() {
     return promise;
   }
 
+  /**
+   * Withdraw the remaining founds from the campaign.
+   */
   async withdraw() {
 
     const gasprice = await this.web3.eth.getGasPrice();
@@ -716,7 +788,6 @@ async getCloseProposals() {
 
     return promise;
   }
-  
 
 }
 

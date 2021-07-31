@@ -6,9 +6,6 @@ import MessageModal from "../modals/MessageModal"
 import { campaignService } from "../../services/campaignService.js"
 import { ipfsService } from "../../services/ipfsService.js"
 
-import { addressToHexBytes } from "../../helpers/utils.js"
-
-
 class ClosePorposalModal extends React.Component {
 
   state = {
@@ -51,7 +48,7 @@ class ClosePorposalModal extends React.Component {
             "created_date": dateToday
           }
           const ipfsHash = await ipfsService.addJson(json_value)
-          const bytes32Hash = "0x" + addressToHexBytes(ipfsHash);
+          const bytes32Hash = ipfsService.getBytes32Hash(ipfsHash);
 
           campaignService.createCloseProposal(bytes32Hash).then((statusResponse) => {
             let title, message = "";

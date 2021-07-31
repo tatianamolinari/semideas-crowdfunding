@@ -232,7 +232,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -251,7 +252,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -264,7 +266,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -277,7 +280,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -290,7 +294,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -303,7 +308,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -316,7 +322,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -329,7 +336,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -373,7 +381,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -386,7 +395,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -399,7 +409,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -418,14 +429,16 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
       "name": "contribute",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [],
@@ -598,7 +611,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -611,7 +625,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -624,7 +639,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -637,7 +653,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -665,7 +682,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -713,7 +731,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -767,7 +786,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -786,7 +806,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -799,7 +820,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -848,7 +870,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -867,7 +890,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -880,7 +904,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -893,7 +918,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minimunContribution\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_goal\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_ipfshash\",\"type\":\"bytes32\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_ipfshash\",\"type\":\"bytes32\"}],\"name\":\"CampaignCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"enum CrowdfundingCampaign.CampaignStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"name\":\"ChangeStatusCampaign\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_ipfshash\",\"type\":\"bytes32\"}],\"name\":\"CloseProposalCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"CloseProposalDissaproved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"CloseProposalVoted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"NewContribution\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_ipfshash\",\"type\":\"bytes32\"}],\"name\":\"ProgressUpdate\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"ProposalClosed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_ipfshash\",\"type\":\"bytes32\"}],\"name\":\"ProposalCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"ProposalRelease\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"ProposalVoted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_member\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"contribution\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"finalContributions\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"payment\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"remainingContributions\",\"type\":\"uint256\"}],\"name\":\"WithdrawFounds\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"approveCloseProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"approveProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"closeCloseProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"closeProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"closeProposals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"approvalsCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"disapprovalsCount\",\"type\":\"uint256\"},{\"internalType\":\"enum CrowdfundingCampaign.ProposalStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"limitTime\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"author\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contribute\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"contributions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_ipfshash\",\"type\":\"bytes32\"}],\"name\":\"createCloseProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_recipient\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_ipfshash\",\"type\":\"bytes32\"}],\"name\":\"createProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"created_at\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"disapproveCloseProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"disapproveProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"finalContributions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBalancesInfo\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_goal\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_finalContributions\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_remainingContributions\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_balance\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCampaignInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"},{\"internalType\":\"enum CrowdfundingCampaign.CampaignStatus\",\"name\":\"_status\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_goal\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_minimunContribution\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_membersCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_finalContributions\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_remainingContributions\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_out_grace_period\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"getCloseProposal\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_approvalsCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_disapprovalsCount\",\"type\":\"uint256\"},{\"internalType\":\"enum CrowdfundingCampaign.ProposalStatus\",\"name\":\"_status\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_limitTime\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_inTime\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"_senderHasVote\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"_author\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCloseProposalsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getFinalContributions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"getProposal\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_approvalsCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_disapprovalsCount\",\"type\":\"uint256\"},{\"internalType\":\"enum CrowdfundingCampaign.ProposalStatus\",\"name\":\"_status\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_limitTime\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"_inTime\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"_senderHasVote\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getProposalsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRemainingContributions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStatus\",\"outputs\":[{\"internalType\":\"enum CrowdfundingCampaign.CampaignStatus\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"goal\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"hasVotedCloseProposal\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"hasVotedProposal\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"hasWithdraw\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isMember\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"membersCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"minimunContribution\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"proposals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"approvalsCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"disapprovalsCount\",\"type\":\"uint256\"},{\"internalType\":\"enum CrowdfundingCampaign.ProposalStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"limitTime\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"release\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"remainingContributions\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_ipfshash\",\"type\":\"bytes32\"}],\"name\":\"saveProgressUpdate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"setActive\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"status\",\"outputs\":[{\"internalType\":\"enum CrowdfundingCampaign.CampaignStatus\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"withdraws\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"events\":{\"CampaignCreated(bytes32)\":{\"details\":\"Emitted when the author creates the campaign.\",\"params\":{\"_ipfshash\":\"The url hash of the campaign data stored in IPFS.\"}},\"ChangeStatusCampaign(uint8)\":{\"details\":\"Emitted when the status of the campaign change.\"},\"CloseProposalCreated(bytes32)\":{\"details\":\"Emitted when a member creates a proposal to close the campaign and get the founds back.\",\"params\":{\"_ipfshash\":\"The url hash of the close proposal data stored in IPFS.\"}},\"CloseProposalDissaproved(uint256)\":{\"details\":\"Emitted when a close proposal is dissaproved.\",\"params\":{\"_index\":\"The index of the close proposal.\"}},\"CloseProposalVoted(uint256)\":{\"details\":\"Emitted when a close proposal is voted.\",\"params\":{\"_index\":\"The index of the close proposal.\"}},\"NewContribution()\":{\"details\":\"Emitted when a new person contributes with the campaign.\"},\"ProgressUpdate(bytes32)\":{\"details\":\"Emitted when the author creates a progress update to show how the project is going.\",\"params\":{\"_ipfshash\":\"The url hash of the progress update data stored in IPFS.\"}},\"ProposalClosed(uint256)\":{\"details\":\"Emitted when a proposal is Closed.\",\"params\":{\"_index\":\"The index of the proposal.\"}},\"ProposalCreated(bytes32)\":{\"details\":\"Emitted when the author creates a proposal to free founds.\",\"params\":{\"_ipfshash\":\"The url hash of the proposal data stored in IPFS.\"}},\"ProposalRelease(uint256)\":{\"details\":\"Emitted when a proposal is release.\",\"params\":{\"_index\":\"The index of the proposal.\"}},\"ProposalVoted(uint256)\":{\"details\":\"Emitted when a proposal is voted.\",\"params\":{\"_index\":\"The index of the proposal.\"}},\"WithdrawFounds(address,uint256,uint256,uint256,uint256)\":{\"details\":\"Emitted when a member withdraw his founds.\"}},\"kind\":\"dev\",\"methods\":{\"approveCloseProposal(uint256)\":{\"details\":\"Allow only members to approve an active close proposal that they haven't voted before.\",\"params\":{\"_index\":\"index of the close proposal the member wants to approve.\"}},\"approveProposal(uint256)\":{\"details\":\"Allow only members to approve an active proposal that they haven't voted before.\",\"params\":{\"_index\":\"index of the proposal the member wants to approve.\"}},\"closeCloseProposal(uint256)\":{\"details\":\"Allow only members to close an active proposal that already has its voting time over.\",\"params\":{\"_index\":\"index of the proposal the member wants to approve.\"}},\"closeProposal(uint256)\":{\"details\":\"Allow only members to close an active proposal that already has its voting time over.\",\"params\":{\"_index\":\"index of the proposal the member wants to approve.\"}},\"constructor\":{\"details\":\"Constructor.\",\"params\":{\"_goal\":\"goal in wei that the project has to reach to be successful.\",\"_ipfshash\":\"The url hash of the campaign data previously stored in IPFS.*\",\"_minimunContribution\":\"minimum contribution in wei that a person has to make to become a member.\"}},\"contribute()\":{\"details\":\"Allow not members to contribute with the campaign and be a member of it.\"},\"createCloseProposal(bytes32)\":{\"details\":\"Allow only members to create a new proposal to finish de project and get the founds back.\",\"params\":{\"_ipfshash\":\"url hash of the close proposal data (description) previously stored in IPFS.\"}},\"createProposal(uint256,address,bytes32)\":{\"details\":\"Allow only owner to create a new proposal to get more founds.\",\"params\":{\"_ipfshash\":\"url hash of the proposal data (description and pictures) previously stored in IPFS.\",\"_recipient\":\"address where the founds are going to be after release them.\",\"_value\":\"founds in wei that the owner want to release.\"}},\"disapproveCloseProposal(uint256)\":{\"details\":\"Allow only members to disapprove an active close proposal that they haven't voted before.\",\"params\":{\"_index\":\"index of the close proposal the member wants to disapprove.\"}},\"disapproveProposal(uint256)\":{\"details\":\"Allow only members to disapprove an active proposal that they haven't voted before.\",\"params\":{\"_index\":\"index of the proposal the member wants to disapprove.\"}},\"getBalancesInfo()\":{\"details\":\"Function to get all the balances of the campaign\"},\"getCampaignInfo()\":{\"details\":\"Function to get the data of the campaign\"},\"getCloseProposal(uint256)\":{\"details\":\"Function to get the data of a close proposal.\",\"params\":{\"_index\":\"index of the proposal to return\"}},\"getCloseProposalsCount()\":{\"details\":\"Function to get the total number of close proposals.\"},\"getFinalContributions()\":{\"details\":\"Function to get the finalContributions of the campaign.\"},\"getProposal(uint256)\":{\"details\":\"Function to get the data of a proposal.\",\"params\":{\"_index\":\"index of the proposal to return\"}},\"getProposalsCount()\":{\"details\":\"Function to get the total number of proposals.\"},\"getRemainingContributions()\":{\"details\":\"Function to get the remainingContributions of the campaign.\"},\"getStatus()\":{\"details\":\"Function to get the actual status of the campaign.\"},\"hasVotedCloseProposal(uint256)\":{\"details\":\"Function to know if a member has already vot a close proposal.\",\"params\":{\"_index\":\"index of the proposal\"}},\"hasVotedProposal(uint256)\":{\"details\":\"Function to know if a member has already vot a proposal.\",\"params\":{\"_index\":\"index of the proposal\"}},\"hasWithdraw()\":{\"details\":\"Function to know if a member has withdraw it's founds \"},\"isMember(address)\":{\"details\":\"Function to return if someone is member.\"},\"release(uint256)\":{\"details\":\"Allow only members to close an active proposal that already has its voting time over.\",\"params\":{\"_index\":\"index of the proposal the member wants to approve.\"}},\"saveProgressUpdate(bytes32)\":{\"details\":\"Allow only owner to save a new progress Update data ipfs hash.\",\"params\":{\"_ipfshash\":\"url hash of the progress update data (description and pictures) previously stored in IPFS.\"}},\"setActive()\":{\"details\":\"Allow only owner to change the status of the cCampaign from CREATED to ACTIVE.\"},\"withdraw()\":{\"details\":\"Allow only members to withdraw the remaining founds once the campaign is closed.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/home/tati/Desktop/personal/Tesina/semideas-crowdfunding/contracts/CrowdfundingCampaign.sol\":\"CrowdfundingCampaign\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/tati/Desktop/personal/Tesina/semideas-crowdfunding/contracts/CrowdfundingCampaign.sol\":{\"keccak256\":\"0x583c357af55759604885a5770bb4b8b13cd0fdf3aadc71455a2b937380c5ea82\",\"license\":\"GPL-3.0-only\",\"urls\":[\"bzz-raw://92253a04d7a2502273e140fc08b9985f527dc70a5153448ca80c662af66d11db\",\"dweb:/ipfs/QmSsDQUvZSnMiicFEJnH8g6znw83WaseUUnJj1vjfKf9gQ\"]}},\"version\":1}",
@@ -52617,15 +52643,29 @@
           ],
           "name": "WithdrawFounds",
           "type": "event"
+        },
+        "0x306a2c545aaafdcaf61ac37c5413861fa80b9f5589fb2fbfa769ec8e718fcd5f": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_index",
+              "type": "uint256"
+            }
+          ],
+          "name": "CloseProposalDissaproved",
+          "type": "event"
         }
       },
       "links": {},
-      "address": "0x1eD628F6863E1830128003FC8A693F37F9cbF3d6",
-      "transactionHash": "0x905ac66496d4ec0c8b6db52bc05bfc4fee182cf2f930804b4feec900212efffa"
+      "address": "0xBCc517a75e32ed8AfBDF66BC1c483F9d67f1147e",
+      "transactionHash": "0xcaba1692f652b5c60587467dcd53f808cedc021039e3b150a96a5c16f01c5bcc"
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-07-29T23:10:23.803Z",
+  "updatedAt": "2021-07-31T00:20:57.300Z",
+  "networkType": "ethereum",
   "devdoc": {
     "events": {
       "CampaignCreated(bytes32)": {

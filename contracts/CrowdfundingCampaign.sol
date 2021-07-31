@@ -145,12 +145,6 @@ contract CrowdfundingCampaign {
         _;
     }
 
-    modifier closeProposalApproved(uint _index) {
-        require( closeProposals[_index].status == ProposalStatus.APPROVED,
-            "The close proposal is not approved." );
-        _;
-    }
-
     modifier beInTimeCloseProposal(uint _index) { 
         require ( block.timestamp <= closeProposals[_index].limitTime, 
             "The close proposal is close for voting." ); 

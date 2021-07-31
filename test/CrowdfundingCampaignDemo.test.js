@@ -14,6 +14,33 @@ contract("CrowdfundingCampaignDemo Test", async accounts => {
         this.campaign = await CrowdfundingCampaignDemo.deployed();
     })
 
+    it("When change campaign created at it should be 14 days after", async() => {
+
+        const campaign = this.campaign;
+
+        const lastTimeBlock = await time.latest();
+        const createdAtExpected = new Date(lastTimeBlock.toNumber() * 1000);
+        
+        const createdAtExpectedAfter = new Date(lastTimeBlock.toNumber() * 1000);
+        createdAtExpectedAfter.setDate(createdAtExpectedAfter.getDate() - 14);
+
+        const createdAtValue = await campaign.created_at();
+        
+        const createdAt = new Date(createdAtValue.toNumber() * 1000);
+        const diffTime = Math.abs(createdAtExpected - createdAt);
+        const diffMinutes = diffTime / (1000*60); 
+        await campaign.changeCreatedAt();
+        const afterCreatedAtValue = await campaign.created_at();
+        
+        const afterCreatedAt = new Date(afterCreatedAtValue.toNumber() * 1000);
+        const diffTimeAfter = Math.abs(createdAtExpectedAfter - afterCreatedAt);
+        const diffMinutesAfter = diffTimeAfter / (1000*60); 
+
+        expect(diffMinutes).to.be.lessThan(1);
+        expect(diffMinutes).to.be.greaterThan(0);
+        expect(diffMinutesAfter).to.be.lessThan(1);
+        expect(diffMinutesAfter).to.be.greaterThan(0);
+    });
 
     it("When change limit time proposal the limit time should be 7 days earlier", async() => {
 
@@ -53,14 +80,12 @@ contract("CrowdfundingCampaignDemo Test", async accounts => {
         expect(diffMinutes).to.be.greaterThan(0);
         expect(diffMinutesAfter).to.be.lessThan(1);
         expect(diffMinutesAfter).to.be.greaterThan(0);
-
         
     });
 
-    it("When change limit time close roposal the limit time should be 7 days earlier", async() => {
+    it("When change limit time close proposal the limit time should be 7 days earlier", async() => {
 
         const campaign = this.campaign;
-
 
         const lastTimeBlock = await time.latest();
         const limitDateExpected = new Date(lastTimeBlock.toNumber() * 1000);
@@ -92,11 +117,6 @@ contract("CrowdfundingCampaignDemo Test", async accounts => {
         expect(diffMinutes).to.be.greaterThan(0);
         expect(diffMinutesAfter).to.be.lessThan(1);
         expect(diffMinutesAfter).to.be.greaterThan(0);
-
-        
     });
-
-    
-
 
 });

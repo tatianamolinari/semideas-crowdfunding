@@ -27,7 +27,12 @@ contract("CrowdfundingCampaign Test", async accounts => {
 
         expect(campaign.minimunContribution()).to.eventually.be.a.bignumber.equal(new BN(5));
         expect(campaign.goal()).to.eventually.be.a.bignumber.equal(new BN(300));
+        
         expect(campaign.status()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaign.getStatus()).to.eventually.be.a.bignumber.equal(new BN(0));
+
+        expect(campaign.getFinalContributions()).to.eventually.be.a.bignumber.equal(new BN(0));
+        expect(campaign.getRemainingContributions()).to.eventually.be.a.bignumber.equal(new BN(0));
 
         expect(campaign.getProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
         expect(campaign.getCloseProposalsCount()).to.eventually.be.a.bignumber.equal(new BN(0));
@@ -681,6 +686,19 @@ contract("CrowdfundingCampaign Test", async accounts => {
         
     });
 
+    it("When a campaign is closed saves the balances status", async() => {
+
+        await time.increase(1209600);
+        const campaign = this.campaign;
+
+        const balancesInfo = await campaign.getBalancesInfo();
+        expect(balancesInfo._goal).to.be.a.a.bignumber.equal(new BN(300));
+        expect(balancesInfo._finalContributions).to.be.a.a.bignumber.equal(new BN(305));
+        expect(balancesInfo._remainingContributions).to.be.a.a.bignumber.equal(new BN(300));
+        expect(balancesInfo._balance).to.be.a.a.bignumber.equal(new BN(300));
+        expect(balancesInfo._balance).to.be.a.a.bignumber.equal(balancesInfo._remainingContributions);
+    });
+
     it("When a close proposal has more approvals than disapprovals votes the result at close should be status APPROVED", async() => {
 
         const campaign = this.campaign;
@@ -691,7 +709,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
     });
     
 
-    it("When a close proposal has more disapprovals than approvals votes the result at close should be status DISAPPROVED", async() => {
+    it("When a close proposal has more disapprovals than approvals votes the result at close should be status DISAPPROVED and emit an CloseProposalDissaproved event", async() => {
 
         await time.increase(1209600);
         const campaign = this.campaignToClose;
@@ -700,10 +718,14 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const i_proposal = 0
         await campaign.disapproveCloseProposal(i_proposal, { from: anotherMemberAccount });
         await campaign.disapproveCloseProposal(i_proposal, { from: otherMemberAccount });
-
         await time.increase(604800);
         
-        await campaign.closeCloseProposal(i_proposal, { from: memberAccount });
+        const tx = await campaign.closeCloseProposal(i_proposal, { from: memberAccount });
+        const { logs } = tx;
+        expect(logs).to.be.an.instanceof(Array);
+        expect(logs).to.have.property('length', 1);
+        expect(logs[0].event).to.equal('CloseProposalDissaproved');
+        
         const afterResult = await campaign.getCloseProposal(i_proposal);
         expect(afterResult._status).to.be.a.a.bignumber.equal(new BN(2));
     });
@@ -820,6 +842,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
         const contributorBalance = await web3.eth.getBalance(anotherMemberAccount);
         const campaignBalance = await web3.eth.getBalance(campaign.address);
+        expect(campaign.hasWithdraw({ from: anotherMemberAccount })).to.eventually.be.false;
 
         const tx2 = await campaign.withdraw({ from: anotherMemberAccount });
         const { logs } = tx2;
@@ -840,6 +863,7 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const campaign = this.campaign;
 
         expect(campaign.isMember(anotherMemberAccount)).to.eventually.be.true;
+        expect(campaign.hasWithdraw({ from: anotherMemberAccount })).to.eventually.be.true;
         expect(campaign.withdraw({ from: anotherMemberAccount })).to.eventually.be.rejectedWith("Sender already withdraw his founds.");
 
     });

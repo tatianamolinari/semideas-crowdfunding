@@ -238,7 +238,7 @@ class DisplayContent extends React.Component {
       this.setState({ goal: balancesInfo.goal, 
                       finalContributions: balancesInfo.finalContributions, 
                       remainingContributions: balancesInfo.remainingContributions, 
-                      balance: balancesInfo.actualBalance });
+                      balance: balancesInfo.balance });
       this.setCanWithdraw();
       this.actualizeProgressInfo();
     }

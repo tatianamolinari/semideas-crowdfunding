@@ -23,3 +23,6 @@ El problema que surge en la comunidad del crowdfunding es el uso de las platafor
 
 </p>
 
+<h2> Como levantar el proyecto </h2>
+
+* [Set Up](https://github.com/tatianamolinari/semideas-crowdfunding/wiki/Set-Up)

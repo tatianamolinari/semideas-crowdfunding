@@ -115,7 +115,7 @@ class CampaignService {
     balancesData.goal = balanceValues._goal;
     balancesData.finalContributions = balanceValues._finalContributions;
     balancesData.remainingContributions = balanceValues._remainingContributions;
-    balancesData.actualBalance = balanceValues._actualBalance;
+    balancesData.balance = balanceValues._balance;
 
     return balancesData;
   }

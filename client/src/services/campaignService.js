@@ -535,7 +535,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 
@@ -558,7 +558,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 
@@ -583,7 +583,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 
@@ -608,7 +608,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 
@@ -633,7 +633,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 
@@ -658,7 +658,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 
@@ -683,7 +683,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 
@@ -708,7 +708,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 
@@ -733,7 +733,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 
@@ -758,7 +758,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 
@@ -782,7 +782,7 @@ class CampaignService {
       statusResponse.errorMsg = "";
 
       transaction.on('error', (error, receipt) => { service.transactionOnError(error, receipt, statusResponse, resolve) });
-      transaction.on('receipt', (receipt) => service.transactionOnReipt(receipt, statusResponse, resolve));
+      transaction.on('receipt', (receipt) => service.transactionOnReceipt(receipt, statusResponse, resolve));
 
     });
 

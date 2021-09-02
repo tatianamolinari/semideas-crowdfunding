@@ -384,9 +384,12 @@ contract("CrowdfundingCampaign Test", async accounts => {
         const result = await campaign.getProposal(i_proposal);
         expect(result._status).to.be.a.a.bignumber.equal(new BN(0));
 
-        await time.increase(604800);
-
         expect(campaign.isMember(memberAccount)).to.eventually.be.true;
+
+        expect(campaign.closeProposal(i_proposal, { from: memberAccount }))
+        .to.eventually.be.rejectedWith("The proposal is still open for voting");
+
+        await time.increase(604800);
         await campaign.closeProposal(i_proposal, { from: memberAccount });
 
         const afterResult = await campaign.getProposal(i_proposal);

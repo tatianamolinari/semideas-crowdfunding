@@ -14,7 +14,8 @@ import DisplayCloseProposals from "../closeProposals/DisplayCloseProposals"
 import ErrorMessage from "../errors/ErrorMessage"
 import MenuButton from "../buttons/MenuButton"
 
-import deployedCampaignsInfo from "../../contracts/campaignAddresses.json"
+import deployedCampaignsInfo from "../../contracts/campaignAddressesTestNet.json"
+//import deployedCampaignsInfo from "../../contracts/campaignAddresses.json"
 
 
 class ContainerInfo extends React.Component {
@@ -68,14 +69,21 @@ class ContainerInfo extends React.Component {
       }
       else {
         const instance = await campaignService.setInstanceFromAddress(address, blockNumber);
+        console.log(instance);
+        console.log("1")
         const campaignInfo = await campaignService.getCampaignInfo();
+        console.log("2")
         const isMember = await campaignService.getMembership();
+        console.log("3")
         const balance = await campaignService.getBalance();
+        console.log("4")
         const actualAccount = await campaignService.getFirstAccount();
+        console.log("5")
         const isOwner = actualAccount===campaignInfo.owner;
 
         const actualizeStatusInfo = async() => {this.actualizeStatusInfo()};
         await campaignService.subscribeToChangeStatus(actualizeStatusInfo);
+        console.log("6")
 
         this.setState({
           loaded: true,

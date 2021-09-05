@@ -1,0 +1,364 @@
+body {
+    overflow: hidden !important;
+    font-family: "DMSans-Regular" !important;
+}
+
+.container.root {
+    margin:0 ;
+    padding: 0;
+}
+
+.container-info {
+  height:85vh;
+}
+
+.navigation-campaigns {
+    padding: 5em
+}
+
+.navigation-campaigns .aling-right a {
+    padding-left: 0px !important;
+    padding-right: 1em !important;
+}
+
+.nav-bar {
+  height:15vh; 
+  margin: 0;
+
+  background-color: rgb(248, 249, 250);
+  border-bottom-color: rgb(238, 238, 238);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+.nav-bar .logo-row {
+    background-color: white;
+    height:15vh; 
+    margin: 0;
+}
+
+.user_side_menu{
+  height:100%;
+  margin:0;
+  background-color: #eda73d;
+  font-family: "DMSans-Regular";
+
+}
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+ul.vertical-center {
+    height: 100%;
+}
+
+.container_img {
+    height: 100%;
+    width: auto;
+}
+
+.invisible_button {
+    font-family: "DMSans-Regular" !important;;
+    background: transparent none repeat scroll 0% 0% !important;
+    border: medium none !important;
+    color: white;
+    width: 100%;
+    text-align: inherit;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.see-more-button .header {
+    font-size: 1.28em !important;
+}
+
+.user_side_menu .invisible_button {
+    height: 25%;
+
+}
+
+.invisible_button:focus {
+    outline: none !important;
+    outline-offset: none !important;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.menu_user {
+    background-color: #f8f9fa;
+}
+  
+.menu_user_li {
+    padding-top: 3.5em;
+    height: 100%;
+    border-bottom: 1px solid #ddd;
+}
+
+.menu_user_li.last{
+    border-bottom: 0;
+}
+  
+.menu_user_li_active {
+    padding-top: 3.5em;
+    height: 100%;
+    border-bottom: 1px solid #ddd;
+    background: #0c6069;
+    color: white;
+}
+  
+.menu_user_li:hover {
+    background: #739ba0;
+}
+  
+.menu_user_li a {
+    color: #666;
+}
+  
+.menu_user_li_active a {
+    color: white;
+}
+
+.campaign-info {
+    padding: 3em;
+    text-align: left;
+    height:85vh;
+    overflow-y:scroll;
+}
+
+.proposal-info {
+    padding: 3em;
+    text-align: left;
+    height:85vh;
+    overflow-y:scroll;
+}
+
+.proposal-item-list {
+    transition: all 0.3s ease-out;
+    margin-bottom: 2em;
+}
+
+.proposal-item-list:hover {
+    cursor: pointer;
+    position: relative;
+    z-index: 999;
+    transform: scale(1.1);
+}
+
+
+.proposal-info .title {
+    font-family: "DMSans-Regular";
+    padding-bottom: 2px;
+    border-bottom: 2px solid #478e97;
+    font-size: 2em !important;
+}
+
+h5 {
+
+    font-size: 1.25em !important;
+}
+
+.main-info-campaign {
+    font-size: 1.20em !important;
+}
+
+.proposal-info .description {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    font-size: 1em !important
+}
+
+.campaign-info .name {
+    font-family: "DMSans-Regular";
+    padding-bottom: 2px;
+    border-bottom: 2px solid #478e97;
+    font-size: 2em !important
+}
+
+.campaign-info .description {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    font-size: 1em !important;
+
+}
+
+.image-detail-container.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.image-detail-container{
+    margin-top: 3em;
+    margin-bottom: 3em;
+}
+
+.photos {
+    transition: all 0.3s ease-out;
+    width: 80%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.photos:hover {
+    cursor: pointer;
+    position: relative;
+    z-index: 999;
+    transform: scale(1.2);
+}
+
+hr {
+    border-top: 3px solid #A9A9A9;
+}
+
+.contribute-row {
+    text-align: right;
+}
+
+.aling-right {
+    text-align: right;
+}
+
+.aling-left {
+    text-align: left;
+}
+
+.proposal-footer {
+    margin :2em !important;
+}
+
+.ui.disabled.right.labeled.button {
+    opacity: .80!important;
+}
+
+.ui.disabled.left.labeled.button {
+    opacity: .80!important;
+}
+
+.normal-button {
+    background-color: #0c6069 !important;
+    color: #fff !important;
+    font-family: "DMSans-Regular" !important;
+    padding: 1em !important;
+    padding-bottom: 0.6em !important;
+    padding-top: 0.6em !important;
+    border-bottom-right-radius: 20px !important;
+    border-top-left-radius: 20px !important;
+    font-size: 1.10em !important;
+    margin: 1.5em !important;
+    border-width: 0 !important;
+    font-weight: 400 !important;
+}
+
+.c_index_info {
+    font-size: 0.5em !important;
+}
+
+.normal-button.no-margin {
+    margin-left :0 !important;
+    margin-right :0 !important;
+    margin-bottom :2em !important;
+}
+
+.show-list-close-proposals .normal-button.no-margin-top {
+    margin-top :0 !important;
+}
+
+.normal-button:hover {
+    background: #1a95ac !important;
+    text-decoration: none !important;
+    color: white !important;
+}
+
+.normal-button:visited {
+    text-decoration: none !important;
+    color: white !important;
+}
+
+.normal-button:focus {
+    text-decoration: none !important;
+    color: white !important;
+    outline: none !important;
+    outline-offset: none !important;
+}
+
+.footer-buttons {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.badge-created {
+    background-color: #0c6069;
+    color: white;
+}
+
+.badge-active {
+    background-color: #65bd9f;
+    color: white;
+}
+
+.div-clickleable {
+    cursor: pointer;
+}
+
+.image-container-left {
+    float: left;
+    padding-top: 2em !important;
+    padding-right: 1.5em !important;
+    padding-bottom: 1em !important;
+}
+
+.message-modal-error .modal-content {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+}
+
+.message-modal-error .modal-content .normal-button {
+    margin: 1em;
+    font-size: 1em;
+}
+
+.title-error-msj {
+    margin-top: 1em !important;
+    margin: auto;
+    width: 60%;
+}
+.progress-container {
+    padding: 0.25em;
+    margin-top: 0.5em !important;
+}
+
+.progress {
+    height: 2em !important;
+    font-size: 1em !important;
+    background-color: #A0A0A0 !important;
+}
+
+h3 .ui.label:first-child {
+    margin-left: 1em !important;
+    margin-bottom: 0.5em !important;
+}
+
+
+@font-face {
+    font-family: 'DMSans-Regular';
+    src: url('/fonts/DMSans-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('webfont.svg#svgFontName') format('svg');
+    /* Legacy iOS */
+}
+
+@font-face {
+    font-family: 'MoonTime-Regular';
+    src: url('/fonts/MoonTime-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('webfont.svg#svgFontName') format('svg');
+    /* Legacy iOS */
+}
+.ui.dimmer {
+    background-color: rgb(0 0 0 / 80%) !important ; 
+}

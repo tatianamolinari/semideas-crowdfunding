@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/semideas-crowdfunding/static/css/main.a3487775.chunk.css",
-    "main.js": "/semideas-crowdfunding/static/js/main.08e6cd96.chunk.js",
-    "main.js.map": "/semideas-crowdfunding/static/js/main.08e6cd96.chunk.js.map",
+    "main.js": "/semideas-crowdfunding/static/js/main.d33c75a1.chunk.js",
+    "main.js.map": "/semideas-crowdfunding/static/js/main.d33c75a1.chunk.js.map",
     "runtime-main.js": "/semideas-crowdfunding/static/js/runtime-main.9f33955a.js",
     "runtime-main.js.map": "/semideas-crowdfunding/static/js/runtime-main.9f33955a.js.map",
     "static/css/2.5e64dd04.chunk.css": "/semideas-crowdfunding/static/css/2.5e64dd04.chunk.css",
     "static/js/2.d01e83c0.chunk.js": "/semideas-crowdfunding/static/js/2.d01e83c0.chunk.js",
     "static/js/2.d01e83c0.chunk.js.map": "/semideas-crowdfunding/static/js/2.d01e83c0.chunk.js.map",
     "index.html": "/semideas-crowdfunding/index.html",
-    "precache-manifest.000c4c9298e29fd7b0fa0d7edfb67764.js": "/semideas-crowdfunding/precache-manifest.000c4c9298e29fd7b0fa0d7edfb67764.js",
+    "precache-manifest.3e0032903d30fe545b2dac09dbc1e489.js": "/semideas-crowdfunding/precache-manifest.3e0032903d30fe545b2dac09dbc1e489.js",
     "service-worker.js": "/semideas-crowdfunding/service-worker.js",
     "static/css/2.5e64dd04.chunk.css.map": "/semideas-crowdfunding/static/css/2.5e64dd04.chunk.css.map",
     "static/css/main.a3487775.chunk.css.map": "/semideas-crowdfunding/static/css/main.a3487775.chunk.css.map",
@@ -20,6 +20,6 @@
     "static/css/2.5e64dd04.chunk.css",
     "static/js/2.d01e83c0.chunk.js",
     "static/css/main.a3487775.chunk.css",
-    "static/js/main.08e6cd96.chunk.js"
+    "static/js/main.d33c75a1.chunk.js"
   ]
 }

@@ -281,7 +281,7 @@ class DisplayContent extends React.Component {
                 <div className="main-info-campaign">
                   <div>
                     <Icon fitted name='user circle'/> &nbsp;Owner:&nbsp; 
-                    <a href={`https://etherscan.io/address/${this.props.data.owner}`}
+                    <a href={`https://rinkeby.etherscan.io/address/${this.props.data.owner}`}
                        target="_blank"
                        rel="noopener noreferrer"
                        data-testid="owner">

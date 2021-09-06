@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "4ae816827c4ba6003151b622809d6d62",
+    "revision": "8f1b9aa05ddca7d86632c3cffdaf01b5",
     "url": "/semideas-crowdfunding/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/semideas-crowdfunding/static/css/2.5e64dd04.chunk.css"
   },
   {
-    "revision": "a5da7a626ec4aee09c86",
+    "revision": "d6ab454ca21e061e7dcf",
     "url": "/semideas-crowdfunding/static/css/main.a3487775.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/semideas-crowdfunding/static/js/2.d01e83c0.chunk.js"
   },
   {
-    "revision": "a5da7a626ec4aee09c86",
-    "url": "/semideas-crowdfunding/static/js/main.d33c75a1.chunk.js"
+    "revision": "d6ab454ca21e061e7dcf",
+    "url": "/semideas-crowdfunding/static/js/main.d8a5d205.chunk.js"
   },
   {
     "revision": "48f51e66bfa7e77992cd",

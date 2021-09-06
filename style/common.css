@@ -348,14 +348,14 @@ h3 .ui.label:first-child {
 
 @font-face {
     font-family: 'DMSans-Regular';
-    src: url('/fonts/DMSans-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    src: url('../fonts/DMSans-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
     url('webfont.svg#svgFontName') format('svg');
     /* Legacy iOS */
 }
 
 @font-face {
     font-family: 'MoonTime-Regular';
-    src: url('/fonts/MoonTime-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    src: url('../fonts/MoonTime-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
     url('webfont.svg#svgFontName') format('svg');
     /* Legacy iOS */
 }

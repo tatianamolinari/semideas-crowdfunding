@@ -55,7 +55,7 @@ class CloseProposalDetail extends React.Component {
                 <h5> Fecha de cierre de votación:  <span data-testid="limite">{ this.state.dproposal_data.limitTime }</span></h5>
                 <h5> 
                     Autor:&nbsp; 
-                    <a href={`https://etherscan.io/address/${this.props.author}`}
+                    <a href={`https://rinkeby.etherscan.io/address/${this.props.author}`}
                        target="_blank"
                        rel="noopener noreferrer" 
                        data-testid="destinatario">

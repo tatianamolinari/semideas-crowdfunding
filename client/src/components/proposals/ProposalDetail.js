@@ -62,7 +62,7 @@ class ProposalDetail extends React.Component {
                 <div> Los fondos a retirar para de este pedido son <Label color="green"> <span data-testid="valor">{ this.state.proposal_data.value }</span></Label> wei. </div>
                 <div> 
                     Destinatario:&nbsp; 
-                    <a href={`https://etherscan.io/address/${this.state.proposal_data.recipient}`}
+                    <a href={`https://rinkeby.etherscan.io/address/${this.state.proposal_data.recipient}`}
                        target="_blank"
                        rel="noopener noreferrer" 
                        data-testid="destinatario">

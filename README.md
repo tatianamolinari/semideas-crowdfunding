@@ -29,4 +29,5 @@ El problema que surge en la comunidad del crowdfunding es el uso de las platafor
 
 <h3> Deploy en red rinkerby </h3>
 
+* [Set Up Metamask Red Rinkeby](https://github.com/tatianamolinari/semideas-crowdfunding/wiki/Set-up-Red-Rinkeby)
 * [Semideas](https://tatianamolinari.github.io/semideas-crowdfunding/)

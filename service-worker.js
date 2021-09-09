@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/semideas-crowdfunding/precache-manifest.8130969173b10926f50e77cf39642868.js"
+  "/semideas-crowdfunding/precache-manifest.a8f13291542f981d02510d7fa942be80.js"
 );
 
 self.addEventListener('message', (event) => {

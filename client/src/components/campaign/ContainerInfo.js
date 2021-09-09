@@ -64,7 +64,7 @@ class ContainerInfo extends React.Component {
         this.setState({
           loaded: true,
           error: true,
-          error_msj: "Por favor, verifica en Metamask haber seleccionado la red correcta."
+          error_msj: "Por favor, verifica en Metamask haber seleccionado la red Rinkeby."
         });
       }
       else {
@@ -230,7 +230,7 @@ class ContainerInfo extends React.Component {
                         <Dimmer active>
                         <h1 data-testid="info-loading"> Obteniendo la información de la campaña... </h1>
   
-                          <Loader size='large' inline>Cargando...</Loader>
+                          <Loader size='large' inline>Recuerda inciar sesión en metamask</Loader>
                         </Dimmer>
                         }
 
